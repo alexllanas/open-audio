@@ -2,7 +2,6 @@ package com.alexllanas.core.domain
 
 import com.google.gson.annotations.SerializedName
 
-
 class User(
     @SerializedName(value = "id", alternate = ["_id", "tId", "uId"])
     val id: String? = null,
@@ -26,6 +25,6 @@ class User(
     // true if the logged-in user has subscribed to this user
     val isSubscribing: Boolean = false
 ) {
-    val avatar: String?
-        get() = id?.let { id -> "/img/u/$id" }
+        val avatarUrl: String?
+            get() = id?.let { id -> "/img/u/$id" }
 }
