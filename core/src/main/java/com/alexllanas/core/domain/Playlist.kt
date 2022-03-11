@@ -7,9 +7,10 @@ class Playlist(
     val name: String? = null,
     @SerializedName(value = "nbTracks")
     val trackCount: Int = 0,
-    val url: Int = 0,
     val author: User? = null
 ) {
     val coverImage: String?
         get() = id?.let { id -> "/img/playlist/$id" }
+    val url: String
+        get() = "/u/" + id?.replace("_", "/playlist/")
 }
