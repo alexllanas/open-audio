@@ -24,6 +24,7 @@ class User(
 
     // true if the logged-in user has subscribed to this user
     val isSubscribing: Boolean = false
+
 ) {
         val avatarUrl: String?
             get() = id?.let { id -> "/img/u/$id" }
