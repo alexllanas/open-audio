@@ -1,9 +1,9 @@
 package com.alexllanas.core.data.remote.user
 
-import com.alexllanas.common.responses.NetworkResponse
+import com.alexllanas.common.responses.TrackResponse
 
 interface UserRemoteService {
 
-    suspend fun getStream(sessionToken: String): List<NetworkResponse>
+    suspend fun getStream(sessionToken: String): List<TrackResponse>
 
 }

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/streamFragment"
-        android:name="com.alexllanas.openaudio.presentation.StreamFragment"
+        android:name="com.alexllanas.openaudio.presentation.home.HomeFragment"
         android:label="fragment_stream"
         tools:layout="@layout/fragment_stream" />
 </navigation>

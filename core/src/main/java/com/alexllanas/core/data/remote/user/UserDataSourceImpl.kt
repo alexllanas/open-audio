@@ -57,7 +57,6 @@ class UserDataSourceImpl(
     override suspend fun getStream(sessionToken: String): Flow<List<Track>> = flow {
         val stream = userRemoteService
             .getStream(sessionToken)
-            .filterIsInstance(TrackResponse::class.java)
             .map { trackResponse ->
                 trackResponse.toDomainTrack()
             }

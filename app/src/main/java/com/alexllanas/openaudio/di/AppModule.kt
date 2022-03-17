@@ -2,10 +2,13 @@ package com.alexllanas.openaudio.di
 
 import android.content.Context
 import com.alexllanas.core.data.remote.common.CommonDataSource
+import com.alexllanas.core.data.remote.common.CommonDataSourceImpl
+import com.alexllanas.core.data.remote.user.UserDataSource
+import com.alexllanas.core.data.remote.user.UserDataSourceImpl
+import com.alexllanas.core.data.remote.user.UserRemoteService
 import com.alexllanas.core.interactors.search.Search
-import com.alexllanas.openaudio.framework.network.CommonDataSourceImpl
-import com.alexllanas.openaudio.framework.network.utils.NetworkErrorHandler
-import com.alexllanas.openaudio.framework.network.utils.NetworkResponseHandler
+import com.alexllanas.core.interactors.stream.GetStream
+import com.alexllanas.openaudio.framework.network.UserApiService
 import com.alexllanas.openaudio.presentation.MainApplication
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -63,11 +66,28 @@ class AppModule {
         return retrofit.build().create(CommonDataSourceImpl::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideUserApiService(retrofit: Retrofit.Builder): UserApiService {
+        return retrofit.build().create(UserApiService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserDataSource(userApiService: UserApiService): UserDataSource {
+        return UserDataSourceImpl(userApiService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetStream(
+        userDataSource: UserDataSource,
+    ) = GetStream(userDataSource)
 
     @Singleton
     @Provides
     fun provideSearch(
         commonDataSource: CommonDataSource,
         @ApplicationContext context: Context
-    ) = Search(commonDataSource, NetworkErrorHandler(context), NetworkResponseHandler())
+    ) = Search(commonDataSource)
 }

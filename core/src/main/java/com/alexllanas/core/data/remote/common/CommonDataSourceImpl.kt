@@ -1,7 +1,5 @@
 package com.alexllanas.core.data.remote.common
 
-import com.alexllanas.common.responses.NetworkResponse
-import com.alexllanas.common.responses.SearchResponse
 import com.alexllanas.core.data.mappers.toDomainPlaylist
 import com.alexllanas.core.data.mappers.toDomainTrack
 import com.alexllanas.core.data.mappers.toDomainUser
@@ -17,21 +15,19 @@ class CommonDataSourceImpl(
 
     override suspend fun search(query: String): Flow<HashMap<String, List<*>>> = flow {
         val response = commonRemoteService.search(query)
-        if (response is SearchResponse) {
-            val resultMap = hashMapOf<String, List<*>>()
-            resultMap["tracks"] =
-                response.results?.tracks?.map { trackResponse -> trackResponse.toDomainTrack() }
-                    ?: emptyList<Track>()
-            resultMap["playlists"] =
-                response.results?.playlists?.map { playlistResponse -> playlistResponse.toDomainPlaylist() }
-                    ?: emptyList<Playlist>()
-            resultMap["users"] =
-                response.results?.users?.map { userResponse -> userResponse.toDomainUser() }
-                    ?: emptyList<User>()
-            resultMap["posts"] =
-                response.results?.posts?.map { trackResponse -> trackResponse.toDomainTrack() }
-                    ?: emptyList<Track>()
-            emit(resultMap)
-        }
+        val resultMap = hashMapOf<String, List<*>>()
+        resultMap["tracks"] =
+            response.results?.tracks?.map { trackResponse -> trackResponse.toDomainTrack() }
+                ?: emptyList<Track>()
+        resultMap["playlists"] =
+            response.results?.playlists?.map { playlistResponse -> playlistResponse.toDomainPlaylist() }
+                ?: emptyList<Playlist>()
+        resultMap["users"] =
+            response.results?.users?.map { userResponse -> userResponse.toDomainUser() }
+                ?: emptyList<User>()
+        resultMap["posts"] =
+            response.results?.posts?.map { trackResponse -> trackResponse.toDomainTrack() }
+                ?: emptyList<Track>()
+        emit(resultMap)
     }
 }

@@ -14,4 +14,4 @@ data class TrackResponse(
     @SerializedName(value = "lov")
     val userLikeIds: List<String> = emptyList(),
     val liked: Boolean = false
-) : NetworkResponse
+)

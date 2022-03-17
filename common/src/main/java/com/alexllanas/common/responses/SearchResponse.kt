@@ -8,7 +8,7 @@ data class SearchResponse(
 
     @SerializedName("results")
     val results: SearchResponseBody? = null
-) : NetworkResponse
+)
 
 data class SearchResponseBody(
     @SerializedName("playlist")
