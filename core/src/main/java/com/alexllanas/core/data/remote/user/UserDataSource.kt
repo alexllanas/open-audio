@@ -1,7 +1,8 @@
-package com.alexllanas.core.data
+package com.alexllanas.core.data.remote.user
 
 import com.alexllanas.core.domain.Track
 import com.alexllanas.core.domain.User
+import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface UserDataSource {
@@ -28,7 +29,7 @@ interface UserDataSource {
 
     suspend fun getTracks(userId: String): List<Track>
 
-    suspend fun getStream(sessionToken: String): List<Track>
+    suspend fun getStream(sessionToken: String): Flow<List<Track>>
 
     suspend fun changeName(name: String, sessionToken: String): User
 

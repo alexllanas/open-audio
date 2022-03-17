@@ -1,7 +1,6 @@
 package com.alexllanas.core.interactors.auth
 
-import com.alexllanas.core.data.UserDataSource
-import com.alexllanas.core.domain.User
+import com.alexllanas.core.data.remote.user.UserDataSource
 
 class Logout(private val userDataSource: UserDataSource) {
 
