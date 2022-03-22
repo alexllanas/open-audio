@@ -1,13 +1,10 @@
 package com.alexllanas.openaudio.presentation.home
 
 import com.alexllanas.core.domain.Track
+import com.alexllanas.openaudio.presentation.state.BaseState
 
 data class HomeViewState(
-    val stream: List<Track>
-) {
-    companion object {
-        fun initial() = HomeViewState(
-            stream = emptyList()
-        )
-    }
-}
+    val stream: List<Track> = emptyList(),
+    val isLoading: Boolean = false,
+    val isError: Boolean = false
+) : BaseState

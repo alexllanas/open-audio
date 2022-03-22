@@ -1,5 +1,6 @@
 package com.alexllanas.core.data.remote.user
 
+import arrow.core.Either
 import com.alexllanas.core.domain.Track
 import com.alexllanas.core.domain.User
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +30,7 @@ interface UserDataSource {
 
     suspend fun getTracks(userId: String): List<Track>
 
-    suspend fun getStream(sessionToken: String): Flow<List<Track>>
+    suspend fun getStream(sessionToken: String): Flow<Either<Throwable, List<Track>>>
 
     suspend fun changeName(name: String, sessionToken: String): User
 

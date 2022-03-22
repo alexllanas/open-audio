@@ -1,55 +1,81 @@
 package com.alexllanas.openaudio.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexllanas.common.Intent
-import com.alexllanas.core.domain.Track
 import com.alexllanas.core.interactors.stream.GetStream
+import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.actions.HomeAction
+import com.alexllanas.openaudio.presentation.changes.HomeChange
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getStream: GetStream
 ) : ViewModel() {
-    val viewState: StateFlow<HomeViewState>
-    private val intentMutableFlow = MutableSharedFlow<Intent>()
-    protected val intentFlow: SharedFlow<Intent> get() = intentMutableFlow
 
+    private val initialState = HomeViewState()
+
+    private val _state = MutableStateFlow(initialState)
+    val state = _state.asStateFlow()
+
+    private val _actions = MutableSharedFlow<HomeAction>()
+    private val actions = _actions
 
     init {
-        val initialViewState = HomeViewState.initial()
-
-        viewState =
-            intentFlow.filterIsInstance<StreamIntent.Initial>().take(1)
-                .toViewState()
-                .scan(initialViewState) { state, change -> change.reduce(state) }
-                .stateIn(viewModelScope, SharingStarted.Eagerly, initialViewState)
+        bindActions()
     }
 
-    private fun Flow<Intent>.toViewState(): Flow<PartialStateChange> {
-        val execute: suspend (String) -> Flow<PartialStateChange> = { sessionToken ->
-            getStream(sessionToken)
-                .map { result ->
-                    PartialStateChange.Success(result)
+    private fun reduce(state: HomeViewState, change: HomeChange): HomeViewState = when (change) {
+        is HomeChange.Stream -> state.copy(
+            stream = change.stream,
+            isLoading = false,
+        )
+        is HomeChange.Error -> state.copy(
+            isLoading = false,
+            isError = false
+        )
+        HomeChange.Loading -> state.copy(
+            isLoading = true,
+            stream = emptyList(),
+            isError = false
+        )
+    }
+
+
+    fun dispatch(action: HomeAction) {
+        Log.d(TAG, "dispatch: $action")
+        viewModelScope.launch {
+            _actions.emit(action)
+        }
+    }
+
+    @OptIn(FlowPreview::class)
+    fun bindActions() {
+        viewModelScope.launch {
+            actions.filterIsInstance<HomeAction.LoadStream>()
+                .flatMapConcat {
+                    flow {
+                        emitAll(getStream(it.sessionToken))
+                    }
+                        .map { result ->
+                            result.fold(
+                                ifLeft = { HomeChange.Error(it) },
+                                ifRight = { HomeChange.Stream(it) }
+                            )
+                        }
+                }.onStart { HomeChange.Loading }
+                .scan(initialState) { state, change -> reduce(state, change) }
+                .onEach { Log.d(TAG, "bindActions: ${it.stream.size}") }
+                .catch { Log.d(TAG, "bindActions: ERROR: $it") }
+                .collect {
+                    _state.value = it
+                    state
                 }
         }
-        val sessionToken = filterIsInstance<StreamIntent.Initial>()
-            .map { it.sessionToken }
-            .shareIn(viewModelScope, SharingStarted.WhileSubscribed())
-        return sessionToken.flatMapLatest(execute)
-    }
-
-    suspend fun processIntent(intent: Intent) = intentMutableFlow.emit(intent)
-}
-
-internal sealed interface PartialStateChange {
-    data class Success(val stream: List<Track>) : PartialStateChange
-
-    fun reduce(state: HomeViewState): HomeViewState = when (this) {
-        is Success -> state.copy(
-            stream = stream
-        )
     }
 }

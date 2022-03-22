@@ -1,9 +1,9 @@
 package com.alexllanas.core.data.remote.common
 
-import com.alexllanas.common.responses.SearchResponse
+import com.alexllanas.core.data.remote.NetworkResponse
 
 interface CommonRemoteService {
 
-    suspend fun search(query: String) : SearchResponse
+    suspend fun search(query: String) : NetworkResponse
 
 }

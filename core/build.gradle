@@ -3,7 +3,6 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'kotlin'
 }
-
 java {
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
@@ -12,5 +11,6 @@ java {
 dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
-    implementation project(':common')
+    implementation "io.arrow-kt:arrow-core:1.0.1"
+
 }
