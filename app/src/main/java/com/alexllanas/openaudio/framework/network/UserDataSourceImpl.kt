@@ -6,9 +6,9 @@ import arrow.core.right
 import com.alexllanas.core.data.remote.user.UserDataSource
 import com.alexllanas.core.data.remote.user.UserRemoteService
 import com.alexllanas.openaudio.framework.mappers.toDomainTrack
-import com.alexllanas.core.domain.Track
-import com.alexllanas.core.domain.User
-import com.alexllanas.openaudio.framework.network.responses.TrackResponse
+import com.alexllanas.core.domain.models.Track
+import com.alexllanas.core.domain.models.User
+import com.alexllanas.openaudio.framework.network.models.TrackResponse
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import java.io.File

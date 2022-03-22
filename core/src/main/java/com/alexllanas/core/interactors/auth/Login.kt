@@ -1,7 +1,7 @@
 package com.alexllanas.core.interactors.auth
 
 import com.alexllanas.core.data.remote.user.UserDataSource
-import com.alexllanas.core.domain.User
+import com.alexllanas.core.domain.models.User
 
 class Login(private val userDataSource: UserDataSource) {
 

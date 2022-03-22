@@ -1,7 +1,7 @@
 package com.alexllanas.openaudio.framework.network
 
 import com.alexllanas.core.data.remote.user.UserRemoteService
-import com.alexllanas.openaudio.framework.network.responses.TrackResponse
+import com.alexllanas.openaudio.framework.network.models.TrackResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
 

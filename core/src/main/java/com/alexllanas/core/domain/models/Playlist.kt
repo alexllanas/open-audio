@@ -1,4 +1,4 @@
-package com.alexllanas.core.domain
+package com.alexllanas.core.domain.models
 
 class Playlist(
     val id: String? = null,

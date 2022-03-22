@@ -1,7 +1,7 @@
 package com.alexllanas.core.data
 
-import com.alexllanas.core.domain.Playlist
-import com.alexllanas.core.domain.Track
+import com.alexllanas.core.domain.models.Playlist
+import com.alexllanas.core.domain.models.Track
 
 interface TrackDataSource {
 

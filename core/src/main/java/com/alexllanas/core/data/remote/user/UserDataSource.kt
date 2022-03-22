@@ -1,8 +1,8 @@
 package com.alexllanas.core.data.remote.user
 
 import arrow.core.Either
-import com.alexllanas.core.domain.Track
-import com.alexllanas.core.domain.User
+import com.alexllanas.core.domain.models.Track
+import com.alexllanas.core.domain.models.User
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 

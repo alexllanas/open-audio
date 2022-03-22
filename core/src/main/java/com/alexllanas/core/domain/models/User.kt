@@ -1,4 +1,4 @@
-package com.alexllanas.core.domain
+package com.alexllanas.core.domain.models
 
 class User(
     val id: String? = null,

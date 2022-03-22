@@ -1,4 +1,4 @@
-package com.alexllanas.core.domain
+package com.alexllanas.core.domain.models
 
 data class Track(
     val id: String? = null,

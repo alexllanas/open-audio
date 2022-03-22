@@ -1,18 +1,16 @@
 package com.alexllanas.openaudio.framework.network
 
-import com.alexllanas.core.data.remote.NetworkResponse
 import com.alexllanas.core.data.remote.common.CommonDataSource
 import com.alexllanas.core.data.remote.common.CommonRemoteService
-import com.alexllanas.core.domain.Playlist
-import com.alexllanas.core.domain.Track
-import com.alexllanas.core.domain.User
+import com.alexllanas.core.domain.models.Playlist
+import com.alexllanas.core.domain.models.Track
+import com.alexllanas.core.domain.models.User
 import com.alexllanas.openaudio.framework.mappers.toDomainPlaylist
 import com.alexllanas.openaudio.framework.mappers.toDomainTrack
 import com.alexllanas.openaudio.framework.mappers.toDomainUser
-import com.alexllanas.openaudio.framework.network.responses.SearchResponse
+import com.alexllanas.openaudio.framework.network.models.SearchResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.IllegalArgumentException
 
 class CommonDataSourceImpl(
     private val commonRemoteService: CommonRemoteService

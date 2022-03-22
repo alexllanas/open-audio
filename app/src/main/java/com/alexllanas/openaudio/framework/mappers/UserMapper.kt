@@ -1,7 +1,7 @@
 package com.alexllanas.openaudio.framework.mappers
 
-import com.alexllanas.core.domain.User
-import com.alexllanas.openaudio.framework.network.responses.UserResponse
+import com.alexllanas.core.domain.models.User
+import com.alexllanas.openaudio.framework.network.models.UserResponse
 
 fun UserResponse.toDomainUser() = User(
     id = id,

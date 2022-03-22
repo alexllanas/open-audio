@@ -1,4 +1,4 @@
-package com.alexllanas.openaudio.framework.network.responses
+package com.alexllanas.openaudio.framework.network.models
 
 import com.alexllanas.core.data.remote.NetworkResponse
 import com.google.gson.annotations.SerializedName

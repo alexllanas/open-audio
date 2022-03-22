@@ -1,7 +1,7 @@
 package com.alexllanas.openaudio.framework.mappers
 
-import com.alexllanas.core.domain.Playlist
-import com.alexllanas.openaudio.framework.network.responses.PlaylistResponse
+import com.alexllanas.core.domain.models.Playlist
+import com.alexllanas.openaudio.framework.network.models.PlaylistResponse
 
 fun PlaylistResponse.toDomainPlaylist(): Playlist =
     Playlist(

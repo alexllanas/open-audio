@@ -1,6 +1,6 @@
 package com.alexllanas.openaudio.presentation.changes
 
-import com.alexllanas.core.domain.Track
+import com.alexllanas.core.domain.models.Track
 
 sealed class HomeChange {
     object Loading : HomeChange()

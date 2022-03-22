@@ -1,6 +1,6 @@
 package com.alexllanas.openaudio.presentation.home
 
-import com.alexllanas.core.domain.Track
+import com.alexllanas.core.domain.models.Track
 import com.alexllanas.openaudio.presentation.state.BaseState
 
 data class HomeViewState(
