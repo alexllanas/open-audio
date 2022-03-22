@@ -1,6 +1,5 @@
 package com.alexllanas.openaudio.framework.network.models
 
-import com.alexllanas.core.data.remote.NetworkResponse
 import com.google.gson.annotations.SerializedName
 
 class UserResponse(
@@ -25,4 +24,4 @@ class UserResponse(
 
     // true if the logged-in user has subscribed to this user
     val isSubscribing: Boolean = false
-): NetworkResponse
+)

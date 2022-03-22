@@ -26,7 +26,7 @@ interface UserDataSource {
 
     suspend fun getSubscriptions(userId: String, sessionToken: String): List<User>
 
-    suspend fun uploadAvatar(file: File, sessionToken: String)
+    suspend fun uploadAvatar(file: Any, sessionToken: String)
 
     suspend fun getTracks(userId: String): List<Track>
 
@@ -39,5 +39,6 @@ interface UserDataSource {
     suspend fun changeBio(bio: String, sessionToken: String): User
 
     suspend fun changeAvatar(filePath: String, sessionToken: String): User
+
 
 }

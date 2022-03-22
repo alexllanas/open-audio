@@ -3,7 +3,7 @@ package com.alexllanas.openaudio.presentation.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexllanas.core.interactors.stream.GetStream
+import com.alexllanas.core.interactors.home.GetStream
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.actions.HomeAction
 import com.alexllanas.openaudio.presentation.changes.HomeChange
@@ -71,7 +71,7 @@ class HomeViewModel @Inject constructor(
                 }.onStart { HomeChange.Loading }
                 .scan(initialState) { state, change -> reduce(state, change) }
                 .onEach { Log.d(TAG, "bindActions: ${it.stream.size}") }
-                .catch { Log.d(TAG, "bindActions: ERROR: $it") }
+//                .catch { Log.d(TAG, "bindActions: ERROR: $it") }
                 .collect {
                     _state.value = it
                     state

@@ -1,6 +1,5 @@
 package com.alexllanas.openaudio.framework.network.models
 
-import com.alexllanas.core.data.remote.NetworkResponse
 import com.google.gson.annotations.SerializedName
 
 data class SearchResponse(
@@ -9,7 +8,7 @@ data class SearchResponse(
 
     @SerializedName("results")
     val results: SearchResponseBody? = null
-) : NetworkResponse
+)
 
 data class SearchResponseBody(
     @SerializedName("playlist")
@@ -19,5 +18,5 @@ data class SearchResponseBody(
     @SerializedName("track")
     val tracks: List<TrackResponse> = emptyList(),
     @SerializedName("post")
-    val posts: List<TrackResponse>  = emptyList(),
-) : NetworkResponse
+    val posts: List<TrackResponse> = emptyList(),
+)

@@ -1,4 +1,4 @@
-package com.alexllanas.core.interactors.stream
+package com.alexllanas.core.interactors.home
 
 import arrow.core.Either
 import com.alexllanas.core.data.remote.user.UserDataSource

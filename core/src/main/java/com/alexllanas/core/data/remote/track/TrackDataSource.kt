@@ -1,4 +1,4 @@
-package com.alexllanas.core.data
+package com.alexllanas.core.data.remote.track
 
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track

@@ -6,6 +6,7 @@
       <module name="OpenAudio.common" target="11" />
       <module name="OpenAudio.temp" target="11" />
       <module name="OpenAudio.test" target="11" />
+      <module name="OpenAudio.testing" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

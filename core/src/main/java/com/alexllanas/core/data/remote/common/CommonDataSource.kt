@@ -1,5 +1,7 @@
 package com.alexllanas.core.data.remote.common
 
+import arrow.core.Either
+import com.alexllanas.core.domain.models.NetworkError
 import kotlinx.coroutines.flow.Flow
 
 interface CommonDataSource {
@@ -7,6 +9,6 @@ interface CommonDataSource {
     /**
      * Returns 4 lists: Tracks, Playlists, Users, Posts (Tracks)
      */
-    suspend fun search(query: String): Flow<HashMap<String, List<*>>>
+    suspend fun search(query: String): Flow<Either<NetworkError, HashMap<String, List<*>>>>
 
 }

@@ -1,6 +1,5 @@
 package com.alexllanas.openaudio.framework.network.models
 
-import com.alexllanas.core.data.remote.NetworkResponse
 import com.google.gson.annotations.SerializedName
 
 class PlaylistResponse(
@@ -9,4 +8,4 @@ class PlaylistResponse(
     @SerializedName(value = "nbTracks")
     val trackCount: Int = 0,
     val author: UserResponse? = null
-) : NetworkResponse
+)

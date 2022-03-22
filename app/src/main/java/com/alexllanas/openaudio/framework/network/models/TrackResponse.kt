@@ -1,6 +1,5 @@
 package com.alexllanas.openaudio.framework.network.models
 
-import com.alexllanas.core.data.remote.NetworkResponse
 import com.google.gson.annotations.SerializedName
 
 data class TrackResponse(
@@ -15,4 +14,4 @@ data class TrackResponse(
     @SerializedName(value = "lov")
     val userLikeIds: List<String> = emptyList(),
     val liked: Boolean = false
-): NetworkResponse
+)
