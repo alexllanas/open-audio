@@ -5,6 +5,7 @@ import com.alexllanas.openaudio.presentation.state.BaseState
 
 data class HomeViewState(
     val stream: List<Track> = emptyList(),
+    val userTracks: List<Track> = emptyList(),
     val isLoading: Boolean = false,
     val isError: Boolean = false
 ) : BaseState

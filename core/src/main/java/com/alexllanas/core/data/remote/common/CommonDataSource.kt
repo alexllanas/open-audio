@@ -1,7 +1,7 @@
 package com.alexllanas.core.data.remote.common
 
 import arrow.core.Either
-import com.alexllanas.core.domain.models.NetworkError
+import com.alexllanas.core.domain.models.Error.*
 import kotlinx.coroutines.flow.Flow
 
 interface CommonDataSource {

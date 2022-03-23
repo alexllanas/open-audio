@@ -10,6 +10,7 @@ import com.alexllanas.core.data.remote.user.UserDataSource
 import com.alexllanas.openaudio.framework.network.user.UserDataSourceImpl
 import com.alexllanas.core.interactors.home.Search
 import com.alexllanas.core.interactors.home.GetStream
+import com.alexllanas.core.interactors.home.GetUserTracks
 import com.alexllanas.core.util.Constants
 import com.alexllanas.core.util.Constants.Companion.BASE_URL
 import com.alexllanas.core.util.Constants.Companion.TAG
@@ -145,8 +146,13 @@ class AppModule {
 
     @Singleton
     @Provides
+    fun provideGetUserTracks(
+        userDataSource: UserDataSource,
+    ) = GetUserTracks(userDataSource)
+
+    @Singleton
+    @Provides
     fun provideSearch(
-        commonDataSource: CommonDataSource,
-        @ApplicationContext context: Context
+        commonDataSource: CommonDataSource
     ) = Search(commonDataSource)
 }

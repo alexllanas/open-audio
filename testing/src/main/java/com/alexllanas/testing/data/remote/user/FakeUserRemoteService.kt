@@ -14,7 +14,12 @@ class FakeUserRemoteService : UserRemoteServiceContract {
         TODO("Not yet implemented")
     }
 
-    override suspend fun registerWithEmail(name: String, email: String, password: String): User {
+    override suspend fun registerWithEmail(
+        name: String,
+        email: String,
+        password: String,
+        ajax: String
+    ): Any {
         TODO("Not yet implemented")
     }
 

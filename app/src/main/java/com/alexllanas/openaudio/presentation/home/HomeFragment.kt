@@ -7,11 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.actions.HomeAction
+import com.alexllanas.openaudio.presentation.actions.HomeAction.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -30,24 +29,34 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        bindActions()
+        observeActions()
         loadStream("whydSid=s%3Alcz9zAORxGMGh--F54iY6W-B-6Dh2GaX.dcbKBd8CjbvZNKiUzqrI3WaQrXW4qy3Xtm%2FQVZQWFjI")
+        getUserTracks("4d94501d1f78ac091dbc9b4d")
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     private fun render(state: HomeViewState) {
-        state.stream.forEach{
+        state.stream.forEach {
+//            Log.d(TAG, "render: $it")
+        }
+        state.userTracks.forEach {
             Log.d(TAG, "render: $it")
         }
     }
 
     private fun loadStream(sessionToken: String) {
         lifecycleScope.launch {
-            actions.send(HomeAction.LoadStream(sessionToken))
+            actions.send(LoadStream(sessionToken))
         }
     }
 
-    private fun bindActions() {
+    private fun getUserTracks(userId: String) {
+        lifecycleScope.launch {
+            actions.send(GetUserTracks(userId))
+        }
+    }
+
+    private fun observeActions() {
         viewActions()
             .onEach {
                 viewModel.dispatch(it)

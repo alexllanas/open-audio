@@ -4,7 +4,7 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import com.alexllanas.core.data.remote.common.CommonDataSource
-import com.alexllanas.core.domain.models.NetworkError
+import com.alexllanas.core.domain.models.Error
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
@@ -17,12 +17,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class CommonDataSourceImpl(
-    private val commonRemoteService: CommonApiService
+    private val commonApiService: CommonApiService
 ) : CommonDataSource {
 
-    override suspend fun search(query: String): Flow<Either<NetworkError, HashMap<String, List<*>>>> =
+    override suspend fun search(query: String): Flow<Either<Error.NetworkError, HashMap<String, List<*>>>> =
         flow {
-            val response = commonRemoteService
+            val response = commonApiService
                 .search(query)
             val resultMap = hashMapOf<String, List<*>>()
             resultMap["tracks"] =
@@ -39,5 +39,5 @@ class CommonDataSourceImpl(
                     ?: emptyList<Track>()
             emit(resultMap)
         }.map { it.right() }
-            .catch { NetworkError(it).left() }
+            .catch { Error.NetworkError(it).left() }
 }

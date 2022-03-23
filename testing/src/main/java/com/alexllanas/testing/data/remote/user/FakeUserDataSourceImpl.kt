@@ -7,7 +7,7 @@ import com.alexllanas.core.domain.models.User
 import kotlinx.coroutines.flow.Flow
 
 class FakeUserDataSourceImpl : UserDataSource {
-    override suspend fun login(email: String, password: String): User {
+    override suspend fun login(email: String, password: String): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
@@ -15,7 +15,11 @@ class FakeUserDataSourceImpl : UserDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun registerWithEmail(name: String, email: String, password: String): User {
+    override suspend fun registerWithEmail(
+        name: String,
+        email: String,
+        password: String
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
@@ -23,28 +27,39 @@ class FakeUserDataSourceImpl : UserDataSource {
         currentPassword: String,
         newPassword: String,
         sessionToken: String
-    ): User {
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserById(userId: String, sessionToken: String): User {
+    override suspend fun getUserById(
+        userId: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getSubscribers(userId: String, sessionToken: String): List<User> {
+    override suspend fun getSubscribers(
+        userId: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, List<User>>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getSubscriptions(userId: String, sessionToken: String): List<User> {
+    override suspend fun getSubscriptions(
+        userId: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, List<User>>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun uploadAvatar(file: Any, sessionToken: String) {
+    override suspend fun uploadAvatar(
+        file: Any,
+        sessionToken: String
+    ): Flow<Either<Throwable, String>> {
         TODO("Not yet implemented")
     }
 
-
-    override suspend fun getTracks(userId: String): List<Track> {
+    override suspend fun getTracks(userId: String): Flow<Either<Throwable, List<Track>>> {
         TODO("Not yet implemented")
     }
 
@@ -52,19 +67,32 @@ class FakeUserDataSourceImpl : UserDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun changeName(name: String, sessionToken: String): User {
+    override suspend fun changeName(
+        name: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun changeLocation(location: String, sessionToken: String): User {
+    override suspend fun changeLocation(
+        location: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun changeBio(bio: String, sessionToken: String): User {
+    override suspend fun changeBio(
+        bio: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun changeAvatar(filePath: String, sessionToken: String): User {
+    override suspend fun changeAvatar(
+        filePath: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
+
 }

@@ -6,5 +6,5 @@ import com.alexllanas.core.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 class GetStream(private val userDataSource: UserDataSource) {
-    suspend operator fun invoke(sessionToken: String): Flow<Either<Throwable, List<Track>>> = userDataSource.getStream(sessionToken)
+    suspend operator fun invoke(sessionToken: String) = userDataSource.getStream(sessionToken)
 }

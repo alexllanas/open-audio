@@ -1,24 +1,24 @@
 package com.alexllanas.openaudio.framework.network.user
 
 import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
 import com.alexllanas.core.data.remote.user.UserDataSource
-import com.alexllanas.core.data.remote.user.UserRemoteServiceContract
-import com.alexllanas.openaudio.framework.mappers.toDomainTrack
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
-import com.alexllanas.openaudio.framework.network.models.TrackResponse
+import com.alexllanas.core.util.getResult
+import com.alexllanas.openaudio.framework.mappers.toDomainTrack
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+
 
 /**
  * Processes network responses.
  */
+@OptIn(FlowPreview::class)
 class UserDataSourceImpl(
-    private val userRemoteService: UserApiService
+    private val userApiService: UserApiService
 ) : UserDataSource {
-    override suspend fun login(email: String, password: String): User {
+    override suspend fun login(email: String, password: String): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
@@ -26,7 +26,11 @@ class UserDataSourceImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun registerWithEmail(name: String, email: String, password: String): User {
+    override suspend fun registerWithEmail(
+        name: String,
+        email: String,
+        password: String
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
@@ -34,56 +38,83 @@ class UserDataSourceImpl(
         currentPassword: String,
         newPassword: String,
         sessionToken: String
-    ): User {
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserById(userId: String, sessionToken: String): User {
+    override suspend fun getUserById(
+        userId: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getSubscribers(userId: String, sessionToken: String): List<User> {
+    override suspend fun getSubscribers(
+        userId: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, List<User>>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getSubscriptions(userId: String, sessionToken: String): List<User> {
+    override suspend fun getSubscriptions(
+        userId: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, List<User>>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun uploadAvatar(file: Any, sessionToken: String) {
+    override suspend fun uploadAvatar(
+        file: Any,
+        sessionToken: String
+    ): Flow<Either<Throwable, String>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getTracks(userId: String): List<Track> {
-        TODO("Not yet implemented")
-    }
-
-    @OptIn(FlowPreview::class)
-    override suspend fun getStream(sessionToken: String): Flow<Either<Throwable, List<Track>>> =
+    override suspend fun getTracks(userId: String): Flow<Either<Throwable, List<Track>>> =
         suspend {
-            userRemoteService
-                .getStream(sessionToken).filterIsInstance<TrackResponse>()
+            userApiService
+                .getTracks(userId)
                 .map {
                     it.toDomainTrack()
                 }
-        }.asFlow()
-            .map { it.right() }
-            .catch { it.left() }
+        }.asFlow().getResult()
 
-    override suspend fun changeName(name: String, sessionToken: String): User {
+    override suspend fun getStream(sessionToken: String): Flow<Either<Throwable, List<Track>>> =
+        suspend {
+            userApiService
+                .getStream(sessionToken)
+                .map {
+                    it.toDomainTrack()
+                }
+        }.asFlow().getResult()
+
+    override suspend fun changeName(
+        name: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun changeLocation(location: String, sessionToken: String): User {
+    override suspend fun changeLocation(
+        location: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun changeBio(bio: String, sessionToken: String): User {
+    override suspend fun changeBio(
+        bio: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun changeAvatar(filePath: String, sessionToken: String): User {
+    override suspend fun changeAvatar(
+        filePath: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
+
 
 }
