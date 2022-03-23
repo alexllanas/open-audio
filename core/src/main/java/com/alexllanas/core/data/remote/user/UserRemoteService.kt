@@ -1,6 +1,5 @@
 package com.alexllanas.core.data.remote.user
 
-import com.alexllanas.core.domain.models.User
 
 interface UserRemoteService {
 
@@ -8,7 +7,7 @@ interface UserRemoteService {
 
     suspend fun logout(sessionToken: String)
 
-    suspend fun registerWithEmail(name: String, email: String, password: String): User
+    suspend fun registerWithEmail(name: String, email: String, password: String): Any
 
     suspend fun changePassword(
         currentPassword: String,
@@ -34,7 +33,7 @@ interface UserRemoteService {
 
     suspend fun changeAvatar(filePath: String, sessionToken: String): Any
 
-    suspend fun uploadAvatar(file: Any, sessionToken: String)
+//    suspend fun uploadAvatar(file: Any, sessionToken: String)
 
 }
 

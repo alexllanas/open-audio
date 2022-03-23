@@ -19,30 +19,27 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class CommonDataSourceImpl(
-    private val commonRemoteService: CommonRemoteService
+    private val commonRemoteService: CommonApiService
 ) : CommonDataSource {
 
     override suspend fun search(query: String): Flow<Either<NetworkError, HashMap<String, List<*>>>> =
         flow {
             val response = commonRemoteService
                 .search(query)
-            if (response is SearchResponse) {
-                val resultMap = hashMapOf<String, List<*>>()
-                resultMap["tracks"] =
-                    response.results?.tracks?.map { trackResponse -> trackResponse.toDomainTrack() }
-                        ?: emptyList<Track>()
-                resultMap["playlists"] =
-                    response.results?.playlists?.map { playlistResponse -> playlistResponse.toDomainPlaylist() }
-                        ?: emptyList<Playlist>()
-                resultMap["users"] =
-                    response.results?.users?.map { userResponse -> userResponse.toDomainUser() }
-                        ?: emptyList<User>()
-                resultMap["posts"] =
-                    response.results?.posts?.map { trackResponse -> trackResponse.toDomainTrack() }
-                        ?: emptyList<Track>()
-                emit(resultMap)
-            }
-
+            val resultMap = hashMapOf<String, List<*>>()
+            resultMap["tracks"] =
+                response.results?.tracks?.map { trackResponse -> trackResponse.toDomainTrack() }
+                    ?: emptyList<Track>()
+            resultMap["playlists"] =
+                response.results?.playlists?.map { playlistResponse -> playlistResponse.toDomainPlaylist() }
+                    ?: emptyList<Playlist>()
+            resultMap["users"] =
+                response.results?.users?.map { userResponse -> userResponse.toDomainUser() }
+                    ?: emptyList<User>()
+            resultMap["posts"] =
+                response.results?.posts?.map { trackResponse -> trackResponse.toDomainTrack() }
+                    ?: emptyList<Track>()
+            emit(resultMap)
         }.map { it.right() }
             .catch { NetworkError(it).left() }
 

@@ -6,7 +6,7 @@ import com.alexllanas.openaudio.framework.network.models.TrackResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface PlaylistApiService : PlaylistRemoteService {
+interface PlaylistApiService : PlaylistRemoteService<PlaylistResponse, TrackResponse> {
 
     @GET("/api/playlist/{id}")
     override suspend fun getPlaylistById(@Path("id") playlistId: String): PlaylistResponse

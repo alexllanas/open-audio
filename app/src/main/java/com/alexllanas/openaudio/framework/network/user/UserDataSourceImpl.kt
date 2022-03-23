@@ -9,8 +9,10 @@ import com.alexllanas.openaudio.framework.mappers.toDomainTrack
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.openaudio.framework.network.models.TrackResponse
+import com.alexllanas.openaudio.framework.network.models.UserResponse
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import okhttp3.MultipartBody
 import java.io.File
 
 /**
@@ -64,7 +66,9 @@ class UserDataSourceImpl(
         suspend {
             userRemoteService
                 .getStream(sessionToken).filterIsInstance<TrackResponse>()
-                .map { it.toDomainTrack() }
+                .map {
+                    it.toDomainTrack()
+                }
         }.asFlow()
             .map { it.right() }
             .catch { it.left() }

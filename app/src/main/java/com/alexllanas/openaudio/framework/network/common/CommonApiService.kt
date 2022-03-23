@@ -12,3 +12,4 @@ interface CommonApiService : CommonRemoteService {
         @Query("q") query: String,
     ): SearchResponse
 }
+

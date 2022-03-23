@@ -8,7 +8,9 @@ import okhttp3.MultipartBody
 import retrofit2.http.*
 import java.io.File
 
-interface UserApiService : UserRemoteService {
+
+interface UserApiService :
+    UserRemoteService {
 
     @GET("/login?action=login&ajax=true&includeUser=true")
     override suspend fun login(
@@ -24,7 +26,7 @@ interface UserApiService : UserRemoteService {
         @Query("oldPwd", encoded = true) currentPassword: String,
         @Query("pwd", encoded = true) newPassword: String,
         @Header("Cookie") sessionToken: String
-    ): Any
+    ): UserResponse
 
     @GET("?format=json")
     override suspend fun getStream(@Header("Cookie") sessionToken: String): List<TrackResponse>
@@ -80,10 +82,10 @@ interface UserApiService : UserRemoteService {
         @Header("Cookie") sessionToken: String
     ): UserResponse
 
-//    @Multipart
-//    @POST("/upload")
-//    override suspend fun uploadAvatar(
-//        @Part file: MultipartBody.Part,
-//        @Header("Cookie") sessionToken: String
-//    )
+    @Multipart
+    @POST("/upload")
+    suspend fun uploadAvatar(
+        @Part file: MultipartBody.Part,
+        @Header("Cookie") sessionToken: String
+    )
 }

@@ -2,8 +2,10 @@ package com.alexllanas.openaudio.di
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import com.alexllanas.core.data.remote.common.CommonDataSource
+import com.alexllanas.core.data.remote.common.CommonRemoteService
 import com.alexllanas.openaudio.framework.network.common.CommonDataSourceImpl
 import com.alexllanas.core.data.remote.user.UserDataSource
 import com.alexllanas.openaudio.framework.network.user.UserDataSourceImpl
@@ -11,10 +13,12 @@ import com.alexllanas.core.interactors.home.Search
 import com.alexllanas.core.interactors.home.GetStream
 import com.alexllanas.core.util.Constants
 import com.alexllanas.core.util.Constants.Companion.BASE_URL
+import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.framework.local.AppDatabase
 import com.alexllanas.openaudio.framework.local.PlaylistDao
 import com.alexllanas.openaudio.framework.local.TrackDao
 import com.alexllanas.openaudio.framework.local.UserDao
+import com.alexllanas.openaudio.framework.network.common.CommonApiService
 import com.alexllanas.openaudio.framework.network.user.UserApiService
 import com.alexllanas.openaudio.presentation.MainApplication
 import com.google.gson.GsonBuilder
@@ -76,7 +80,13 @@ class AppModule {
     fun provideOkHttpClientBuilder(
         @ApplicationContext app: Context
     ): OkHttpClient.Builder {
-        return OkHttpClient.Builder()
+        return OkHttpClient.Builder().addInterceptor {
+            val req = it.request()
+            val res = it.proceed(req)
+            Log.d(TAG, "provideOkHttpClientBuilder: ")
+            res.peekBody(Long.MAX_VALUE).string()
+            res
+        }
     }
 
     @Singleton
@@ -102,8 +112,14 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideCommonDataSource(retrofit: Retrofit.Builder): CommonDataSource {
-        return retrofit.build().create(CommonDataSourceImpl::class.java)
+    fun provideCommonApiService(retrofit: Retrofit.Builder): CommonApiService {
+        return retrofit.build().create(CommonApiService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCommonDataSource(commonApiService: CommonApiService): CommonDataSource {
+        return CommonDataSourceImpl(commonApiService)
     }
 
     @Singleton

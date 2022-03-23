@@ -5,9 +5,11 @@ import com.alexllanas.core.data.remote.playlist.PlaylistRemoteService
 import com.alexllanas.core.data.remote.user.UserRemoteService
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
+import com.alexllanas.openaudio.framework.network.models.PlaylistResponse
+import com.alexllanas.openaudio.framework.network.models.TrackResponse
 
 class PlaylistDataSourceImpl(
-    private val playlistRemoteService: PlaylistRemoteService
+    private val playlistRemoteService: PlaylistRemoteService<PlaylistResponse, TrackResponse>
 ) : PlaylistDataSource {
     override suspend fun getPlaylistById(playlistId: String): Playlist {
         TODO("Not yet implemented")

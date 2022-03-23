@@ -24,10 +24,6 @@ class HomeFragment : Fragment() {
     private val actions = Channel<HomeAction>()
     private fun viewActions(): Flow<HomeAction> = actions.consumeAsFlow()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +31,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         bindActions()
-        loadStream("whydSid=s%3AC05hk5_esLk9IkRq8x7ugyZopizvrtwp.Ld3rygEAWQEpWYI08b9eZbwe0t8bsYO44TNvAEsj9DU")
+        loadStream("whydSid=s%3Alcz9zAORxGMGh--F54iY6W-B-6Dh2GaX.dcbKBd8CjbvZNKiUzqrI3WaQrXW4qy3Xtm%2FQVZQWFjI")
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 

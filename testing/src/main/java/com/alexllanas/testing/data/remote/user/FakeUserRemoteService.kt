@@ -1,10 +1,12 @@
 package com.alexllanas.testing.data.remote.user
 
 import com.alexllanas.core.data.remote.user.UserRemoteService
+import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
+import java.io.File
 
 class FakeUserRemoteService : UserRemoteService {
-    override suspend fun login(email: String, password: String): Any {
+    override suspend fun login(email: String, password: String): User {
         TODO("Not yet implemented")
     }
 
@@ -20,47 +22,47 @@ class FakeUserRemoteService : UserRemoteService {
         currentPassword: String,
         newPassword: String,
         sessionToken: String
-    ): Any {
+    ): User {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getStream(sessionToken: String): List<Any> {
+    override suspend fun getStream(sessionToken: String): List<Track> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserById(userId: String, sessionToken: String): Any {
+    override suspend fun getUserById(userId: String, sessionToken: String): User {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getTracks(userId: String): List<Any> {
+    override suspend fun getTracks(userId: String): List<Track> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getSubscribers(userId: String, sessionToken: String): List<Any> {
+    override suspend fun getSubscribers(userId: String, sessionToken: String): List<User> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getSubscriptions(userId: String, sessionToken: String): List<Any> {
+    override suspend fun getSubscriptions(userId: String, sessionToken: String): List<User> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun changeName(name: String, sessionToken: String): Any {
+    override suspend fun changeName(name: String, sessionToken: String): User {
         TODO("Not yet implemented")
     }
 
-    override suspend fun changeLocation(location: String, sessionToken: String): Any {
+    override suspend fun changeLocation(location: String, sessionToken: String): User {
         TODO("Not yet implemented")
     }
 
-    override suspend fun changeBio(bio: String, sessionToken: String): Any {
+    override suspend fun changeBio(bio: String, sessionToken: String): User {
         TODO("Not yet implemented")
     }
 
-    override suspend fun changeAvatar(filePath: String, sessionToken: String): Any {
+    override suspend fun changeAvatar(filePath: String, sessionToken: String): User {
         TODO("Not yet implemented")
     }
 
-    override suspend fun uploadAvatar(file: Any, sessionToken: String) {
+    suspend fun uploadAvatar(file: File, sessionToken: String) {
         TODO("Not yet implemented")
     }
 }
