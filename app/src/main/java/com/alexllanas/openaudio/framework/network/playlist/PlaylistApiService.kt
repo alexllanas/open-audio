@@ -17,7 +17,7 @@ interface PlaylistApiService : PlaylistRemoteServiceContract {
     ): List<TrackResponse>
 
     @FormUrlEncoded
-    @GET("/api/playlist")
+    @POST("/api/playlist")
     override suspend fun createPlaylist(
         @Field("name") playlistName: String,
         @Field("action") action: String,
@@ -25,7 +25,7 @@ interface PlaylistApiService : PlaylistRemoteServiceContract {
     ): PlaylistResponse
 
     @FormUrlEncoded
-    @GET("/api/playlist")
+    @POST("/api/playlist")
     override suspend fun deletePlaylist(
         @Field("id") id: String,
         @Field("action") action: String,

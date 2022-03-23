@@ -3,6 +3,7 @@ package com.alexllanas.openaudio.framework.network.user
 import com.alexllanas.core.data.remote.user.UserRemoteServiceContract
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.openaudio.framework.network.models.TrackResponse
+import com.alexllanas.openaudio.framework.network.models.UploadResponse
 import com.alexllanas.openaudio.framework.network.models.UserResponse
 import okhttp3.MultipartBody
 import retrofit2.http.*
@@ -20,6 +21,18 @@ interface UserApiService :
 
     @GET("/login?action=logout&ajax=true")
     override suspend fun logout(@Header("Cookie") sessionToken: String)
+
+    /**
+     * TODO: Get this working via postman first
+     */
+    @FormUrlEncoded
+    @GET("/register")
+    override suspend fun registerWithEmail(
+        @Field("name") name: String,
+        @Field("name", encoded = true) email: String,
+        @Field("name", encoded = true) password: String,
+        @Field("ajax") ajax: String
+    ): UserResponse
 
     @GET("/api/user")
     override suspend fun changePassword(
@@ -87,5 +100,5 @@ interface UserApiService :
     suspend fun uploadAvatar(
         @Part file: MultipartBody.Part,
         @Header("Cookie") sessionToken: String
-    )
+    ): UploadResponse
 }

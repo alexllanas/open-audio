@@ -8,15 +8,16 @@ data class SearchResponse(
 
     @SerializedName("results")
     val results: SearchResponseBody? = null
-)
+) {
+    data class SearchResponseBody(
+        @SerializedName("playlist")
+        val playlists: List<PlaylistResponse> = emptyList(),
+        @SerializedName("user")
+        val users: List<UserResponse> = emptyList(),
+        @SerializedName("track")
+        val tracks: List<TrackResponse> = emptyList(),
+        @SerializedName("post")
+        val posts: List<TrackResponse> = emptyList(),
+    )
+}
 
-data class SearchResponseBody(
-    @SerializedName("playlist")
-    val playlists: List<PlaylistResponse> = emptyList(),
-    @SerializedName("user")
-    val users: List<UserResponse> = emptyList(),
-    @SerializedName("track")
-    val tracks: List<TrackResponse> = emptyList(),
-    @SerializedName("post")
-    val posts: List<TrackResponse> = emptyList(),
-)
