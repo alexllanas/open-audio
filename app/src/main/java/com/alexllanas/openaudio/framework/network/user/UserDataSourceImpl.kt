@@ -4,22 +4,19 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import com.alexllanas.core.data.remote.user.UserDataSource
-import com.alexllanas.core.data.remote.user.UserRemoteService
+import com.alexllanas.core.data.remote.user.UserRemoteServiceContract
 import com.alexllanas.openaudio.framework.mappers.toDomainTrack
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.openaudio.framework.network.models.TrackResponse
-import com.alexllanas.openaudio.framework.network.models.UserResponse
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
-import okhttp3.MultipartBody
-import java.io.File
 
 /**
  * Processes network responses.
  */
 class UserDataSourceImpl(
-    private val userRemoteService: UserRemoteService
+    private val userRemoteService: UserApiService
 ) : UserDataSource {
     override suspend fun login(email: String, password: String): User {
         TODO("Not yet implemented")

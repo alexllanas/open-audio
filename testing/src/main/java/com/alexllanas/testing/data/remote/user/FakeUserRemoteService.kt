@@ -1,11 +1,11 @@
 package com.alexllanas.testing.data.remote.user
 
-import com.alexllanas.core.data.remote.user.UserRemoteService
+import com.alexllanas.core.data.remote.user.UserRemoteServiceContract
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import java.io.File
 
-class FakeUserRemoteService : UserRemoteService {
+class FakeUserRemoteService : UserRemoteServiceContract {
     override suspend fun login(email: String, password: String): User {
         TODO("Not yet implemented")
     }

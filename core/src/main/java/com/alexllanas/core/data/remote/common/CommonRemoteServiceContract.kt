@@ -1,6 +1,6 @@
 package com.alexllanas.core.data.remote.common
 
-interface CommonRemoteService {
+interface CommonRemoteServiceContract {
 
     suspend fun search(query: String): Any
 

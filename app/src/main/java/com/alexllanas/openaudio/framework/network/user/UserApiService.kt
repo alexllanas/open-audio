@@ -1,6 +1,6 @@
 package com.alexllanas.openaudio.framework.network.user
 
-import com.alexllanas.core.data.remote.user.UserRemoteService
+import com.alexllanas.core.data.remote.user.UserRemoteServiceContract
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.openaudio.framework.network.models.TrackResponse
 import com.alexllanas.openaudio.framework.network.models.UserResponse
@@ -10,7 +10,7 @@ import java.io.File
 
 
 interface UserApiService :
-    UserRemoteService {
+    UserRemoteServiceContract {
 
     @GET("/login?action=login&ajax=true&includeUser=true")
     override suspend fun login(

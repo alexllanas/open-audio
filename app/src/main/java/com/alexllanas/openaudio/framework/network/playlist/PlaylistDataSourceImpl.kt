@@ -1,15 +1,12 @@
 package com.alexllanas.openaudio.framework.network.playlist
 
 import com.alexllanas.core.data.remote.playlist.PlaylistDataSource
-import com.alexllanas.core.data.remote.playlist.PlaylistRemoteService
-import com.alexllanas.core.data.remote.user.UserRemoteService
+import com.alexllanas.core.data.remote.playlist.PlaylistRemoteServiceContract
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
-import com.alexllanas.openaudio.framework.network.models.PlaylistResponse
-import com.alexllanas.openaudio.framework.network.models.TrackResponse
 
 class PlaylistDataSourceImpl(
-    private val playlistRemoteService: PlaylistRemoteService<PlaylistResponse, TrackResponse>
+    private val playlistRemoteService: PlaylistApiService
 ) : PlaylistDataSource {
     override suspend fun getPlaylistById(playlistId: String): Playlist {
         TODO("Not yet implemented")

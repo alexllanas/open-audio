@@ -1,7 +1,7 @@
 package com.alexllanas.core.data.remote.user
 
 
-interface UserRemoteService {
+interface UserRemoteServiceContract {
 
     suspend fun login(email: String, password: String): Any
 

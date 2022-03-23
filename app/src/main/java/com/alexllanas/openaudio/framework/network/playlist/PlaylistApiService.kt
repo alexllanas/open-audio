@@ -1,16 +1,14 @@
 package com.alexllanas.openaudio.framework.network.playlist
 
-import com.alexllanas.core.data.remote.playlist.PlaylistRemoteService
+import com.alexllanas.core.data.remote.playlist.PlaylistRemoteServiceContract
 import com.alexllanas.openaudio.framework.network.models.PlaylistResponse
 import com.alexllanas.openaudio.framework.network.models.TrackResponse
-import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.*
 
-interface PlaylistApiService : PlaylistRemoteService<PlaylistResponse, TrackResponse> {
+interface PlaylistApiService : PlaylistRemoteServiceContract {
 
     @GET("/api/playlist/{id}")
     override suspend fun getPlaylistById(@Path("id") playlistId: String): PlaylistResponse
-
 
     @GET("/u/{uId}/playlist/{pId}?format=json")
     override suspend fun getPlaylistTracks(
@@ -18,10 +16,19 @@ interface PlaylistApiService : PlaylistRemoteService<PlaylistResponse, TrackResp
         @Path("pId") playlistNumber: String
     ): List<TrackResponse>
 
+    @FormUrlEncoded
+    @GET("/api/playlist")
     override suspend fun createPlaylist(
-        playlistName: String,
-        sessionToken: String
+        @Field("name") playlistName: String,
+        @Field("action") action: String,
+        @Header("Cookie") sessionToken: String
     ): PlaylistResponse
 
-    override suspend fun deletePlaylist(playlistId: String, sessionToken: String): Int
+    @FormUrlEncoded
+    @GET("/api/playlist")
+    override suspend fun deletePlaylist(
+        @Field("id") id: String,
+        @Field("action") action: String,
+        @Header("Cookie") sessionToken: String
+    ): Int
 }
