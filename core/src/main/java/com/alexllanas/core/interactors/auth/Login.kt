@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 class Login(private val userDataSource: UserDataSource) {
 
-    suspend operator fun invoke(email: String, password: String): Flow<Either<Throwable, User>> =
+    suspend operator fun invoke(email: String, password: String) =
         userDataSource.login(email, password)
-
 }

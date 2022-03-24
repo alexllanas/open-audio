@@ -26,18 +26,20 @@ class CommonDataSourceImpl(
                 .search(query)
             val resultMap = hashMapOf<String, List<*>>()
             resultMap["tracks"] =
-                response.results?.tracks?.map { trackResponse -> trackResponse.toDomainTrack() }
+                response.results?.tracks?.map { trackResponse -> trackResponse?.toDomainTrack() }
                     ?: emptyList<Track>()
             resultMap["playlists"] =
-                response.results?.playlists?.map { playlistResponse -> playlistResponse.toDomainPlaylist() }
+                response.results?.playlists?.map { playlistResponse -> playlistResponse?.toDomainPlaylist() }
                     ?: emptyList<Playlist>()
             resultMap["users"] =
-                response.results?.users?.map { userResponse -> userResponse.toDomainUser() }
+                response.results?.users?.map { userResponse -> userResponse?.toDomainUser() }
                     ?: emptyList<User>()
             resultMap["posts"] =
-                response.results?.posts?.map { trackResponse -> trackResponse.toDomainTrack() }
+                response.results?.posts?.map { trackResponse -> trackResponse?.toDomainTrack() }
                     ?: emptyList<Track>()
             emit(resultMap)
         }.map { it.right() }
-            .catch { Error.NetworkError(it).left() }
+            .catch {
+                Error.NetworkError(it).left()
+            }
 }

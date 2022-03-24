@@ -6,6 +6,7 @@ import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.getResult
 import com.alexllanas.openaudio.framework.mappers.toDomainTrack
+import com.alexllanas.openaudio.framework.mappers.toDomainUser
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -18,9 +19,12 @@ import kotlinx.coroutines.flow.asFlow
 class UserDataSourceImpl(
     private val userApiService: UserApiService
 ) : UserDataSource {
-    override suspend fun login(email: String, password: String): Flow<Either<Throwable, User>> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun login(email: String, password: String): Flow<Either<Throwable, User>> =
+        suspend {
+            userApiService
+                .login(email, password)
+                .user!!.toDomainUser()
+        }.asFlow().getResult()
 
     override suspend fun logout(sessionToken: String) {
         TODO("Not yet implemented")

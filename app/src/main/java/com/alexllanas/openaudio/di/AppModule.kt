@@ -7,6 +7,7 @@ import androidx.room.Room
 import com.alexllanas.core.data.remote.common.CommonDataSource
 import com.alexllanas.openaudio.framework.network.common.CommonDataSourceImpl
 import com.alexllanas.core.data.remote.user.UserDataSource
+import com.alexllanas.core.interactors.auth.Login
 import com.alexllanas.openaudio.framework.network.user.UserDataSourceImpl
 import com.alexllanas.core.interactors.home.Search
 import com.alexllanas.core.interactors.home.GetStream
@@ -18,6 +19,7 @@ import com.alexllanas.openaudio.framework.local.AppDatabase
 import com.alexllanas.openaudio.framework.local.PlaylistDao
 import com.alexllanas.openaudio.framework.local.TrackDao
 import com.alexllanas.openaudio.framework.local.UserDao
+import com.alexllanas.openaudio.framework.network.ResponseInterceptor
 import com.alexllanas.openaudio.framework.network.common.CommonApiService
 import com.alexllanas.openaudio.framework.network.user.UserApiService
 import com.alexllanas.openaudio.presentation.MainApplication
@@ -80,13 +82,7 @@ class AppModule {
     fun provideOkHttpClientBuilder(
         @ApplicationContext app: Context
     ): OkHttpClient.Builder {
-        return OkHttpClient.Builder().addInterceptor {
-            val req = it.request()
-            val res = it.proceed(req)
-            Log.d(TAG, "provideOkHttpClientBuilder: ")
-            res.peekBody(Long.MAX_VALUE).string()
-            res
-        }
+        return OkHttpClient.Builder().addInterceptor(ResponseInterceptor())
     }
 
     @Singleton
@@ -138,6 +134,12 @@ class AppModule {
     /**
      * Use Cases
      */
+    @Singleton
+    @Provides
+    fun provideLogin(
+        userDataSource: UserDataSource,
+    ) = Login(userDataSource)
+
     @Singleton
     @Provides
     fun provideGetStream(

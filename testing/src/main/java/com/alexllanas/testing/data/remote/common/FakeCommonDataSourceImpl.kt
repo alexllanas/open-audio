@@ -6,7 +6,6 @@ import arrow.core.leftWiden
 import arrow.core.right
 import com.alexllanas.core.data.remote.common.CommonDataSource
 import com.alexllanas.core.domain.models.Error
-import com.alexllanas.core.domain.models.NetworkError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow

@@ -2,6 +2,7 @@ package com.alexllanas.openaudio.framework.network.user
 
 import com.alexllanas.core.data.remote.user.UserRemoteServiceContract
 import com.alexllanas.core.domain.models.User
+import com.alexllanas.openaudio.framework.network.models.LoginResponse
 import com.alexllanas.openaudio.framework.network.models.TrackResponse
 import com.alexllanas.openaudio.framework.network.models.UploadResponse
 import com.alexllanas.openaudio.framework.network.models.UserResponse
@@ -13,11 +14,11 @@ import java.io.File
 interface UserApiService :
     UserRemoteServiceContract {
 
-    @GET("/login?action=login&ajax=true&includeUser=true")
+    @GET("login?action=login&ajax=true&includeUser=true")
     override suspend fun login(
         @Query("email", encoded = true) email: String,
         @Query("password", encoded = true) password: String
-    ): UserResponse
+    ): LoginResponse
 
     @GET("/login?action=logout&ajax=true")
     override suspend fun logout(@Header("Cookie") sessionToken: String)
