@@ -4,7 +4,7 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import com.alexllanas.core.data.remote.common.CommonDataSource
-import com.alexllanas.core.domain.models.Error
+import com.alexllanas.core.domain.models.GeneralError
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
@@ -20,7 +20,7 @@ class CommonDataSourceImpl(
     private val commonApiService: CommonApiService
 ) : CommonDataSource {
 
-    override suspend fun search(query: String): Flow<Either<Error.NetworkError, HashMap<String, List<*>>>> =
+    override suspend fun search(query: String): Flow<Either<GeneralError.NetworkError, HashMap<String, List<*>>>> =
         flow {
             val response = commonApiService
                 .search(query)
@@ -40,6 +40,6 @@ class CommonDataSourceImpl(
             emit(resultMap)
         }.map { it.right() }
             .catch {
-                Error.NetworkError(it).left()
+                GeneralError.NetworkError.left()
             }
 }

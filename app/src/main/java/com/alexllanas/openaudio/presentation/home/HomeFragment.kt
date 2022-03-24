@@ -15,10 +15,9 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.alexllanas.core.util.Constants.Companion.TAG
-import com.alexllanas.openaudio.presentation.actions.HomeAction
-import com.alexllanas.openaudio.presentation.actions.HomeAction.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -28,11 +27,11 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by activityViewModels()
     private val actions = Channel<HomeAction>()
     private fun viewActions(): Flow<HomeAction> = actions.consumeAsFlow()
-    private val actionFlow = merge(
-        flowOf(login("testOpenAudio@gmail.com", "ducksquad1!")),
+    private fun actionFlow(): Flow<HomeAction> = merge(
+//        flowOf(login("testOpenAudio@gmail.com", "ducksquad1!")),
         flowOf(loadStream("whydSid=s%3Alcz9zAORxGMGh--F54iY6W-B-6Dh2GaX.dcbKBd8CjbvZNKiUzqrI3WaQrXW4qy3Xtm%2FQVZQWFjI")),
-        flowOf(getUserTracks("4d94501d1f78ac091dbc9b4d")),
-        flowOf(search("bowie")),
+//        flowOf(getUserTracks("4d94501d1f78ac091dbc9b4d")),
+//        flowOf(search("bowie")),
     )
 
 
@@ -41,14 +40,20 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         observeActions()
 
         // Just testing
-        login("testOpenAudio@gmail.com", "ducksquad1!")
-        loadStream("whydSid=s%3Alcz9zAORxGMGh--F54iY6W-B-6Dh2GaX.dcbKBd8CjbvZNKiUzqrI3WaQrXW4qy3Xtm%2FQVZQWFjI")
-        getUserTracks("4d94501d1f78ac091dbc9b4d")
-        search("bowie")
+//        login("testOpenAudio@gmail.com", "ducksquad1!")
+//        loadStream("whydSid=s%3Alcz9zAORxGMGh--F54iY6W-B-6Dh2GaX.dcbKBd8CjbvZNKiUzqrI3WaQrXW4qy3Xtm%2FQVZQWFjI")
+//        getUserTracks("4d94501d1f78ac091dbc9b4d")
+//        search("bowie")
+
+
+//        lifecycleScope.launch {
+//            actions.send(HomeAction.GetUserTracksAction("4d94501d1f78ac091dbc9b4d"))
+//        }
+        viewModel.dispatch(HomeAction.GetUserTracksAction("4d94501d1f78ac091dbc9b4d"))
+        viewModel.dispatch(HomeAction.LoadStreamAction("whydSid=s%3Alcz9zAORxGMGh--F54iY6W-B-6Dh2GaX.dcbKBd8CjbvZNKiUzqrI3WaQrXW4qy3Xtm%2FQVZQWFjI"))
 
         return ComposeView(requireContext()).apply {
             setContent {
@@ -73,41 +78,40 @@ class HomeFragment : Fragment() {
         state.stream.forEach {
             Log.d(TAG, "render: $it")
         }
-//        state.userTracks.forEach {
-//            Log.d(TAG, "render: $it")
-//        }
+        state.userTracks.forEach {
+            Log.d(TAG, "render: $it")
+        }
 //        state.searchTrackResults.forEach {
 //            Log.d(TAG, "render: $it")
 //        }
     }
 
-    private fun login(email: String, password: String): LoginAction {
-        return LoginAction(email, password)
+    private fun login(email: String, password: String): HomeAction.LoginAction {
+        return HomeAction.LoginAction(email, password)
     }
 
-    private fun loadStream(sessionToken: String): LoadStreamAction {
-        return LoadStreamAction(sessionToken)
+    private fun loadStream(sessionToken: String): HomeAction.LoadStreamAction {
+        return HomeAction.LoadStreamAction(sessionToken)
     }
 
-    private fun getUserTracks(userId: String): GetUserTracksAction {
-        return GetUserTracksAction(userId)
+    private fun getUserTracks(userId: String): HomeAction.GetUserTracksAction {
+        return HomeAction.GetUserTracksAction(userId)
     }
 
-    private fun search(query: String): SearchAction {
-        return SearchAction(query)
+    private fun search(query: String): HomeAction.SearchAction {
+        return HomeAction.SearchAction(query)
     }
 
     private fun observeActions() {
-        actionFlow.onEach {
-            viewModel.dispatch(it)
-        }
-            .launchIn(lifecycleScope)
+//        actionFlow()
 //        viewActions()
 //            .onEach {
 //                viewModel.dispatch(it)
 //            }
+//            .launchIn(lifecycleScope)
+
         lifecycleScope.launchWhenStarted {
-            viewModel.viewState.collect { state ->
+            viewModel.state.collect { state ->
                 render(state)
             }
         }
