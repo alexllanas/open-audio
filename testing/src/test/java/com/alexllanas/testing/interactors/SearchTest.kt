@@ -3,8 +3,8 @@ package com.alexllanas.testing.interactors
 import com.alexllanas.core.interactors.home.Search
 import com.alexllanas.testing.NETWORK_ERROR_MESSAGE
 import com.alexllanas.testing.SEARCH_MAP_RESULTS
-import com.alexllanas.testing.data.remote.common.FakeCommonDataSourceImpl
-import com.alexllanas.testing.data.remote.common.FakeCommonRemoteServiceImpl
+import com.alexllanas.testing.data.remote.home.FakeHomeDataSourceImpl
+import com.alexllanas.testing.data.remote.home.FakeHomeRemoteServiceImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -12,8 +12,8 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchTest {
 
-    private val remoteService = FakeCommonRemoteServiceImpl()
-    private val dataSource = FakeCommonDataSourceImpl(remoteService)
+    private val remoteService = FakeHomeRemoteServiceImpl()
+    private val dataSource = FakeHomeDataSourceImpl(remoteService)
 
     // system under test
     val search = Search(commonDataSource = dataSource)

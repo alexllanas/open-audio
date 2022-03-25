@@ -46,28 +46,34 @@ interface UserApiService :
     override suspend fun getStream(@Header("Cookie") sessionToken: String): List<TrackResponse>
 
     @GET("/api/user?isSubscr=true&includeSubscr=true")
-    override suspend fun getUserById(
+    override suspend fun getUser(
         @Query("id") userId: String,
+        @Header("Cookie") sessionToken: String
+    ): UserResponse
+
+    @GET("/api/follow?action=insert")
+    override suspend fun followUser(
+        @Query("tId") userId: String,
+        @Header("Cookie") sessionToken: String
+    ): UserResponse
+
+    @GET("/api/follow?action=delete")
+    override suspend fun unfollowUser(
+        @Query("tId") userId: String,
         @Header("Cookie") sessionToken: String
     ): UserResponse
 
     @GET("/u/{id}?format=json")
     override suspend fun getTracks(@Path("id", encoded = true) userId: String): List<TrackResponse>
 
-    /**
-     * Users that follow me.
-     */
     @GET("/api/follow/fetchFollowers?isSubscr=true")
-    override suspend fun getSubscribers(
+    override suspend fun getFollowers(
         @Query("id") userId: String,
         @Header("Cookie") sessionToken: String
     ): List<UserResponse>
 
-    /**
-     * Users I'm following.
-     */
     @GET("/api/follow/fetchFollowing?isSubscr=true")
-    override suspend fun getSubscriptions(
+    override suspend fun getFollowing(
         @Query("id") userId: String,
         @Header("Cookie") sessionToken: String
     ): List<UserResponse>

@@ -31,33 +31,48 @@ class FakeUserDataSourceImpl : UserDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserById(
+    override suspend fun getUser(
         userId: String,
         sessionToken: String
     ): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getSubscribers(
+    override suspend fun getFollowers(
         userId: String,
         sessionToken: String
     ): Flow<Either<Throwable, List<User>>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getSubscriptions(
+    override suspend fun getFollowing(
         userId: String,
         sessionToken: String
     ): Flow<Either<Throwable, List<User>>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun followUser(
+        userId: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, Boolean>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun unfollowUser(
+        userId: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, Boolean>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun uploadAvatar(
-        file: Any,
+        filePath: String,
         sessionToken: String
     ): Flow<Either<Throwable, String>> {
         TODO("Not yet implemented")
     }
+
 
     override suspend fun getTracks(userId: String): Flow<Either<Throwable, List<Track>>> {
         TODO("Not yet implemented")

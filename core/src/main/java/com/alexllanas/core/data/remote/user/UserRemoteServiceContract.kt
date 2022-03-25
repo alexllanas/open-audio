@@ -1,5 +1,9 @@
 package com.alexllanas.core.data.remote.user
 
+import arrow.core.Either
+import com.alexllanas.core.domain.models.User
+import kotlinx.coroutines.flow.Flow
+
 
 interface UserRemoteServiceContract {
 
@@ -22,13 +26,24 @@ interface UserRemoteServiceContract {
 
     suspend fun getStream(sessionToken: String): List<Any>
 
-    suspend fun getUserById(userId: String, sessionToken: String): Any
+    suspend fun getUser(userId: String, sessionToken: String): Any
 
     suspend fun getTracks(userId: String): List<Any>
 
-    suspend fun getSubscribers(userId: String, sessionToken: String): List<Any>
+    suspend fun getFollowers(userId: String, sessionToken: String): List<Any>
 
-    suspend fun getSubscriptions(userId: String, sessionToken: String): List<Any>
+    suspend fun getFollowing(userId: String, sessionToken: String): List<Any>
+
+
+    suspend fun followUser(
+        userId: String,
+        sessionToken: String
+    ): Any
+
+    suspend fun unfollowUser(
+        userId: String,
+        sessionToken: String
+    ): Any
 
     suspend fun changeName(name: String, sessionToken: String): Any
 

@@ -11,13 +11,13 @@ data class SearchResponse(
 ) {
     data class SearchResponseBody(
         @SerializedName("playlists")
-        val playlists: List<PlaylistResponse> = emptyList(),
+        val playlists: List<PlaylistResponse?> = emptyList(),
         @SerializedName("users")
-        val users: List<UserResponse> = emptyList(),
+        val users: List<UserResponse?> = emptyList(),
         @SerializedName("tracks")
-        val tracks: List<TrackResponse> = emptyList(),
+        val tracks: List<TrackResponse?> = emptyList(),
         @SerializedName("posts")
-        val posts: List<TrackResponse> = emptyList(),
+        val posts: List<TrackResponse?> = emptyList(),
     )
 }
 

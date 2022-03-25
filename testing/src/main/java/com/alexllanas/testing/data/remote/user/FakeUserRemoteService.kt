@@ -35,7 +35,7 @@ class FakeUserRemoteService : UserRemoteServiceContract {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserById(userId: String, sessionToken: String): User {
+    override suspend fun getUser(userId: String, sessionToken: String): User {
         TODO("Not yet implemented")
     }
 
@@ -43,11 +43,19 @@ class FakeUserRemoteService : UserRemoteServiceContract {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getSubscribers(userId: String, sessionToken: String): List<User> {
+    override suspend fun getFollowers(userId: String, sessionToken: String): List<User> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getSubscriptions(userId: String, sessionToken: String): List<User> {
+    override suspend fun getFollowing(userId: String, sessionToken: String): List<User> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun followUser(userId: String, sessionToken: String): Any {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun unfollowUser(userId: String, sessionToken: String): Any {
         TODO("Not yet implemented")
     }
 

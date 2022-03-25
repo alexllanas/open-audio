@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
-fun <R> Flow<R>.getResult(): Flow<Either<GeneralError.NetworkError, R>> =
+fun <R> Flow<R>.getResult(): Flow<Either<Throwable, R>> =
     map {
-        it.right().leftWiden<GeneralError.NetworkError, Nothing, R>()
+        it.right().leftWiden<Throwable, Nothing, R>()
     }.catch {
-        emit(GeneralError.NetworkError.left())
+        emit(it.left())
     }

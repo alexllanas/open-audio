@@ -1,9 +1,11 @@
 package com.alexllanas.core.data.remote.playlist
 
 interface PlaylistRemoteServiceContract {
-    suspend fun getPlaylistById(playlistId: String): Any
+    suspend fun getPlaylist(playlistId: String): Any
 
-    suspend fun getPlaylistTracks(userId: String, playlistNumber: String): List<Any>
+    suspend fun getPlaylistTracks(
+        playlistUrl: String
+    ): List<Any>
 
     suspend fun createPlaylist(
         playlistName: String,

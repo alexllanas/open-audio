@@ -8,6 +8,6 @@ class Playlist(
     val coverImage: String?
         get() = id?.let { id -> "/img/playlist/$id" }
     val url: String
-        get() = "/u/" + id?.replace("_", "/playlist/")
+        get() = "u/" + id?.replace("_", "/playlist")
     var author: User? = null
 }

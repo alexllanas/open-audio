@@ -28,5 +28,5 @@ interface TrackApiService : TrackRemoteServiceContract {
     override suspend fun deleteTrack(
         @Query("_id") trackId: String,
         @Header("Cookie") sessionToken: String
-    )
+    ): TrackResponse
 }

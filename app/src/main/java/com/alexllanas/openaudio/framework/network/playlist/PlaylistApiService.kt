@@ -8,12 +8,11 @@ import retrofit2.http.*
 interface PlaylistApiService : PlaylistRemoteServiceContract {
 
     @GET("/api/playlist/{id}")
-    override suspend fun getPlaylistById(@Path("id") playlistId: String): PlaylistResponse
+    override suspend fun getPlaylist(@Path("id") playlistId: String): PlaylistResponse
 
-    @GET("/u/{uId}/playlist/{pId}?format=json")
+    @GET("/{playlistUrl}?format=json")
     override suspend fun getPlaylistTracks(
-        @Path("uId") userId: String,
-        @Path("pId") playlistNumber: String
+        @Path("playlistUrl") playlistUrl: String
     ): List<TrackResponse>
 
     @FormUrlEncoded

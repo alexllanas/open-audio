@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlaylistDataSource {
 
-    suspend fun getPlaylistById(playlistId: String): Flow<Either<Throwable, Playlist>>
+    suspend fun getPlaylist(playlistId: String): Flow<Either<Throwable, Playlist>>
 
     suspend fun getPlaylistTracks(playlistUrl: String): Flow<Either<Throwable, List<Track>>>
 
@@ -19,6 +19,6 @@ interface PlaylistDataSource {
     suspend fun deletePlaylist(
         playlistId: String,
         sessionToken: String
-    ): Flow<Either<Throwable, Int>>
+    ): Flow<Either<Throwable, Boolean>>
 
 }

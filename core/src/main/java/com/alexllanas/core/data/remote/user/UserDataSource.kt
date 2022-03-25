@@ -4,7 +4,6 @@ import arrow.core.Either
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import kotlinx.coroutines.flow.Flow
-import java.io.File
 
 interface UserDataSource {
 
@@ -24,19 +23,32 @@ interface UserDataSource {
         sessionToken: String
     ): Flow<Either<Throwable, User>>
 
-    suspend fun getUserById(userId: String, sessionToken: String): Flow<Either<Throwable, User>>
+    suspend fun getUser(userId: String, sessionToken: String): Flow<Either<Throwable, User>>
 
-    suspend fun getSubscribers(
+    suspend fun getFollowers(
         userId: String,
         sessionToken: String
     ): Flow<Either<Throwable, List<User>>>
 
-    suspend fun getSubscriptions(
+    suspend fun getFollowing(
         userId: String,
         sessionToken: String
     ): Flow<Either<Throwable, List<User>>>
 
-    suspend fun uploadAvatar(file: Any, sessionToken: String): Flow<Either<Throwable, String>>
+    suspend fun followUser(
+        userId: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, Boolean>>
+
+    suspend fun unfollowUser(
+        userId: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, Boolean>>
+
+    suspend fun uploadAvatar(
+        filePath: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, String>>
 
     suspend fun getTracks(userId: String): Flow<Either<Throwable, List<Track>>>
 

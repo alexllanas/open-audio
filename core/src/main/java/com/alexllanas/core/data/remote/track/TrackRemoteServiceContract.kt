@@ -1,5 +1,7 @@
 package com.alexllanas.core.data.remote.track
 
+import javax.sound.midi.Track
+
 interface TrackRemoteServiceContract {
 
 
@@ -22,6 +24,6 @@ interface TrackRemoteServiceContract {
     suspend fun deleteTrack(
         trackId: String,
         sessionToken: String
-    )
+    ) : Any
 
 }
