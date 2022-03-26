@@ -1,6 +1,5 @@
 package com.alexllanas.openaudio.presentation.home.state
 
-import com.alexllanas.core.domain.models.GeneralError
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User

@@ -4,7 +4,6 @@ import arrow.core.Either
 import arrow.core.leftWiden
 import arrow.core.right
 import com.alexllanas.core.data.remote.home.HomeDataSource
-import com.alexllanas.core.domain.models.GeneralError
 import com.alexllanas.core.util.getResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

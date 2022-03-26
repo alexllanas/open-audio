@@ -109,7 +109,7 @@ class UserDataSourceImpl(
     override suspend fun uploadAvatar(
         filePath: String,
         sessionToken: String
-    ): Flow<Either<Throwable, String>> =
+    ): Flow<String> =
         suspend {
             val file = File(filePath)
             val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
@@ -117,7 +117,7 @@ class UserDataSourceImpl(
             userApiService
                 .uploadAvatar(body, sessionToken)
                 .file.path ?: throw Error("Something went wrong while uploading image.")
-        }.asFlow().getResult()
+        }.asFlow()
 
     override suspend fun getTracks(userId: String): Flow<Either<Throwable, List<Track>>> =
         suspend {

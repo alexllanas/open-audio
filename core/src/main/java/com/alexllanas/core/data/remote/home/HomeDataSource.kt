@@ -1,7 +1,6 @@
 package com.alexllanas.core.data.remote.home
 
 import arrow.core.Either
-import com.alexllanas.core.domain.models.GeneralError.*
 import kotlinx.coroutines.flow.Flow
 
 interface HomeDataSource {

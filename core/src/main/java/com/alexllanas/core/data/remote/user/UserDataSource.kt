@@ -48,7 +48,7 @@ interface UserDataSource {
     suspend fun uploadAvatar(
         filePath: String,
         sessionToken: String
-    ): Flow<Either<Throwable, String>>
+    ): Flow<String>
 
     suspend fun getTracks(userId: String): Flow<Either<Throwable, List<Track>>>
 
