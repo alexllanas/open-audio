@@ -44,8 +44,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         observeActions()
-//        login("testOpenAudio@gmail.com", "ducksquad1!")
-        viewModel.dispatch(HomeAction.SearchAction("grouper"))
+        viewModel.dispatch(HomeAction.SearchAction("cocteau"))
 //        viewModel.dispatch(HomeAction.GetUserTracksAction("4d94501d1f78ac091dbc9b4d"))
 //        viewModel.dispatch(HomeAction.LoadStreamAction("whydSid=s%3AbS7XKNXe0m5ZaNR7HIwCmtDSL_HDYIBx.KIlQu%2F0PrwEfbReaCMebbWKeE2LKRKznRTAzSxGidto"))
 
@@ -56,14 +55,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun login(email: String, password: String) {
-        viewModel.dispatch(HomeAction.LoginAction(email, password))
-    }
-
     @Suppress("FunctionName")
     @Composable
     fun MainScreen() {
-        val state by viewModel.state.collectAsState()
+        val state by viewModel.homeState.collectAsState()
         state.loggedInUser?.name?.let {
             SomeText(it)
         }
@@ -137,7 +132,7 @@ class HomeFragment : Fragment() {
 //            .launchIn(lifecycleScope)
 
         lifecycleScope.launchWhenStarted {
-            viewModel.state.collect { state ->
+            viewModel.homeState.collect { state ->
                 render(state)
             }
         }

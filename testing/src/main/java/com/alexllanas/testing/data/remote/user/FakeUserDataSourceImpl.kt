@@ -69,7 +69,7 @@ class FakeUserDataSourceImpl : UserDataSource {
     override suspend fun uploadAvatar(
         filePath: String,
         sessionToken: String
-    ): Flow<Either<Throwable, String>> {
+    ): Flow<String> {
         TODO("Not yet implemented")
     }
 

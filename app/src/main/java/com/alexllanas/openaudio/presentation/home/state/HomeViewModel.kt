@@ -6,12 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
-import com.alexllanas.core.interactors.auth.Login
-import com.alexllanas.core.interactors.home.GetStream
-import com.alexllanas.core.interactors.home.GetUserTracks
 import com.alexllanas.core.interactors.home.HomeInteractors
-import com.alexllanas.core.interactors.home.Search
 import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -22,19 +19,18 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-//    private val login: Login,
     private val homeInteractors: HomeInteractors
 ) : ViewModel() {
 
     private val initialState: HomeState by lazy { HomeState() }
 
-    val state: StateFlow<HomeState>
+    val homeState: StateFlow<HomeState>
 
     private val _actions = MutableSharedFlow<HomeAction>()
     private val actions = _actions.asSharedFlow()
 
     init {
-        state =
+        homeState =
             actions
                 .toChangeFlow()
                 .scan(initialState) { state, change -> change.reduce(state) }
@@ -46,36 +42,38 @@ class HomeViewModel @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun SharedFlow<HomeAction>.toChangeFlow(): Flow<PartialStateChange> {
-        val executeLoadStream: suspend (String) -> Flow<PartialStateChange> = { sessionToken ->
-            flow { emitAll(homeInteractors.getStream(sessionToken)) }
-                .map { result ->
-                    result.fold(
-                        ifLeft = { PartialStateChange.StreamChange.Error(it) },
-                        ifRight = { PartialStateChange.StreamChange.Data(it) }
-                    )
-                }.onStart { PartialStateChange.StreamChange.Loading }
-        }
-        val executeGetUserTracks: suspend (String) -> Flow<PartialStateChange> = { userId ->
-            flow {
-                emitAll(homeInteractors.getUserTracks(userId))
+    private fun SharedFlow<HomeAction>.toChangeFlow(): Flow<PartialStateChange<HomeState>> {
+        val executeLoadStream: suspend (String) -> Flow<PartialStateChange<HomeState>> =
+            { sessionToken ->
+                flow { emitAll(homeInteractors.getStream(sessionToken)) }
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { StreamChange.Error(it) },
+                            ifRight = { StreamChange.Data(it) }
+                        )
+                    }.onStart { StreamChange.Loading }
             }
-                .map { result ->
-                    result.fold(
-                        ifLeft = { PartialStateChange.UserTracksChange.Error(it) },
-                        ifRight = { PartialStateChange.UserTracksChange.Data(it) }
-                    )
-                }.onStart { PartialStateChange.UserTracksChange.Loading }
-        }
-        val executeSearch: suspend (String) -> Flow<PartialStateChange> = { query ->
+        val executeGetUserTracks: suspend (String) -> Flow<PartialStateChange<HomeState>> =
+            { userId ->
+                flow {
+                    emitAll(homeInteractors.getUserTracks(userId))
+                }
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { UserTracksChange.Error(it) },
+                            ifRight = { UserTracksChange.Data(it) }
+                        )
+                    }.onStart { UserTracksChange.Loading }
+            }
+        val executeSearch: suspend (String) -> Flow<PartialStateChange<HomeState>> = { query ->
             flow {
                 emitAll(homeInteractors.search(query))
             }
                 .map { result ->
                     result.fold(
-                        ifLeft = { PartialStateChange.SearchChange.Error(it) },
+                        ifLeft = { SearchChange.Error(it) },
                         ifRight = {
-                            PartialStateChange.SearchChange.Data(
+                            SearchChange.Data(
                                 searchTrackResults = it["tracks"] as List<Track>,
                                 searchPlaylistResults = it["playlists"] as List<Playlist>,
                                 searchUserResults = it["users"] as List<User>,
@@ -83,7 +81,7 @@ class HomeViewModel @Inject constructor(
                             )
                         }
                     )
-                }.onStart { PartialStateChange.SearchChange.Loading }
+                }.onStart { SearchChange.Loading }
         }
 //        val executeLogin: suspend (String, String) -> Flow<PartialStateChange> =
 //            { email, password ->

@@ -3,11 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/streamFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/streamFragment"
         android:name="com.alexllanas.openaudio.presentation.home.ui.HomeFragment"
-        android:label="fragment_stream"
-        tools:layout="@layout/fragment_stream" />
+        android:label="fragment_stream" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.alexllanas.openaudio.presentation.auth.ui.LoginFragment"
+        android:label="LoginFragment" />
+
+
 </navigation>
