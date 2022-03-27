@@ -83,26 +83,14 @@ class HomeViewModel @Inject constructor(
                     )
                 }.onStart { SearchChange.Loading }
         }
-//        val executeLogin: suspend (String, String) -> Flow<PartialStateChange> =
-//            { email, password ->
-//                flow {
-//                    emitAll(login(email, password))
-//                }
-//                    .map { result ->
-//                        result.fold(
-//                            ifLeft = { PartialStateChange.LoginChange.Error(it) },
-//                            ifRight = { PartialStateChange.LoginChange.Data(it) }
-//                        )
-//                    }.onStart { PartialStateChange.LoginChange.Loading }
-//            }
 
         return merge(
-            filterIsInstance<HomeAction.LoadStreamAction>()
+            filterIsInstance<HomeAction.LoadStream>()
                 .flatMapLatest
                 {
                     executeLoadStream(it.sessionToken)
                 },
-            filterIsInstance<HomeAction.GetUserTracksAction>()
+            filterIsInstance<HomeAction.GetUserTracks>()
                 .flatMapLatest
                 {
                     executeGetUserTracks(it.userId)
@@ -112,10 +100,6 @@ class HomeViewModel @Inject constructor(
                 {
                     executeSearch(it.query)
                 },
-//            filterIsInstance<HomeAction.LoginAction>()
-//                .flatMapLatest {
-//                    executeLogin(it.email, it.password)
-//                }
         )
     }
 

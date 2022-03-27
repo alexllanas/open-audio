@@ -35,18 +35,11 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        authViewModel.dispatch(AuthAction.Login.EmailTextChangedAction("Login.EmailTextChangedAction"))
-        authViewModel.dispatch(AuthAction.Login.PasswordTextChangedAction("Login.PasswordTextChangedAction"))
+        authViewModel.dispatch(AuthAction.Login.EmailTextChangedAction("testOpenAudio@gmail.com"))
+        authViewModel.dispatch(AuthAction.Login.PasswordTextChangedAction("ducksquad1!"))
         authViewModel.dispatch(AuthAction.Register.NameTextChangedAction("Register.NameTextChangedAction"))
         authViewModel.dispatch(AuthAction.Register.EmailTextChangedAction("Register.EmailTextChangedAction"))
         authViewModel.dispatch(AuthAction.Register.PasswordTextChangedAction("Register.PasswordTextChangedAction"))
-
-        mainViewModel.dispatch(
-            AuthAction.Login.LoginAction(
-                "testOpenAudio@gmail.com",
-                "ducksquad1!"
-            )
-        )
 
         return ComposeView(requireContext()).apply {
             setContent {
@@ -60,7 +53,12 @@ class LoginFragment : Fragment() {
     fun MainScreen() {
         val authState by authViewModel.authState.collectAsState()
         val mainState by mainViewModel.mainState.collectAsState()
-
+        mainViewModel.dispatch(
+            AuthAction.Login.LoginAction(
+                authState.loginEmailText,
+                authState.loginPasswordText
+            )
+        )
         Column {
             SomeText(authState.loginEmailText)
             SomeText(authState.loginPasswordText)

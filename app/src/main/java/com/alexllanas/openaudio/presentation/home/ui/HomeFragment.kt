@@ -6,17 +6,25 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
+import com.alexllanas.core.domain.models.Playlist
+import com.alexllanas.core.domain.models.Track
+import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeState
@@ -45,8 +53,7 @@ class HomeFragment : Fragment() {
     ): View {
         observeActions()
         viewModel.dispatch(HomeAction.SearchAction("cocteau"))
-//        viewModel.dispatch(HomeAction.GetUserTracksAction("4d94501d1f78ac091dbc9b4d"))
-//        viewModel.dispatch(HomeAction.LoadStreamAction("whydSid=s%3AbS7XKNXe0m5ZaNR7HIwCmtDSL_HDYIBx.KIlQu%2F0PrwEfbReaCMebbWKeE2LKRKznRTAzSxGidto"))
+        viewModel.dispatch(HomeAction.LoadStream("whydSid=s%3AbS7XKNXe0m5ZaNR7HIwCmtDSL_HDYIBx.KIlQu%2F0PrwEfbReaCMebbWKeE2LKRKznRTAzSxGidto"))
 
         return ComposeView(requireContext()).apply {
             setContent {
@@ -59,12 +66,49 @@ class HomeFragment : Fragment() {
     @Composable
     fun MainScreen() {
         val state by viewModel.homeState.collectAsState()
-        state.loggedInUser?.name?.let {
-            SomeText(it)
+        val scrollState = rememberScrollState()
+
+        Column(
+            modifier = Modifier.scrollable(
+                scrollState,
+                orientation = Orientation.Vertical,
+            ),
+        ) {
+            Column {
+                UserList(state.searchUserResults)
+//                PlaylistList(state.searchPlaylistResults)
+//                TrackList(state.stream)
+//                TrackList(state.searchTrackResults)
+            }
         }
-        Column {
-            state.searchTrackResults.forEach {
-                it?.title?.let { it1 -> Text(it1) }
+    }
+
+    @Suppress("FunctionName")
+    @Composable
+    fun TrackList(items: List<Track>) {
+        LazyColumn {
+            items(items) { track ->
+                track.title?.let { Text(it) }
+            }
+        }
+    }
+
+    @Suppress("FunctionName")
+    @Composable
+    fun PlaylistList(items: List<Playlist>) {
+        LazyColumn {
+            items(items) { playlist ->
+                playlist.name?.let { Text(it) }
+            }
+        }
+    }
+
+    @Suppress("FunctionName")
+    @Composable
+    fun UserList(items: List<User>) {
+        LazyColumn {
+            items(items) { user ->
+                user.name?.let { Text(it) }
             }
         }
     }
@@ -111,12 +155,12 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun loadStream(sessionToken: String): HomeAction.LoadStreamAction {
-        return HomeAction.LoadStreamAction(sessionToken)
+    private fun loadStream(sessionToken: String): HomeAction.LoadStream {
+        return HomeAction.LoadStream(sessionToken)
     }
 
-    private fun getUserTracks(userId: String): HomeAction.GetUserTracksAction {
-        return HomeAction.GetUserTracksAction(userId)
+    private fun getUserTracks(userId: String): HomeAction.GetUserTracks {
+        return HomeAction.GetUserTracks(userId)
     }
 
     private fun search(query: String): HomeAction.SearchAction {
@@ -131,10 +175,10 @@ class HomeFragment : Fragment() {
 //            }
 //            .launchIn(lifecycleScope)
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.homeState.collect { state ->
-                render(state)
-            }
-        }
+//    lifecycleScope.launchWhenStarted {
+//        viewModel.homeState.collect { state ->
+//            render(state)
+//        }
+//    }
     }
 }

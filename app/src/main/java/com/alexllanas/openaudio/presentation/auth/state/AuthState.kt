@@ -5,5 +5,6 @@ data class AuthState(
     val loginPasswordText: String = "",
     val registerNameText: String = "",
     val registerEmailText: String = "",
-    val registerPasswordText: String = ""
+    val registerPasswordText: String = "",
+    val error: Throwable? = null
 )
