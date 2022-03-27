@@ -21,17 +21,17 @@ sealed class HomeAction {
     ) : HomeAction()
 
     data class UnlikeTrack(
-        val trackId: String,
+        val track: Track,
         val sessionToken: String
     ) : HomeAction()
 
     data class FollowUser(
-        val userId: String,
+        val user: User,
         val sessionToken: String
     ) : HomeAction()
 
     data class UnfollowUser(
-        val userId: String,
+        val user: User,
         val sessionToken: String
     ) : HomeAction()
 
@@ -44,7 +44,6 @@ sealed class HomeAction {
         val sessionToken: String
     ) : HomeAction()
 
-
     data class GetFollowers(
         val userId: String,
         val sessionToken: String
@@ -54,6 +53,8 @@ sealed class HomeAction {
         val userId: String,
         val sessionToken: String
     ) : HomeAction()
+
+    data class QueryTextChanged(val query: String) : HomeAction()
 }
 
 
@@ -81,6 +82,18 @@ sealed class GetFollowersChange : PartialStateChange<HomeState> {
     data class Data(val followers: List<User>) : GetFollowersChange()
     data class Error(val throwable: Throwable) : GetFollowersChange()
     object Loading : GetFollowersChange()
+}
+
+sealed class TextChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is QueryTextChange -> state.copy(
+                query = query
+            )
+        }
+    }
+
+    data class QueryTextChange(val query: String) : TextChange()
 }
 
 sealed class GetFollowingChange : PartialStateChange<HomeState> {
@@ -113,6 +126,7 @@ sealed class AddTrackToPlaylistChange : PartialStateChange<MainState> {
     override fun reduce(state: MainState): MainState {
         return when (this) {
             is Data -> {
+                // TODO("refresh logged in user to update playlist")
                 Log.d(TAG, "reduce: Track has been added to playlist.")
                 state.copy(
                     isLoading = false,
@@ -151,7 +165,7 @@ sealed class FollowUserChange : PartialStateChange<HomeState> {
         }
     }
 
-    data class Data(val isSuccessful: Boolean, val user: User) : FollowUserChange()
+    data class Data(val user: User) : FollowUserChange()
     data class Error(val throwable: Throwable) : FollowUserChange()
     object Loading : FollowUserChange()
 }
@@ -171,7 +185,7 @@ sealed class UnfollowUserChange : PartialStateChange<HomeState> {
         }
     }
 
-    data class Data(val isSuccessful: Boolean, val user: User) : UnfollowUserChange()
+    data class Data(val user: User) : UnfollowUserChange()
     data class Error(val throwable: Throwable) : UnfollowUserChange()
     object Loading : UnfollowUserChange()
 }

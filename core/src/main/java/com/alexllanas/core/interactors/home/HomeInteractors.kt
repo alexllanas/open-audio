@@ -12,5 +12,8 @@ data class HomeInteractors(
     val getUserTracks: GetUserTracks,
     val likeTrack: LikeTrack,
     val unlikeTrack: UnlikeTrack,
-    val search: Search
+    val search: Search,
+    val followUser: FollowUser,
+    val unfollowUser: UnfollowUser,
+    val addTrackToPlaylist: AddTrackToPlaylist
 )

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.*
 //upload image file -> change avatar
 class ChangeAvatar(private val userDataSource: UserDataSource) {
     @OptIn(FlowPreview::class)
-    suspend operator fun invoke(imageFilePath: String, sessionToken: String) = suspend {
+    suspend operator fun invoke(imageFilePath: String, sessionToken: String) =
         userDataSource
             .uploadAvatar(imageFilePath, sessionToken)
             .flatMapConcat { uploadedFilePath ->
@@ -23,7 +23,4 @@ class ChangeAvatar(private val userDataSource: UserDataSource) {
                     )
                 }
             }
-    }
-
-
 }

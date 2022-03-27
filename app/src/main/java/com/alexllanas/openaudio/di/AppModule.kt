@@ -189,7 +189,10 @@ class AppModule {
             GetUserTracks(userDataSource),
             LikeTrack(trackDataSource),
             UnlikeTrack(trackDataSource),
-            Search(homeDataSource)
+            Search(homeDataSource),
+            FollowUser(userDataSource),
+            UnfollowUser(userDataSource),
+            AddTrackToPlaylist(trackDataSource)
         )
     }
 
