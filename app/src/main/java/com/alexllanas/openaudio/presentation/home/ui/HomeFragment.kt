@@ -26,6 +26,7 @@ import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.compose.OpenAudioTheme
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeState
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
@@ -42,7 +43,7 @@ class HomeFragment : Fragment() {
     private fun actionFlow(): Flow<HomeAction> = merge(
 //        flowOf(login("testOpenAudio@gmail.com", "ducksquad1!")),
         flowOf(loadStream("whydSid=s%3Alcz9zAORxGMGh--F54iY6W-B-6Dh2GaX.dcbKBd8CjbvZNKiUzqrI3WaQrXW4qy3Xtm%2FQVZQWFjI")),
-//        flowOf(getUserTracks("4d94501d1f78ac091dbc9b4d")),
+//        flowOf(getUserTracks("4d94501d1f758ac091dbc9b4d")),
 //        flowOf(search("bowie")),
     )
 
@@ -57,16 +58,19 @@ class HomeFragment : Fragment() {
 
         return ComposeView(requireContext()).apply {
             setContent {
-                MainScreen()
+                OpenAudioTheme {
+                    MainScreen()
+                }
             }
         }
     }
 
-    @Suppress("FunctionName")
     @Composable
     fun MainScreen() {
         val state by viewModel.homeState.collectAsState()
         val scrollState = rememberScrollState()
+
+`
 
         Column(
             modifier = Modifier.scrollable(
@@ -83,7 +87,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    @Suppress("FunctionName")
     @Composable
     fun TrackList(items: List<Track>) {
         LazyColumn {
@@ -93,7 +96,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    @Suppress("FunctionName")
     @Composable
     fun PlaylistList(items: List<Playlist>) {
         LazyColumn {
@@ -103,7 +105,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    @Suppress("FunctionName")
     @Composable
     fun UserList(items: List<User>) {
         LazyColumn {
@@ -113,7 +114,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    @Suppress("FunctionName")
     @Composable
     private fun SomeText(name: String) {
         Column {
