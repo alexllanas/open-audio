@@ -9,17 +9,20 @@ import android.view.ViewGroup
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.activityViewModels
 import com.alexllanas.core.domain.models.Playlist
@@ -32,6 +35,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeState
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 
 @AndroidEntryPoint
@@ -59,39 +63,63 @@ class HomeFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 OpenAudioTheme {
-                    MainScreen()
+                    MainScreen(viewModel = viewModel)
                 }
             }
         }
     }
 
     @Composable
-    fun MainScreen() {
-        val state by viewModel.homeState.collectAsState()
-        val scrollState = rememberScrollState()
-
-`
+    fun MainScreen(
+        modifier: Modifier = Modifier,
+        viewModel: HomeViewModel,
+        state: SearchState = rememberSearchState()
+    ) {
+//        val state by viewModel.homeState.collectAsState()
+//        val scrollState = rememberScrollState()
 
         Column(
-            modifier = Modifier.scrollable(
-                scrollState,
-                orientation = Orientation.Vertical,
-            ),
+            modifier = modifier.fillMaxSize()
         ) {
-            Column {
-                UserList(state.searchUserResults)
-//                PlaylistList(state.searchPlaylistResults)
-//                TrackList(state.stream)
-//                TrackList(state.searchTrackResults)
+            SearchBar(
+                query = state.query,
+                onQueryChange = { state.query = it },
+                onSearchFocusChange = { state.focused = it },
+                onClearQuery = { state.query = TextFieldValue("") },
+                onBack = { state.query = TextFieldValue("") },
+                searching = state.searching,
+                focused = state.focused,
+                modifier = modifier
+            )
+            LaunchedEffect(state.query.text) {
+                state.searching = true
+                delay(100)
+                viewModel.dispatch(HomeAction.SearchAction(state.query.text))
+                state.searchResults = viewModel.homeState.value.searchTrackResults
+                state.searching = false
+            }
+            when (state.searchDisplay) {
+                SearchDisplay.Initial -> {
+                    Log.d(TAG, "MainScreen: Initial state")
+                }
+                SearchDisplay.Results -> {
+                    Log.d(TAG, "MainScreen: ${state.searchResults.size}")
+                    TrackList(state.searchResults)
+                }
+                SearchDisplay.NoResults -> {
+
+                }
+
             }
         }
+
     }
 
     @Composable
-    fun TrackList(items: List<Track>) {
+    fun TrackList(items: List<Track?>) {
         LazyColumn {
             items(items) { track ->
-                track.title?.let { Text(it) }
+                track?.title?.let { Text(it) }
             }
         }
     }
