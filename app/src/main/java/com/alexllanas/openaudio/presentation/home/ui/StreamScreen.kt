@@ -37,7 +37,7 @@ fun StreamScreen(homeViewModel: HomeViewModel, mainViewModel: MainViewModel) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Stream")
+                    Text("Your Stream")
                 })
         }
     ) {

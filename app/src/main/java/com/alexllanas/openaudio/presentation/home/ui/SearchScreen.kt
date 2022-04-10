@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
@@ -20,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.alexllanas.core.util.Constants
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
+import com.alexllanas.openaudio.presentation.home.state.HomeState
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import kotlinx.coroutines.delay
@@ -61,11 +59,16 @@ fun SearchScreen(homeViewModel: HomeViewModel, mainViewModel: MainViewModel) {
 //        )
 //    }
 
-//    Scaffold(
-//        topBar = {
-    SearchBar(modifier = Modifier, homeViewModel)
-//        }
-//    ) { }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("Search")
+                })
+        }
+    ) {
+        SearchBar(modifier = Modifier, homeViewModel, homeState = homeState)
+    }
 
 }
 
@@ -73,19 +76,21 @@ fun SearchScreen(homeViewModel: HomeViewModel, mainViewModel: MainViewModel) {
 fun SearchBar(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
-    state: SearchState = rememberSearchState()
+    state: SearchState = rememberSearchState(),
+    homeState: HomeState
 ) {
 
     Column(
         modifier = modifier.fillMaxSize()
+            .padding(top = 5.dp)
     ) {
         SearchBar(
             query = state.query,
             onQueryChange = { state.query = it },
             onSearchFocusChange = { state.focused = it },
             onClearQuery = { state.query = TextFieldValue("") },
-//            onBack = { state.query = TextFieldValue("") },
-            onBack = { },
+            onBack = { state.query = TextFieldValue("") },
+//            onBack = { },
             searching = state.searching,
             focused = state.focused,
             modifier = modifier
@@ -94,12 +99,13 @@ fun SearchBar(
             state.searching = true
             delay(100)
             viewModel.dispatch(HomeAction.SearchAction(state.query.text))
-            state.searchResults = viewModel.homeState.value.searchTrackResults
+            state.searchResults = homeState.searchTrackResults
             state.searching = false
         }
         when (state.searchDisplay) {
             SearchDisplay.Initial -> {
                 Log.d(Constants.TAG, "MainScreen: Initial state")
+                TrackList(state.searchResults)
             }
             SearchDisplay.Results -> {
                 Log.d(Constants.TAG, "MainScreen: ${state.searchResults.size}")
