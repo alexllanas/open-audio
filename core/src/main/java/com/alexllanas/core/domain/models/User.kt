@@ -1,5 +1,7 @@
 package com.alexllanas.core.domain.models
 
+import com.alexllanas.core.util.Constants
+
 data class User(
     val id: String? = null,
     val name: String? = null,
@@ -18,5 +20,5 @@ data class User(
     val isSubscribing: Boolean = false
 ) {
     val avatarUrl: String?
-        get() = id?.let { id -> "/img/u/$id" }
+        get() = id?.let { id -> "${Constants.BASE_URL}/img/u/$id" }
 }

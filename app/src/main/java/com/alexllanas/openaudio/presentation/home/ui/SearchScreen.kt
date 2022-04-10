@@ -1,21 +1,16 @@
 package com.alexllanas.openaudio.presentation.home.ui
 
-import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
-import com.alexllanas.openaudio.presentation.common.ui.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.alexllanas.core.util.Constants
-import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.compose.components.SearchResultTabLayout
+import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeState
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
@@ -61,13 +56,9 @@ fun SearchScreen(homeViewModel: HomeViewModel, mainViewModel: MainViewModel) {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Search")
-                })
+            SearchBar(modifier = Modifier, homeViewModel, homeState = homeState)
         }
     ) {
-        SearchBar(modifier = Modifier, homeViewModel, homeState = homeState)
     }
 
 }
@@ -99,20 +90,19 @@ fun SearchBar(
             state.searching = true
             delay(100)
             viewModel.dispatch(HomeAction.SearchAction(state.query.text))
-            state.searchResults = homeState.searchTrackResults
+            state.trackResults = homeState.searchTrackResults
+            state.playlistResults = homeState.searchPlaylistResults
+            state.userResults = homeState.searchUserResults
             state.searching = false
         }
         when (state.searchDisplay) {
             SearchDisplay.Initial -> {
-                Log.d(Constants.TAG, "MainScreen: Initial state")
-                TrackList(state.searchResults)
+                SearchResultTabLayout(state)
             }
             SearchDisplay.Results -> {
-                Log.d(Constants.TAG, "MainScreen: ${state.searchResults.size}")
-                TrackList(state.searchResults)
+                SearchResultTabLayout(state)
             }
             SearchDisplay.NoResults -> {
-
             }
         }
     }

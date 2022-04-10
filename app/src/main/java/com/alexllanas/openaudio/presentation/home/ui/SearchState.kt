@@ -1,6 +1,5 @@
 package com.alexllanas.openaudio.presentation.home.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,7 +20,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
+import com.alexllanas.core.domain.models.User
 
 enum class SearchDisplay {
     Initial, Results, NoResults
@@ -32,17 +33,23 @@ class SearchState(
     query: TextFieldValue,
     focused: Boolean,
     searching: Boolean,
-    searchResults: List<Track>
+    tracks: List<Track>,
+    playlists: List<Playlist>,
+    users: List<User>
 ) {
     var query by mutableStateOf(query)
     var focused by mutableStateOf(focused)
     var searching by mutableStateOf(searching)
-    var searchResults by mutableStateOf(searchResults)
+    var trackResults by mutableStateOf(tracks)
+    var playlistResults by mutableStateOf(playlists)
+    var userResults by mutableStateOf(users)
 
     val searchDisplay: SearchDisplay
         get() = when {
             !focused && query.text.isEmpty() -> SearchDisplay.Initial
-            searchResults.isEmpty() -> SearchDisplay.NoResults
+            trackResults.isEmpty() -> SearchDisplay.NoResults
+            playlistResults.isEmpty() -> SearchDisplay.NoResults
+            userResults.isEmpty() -> SearchDisplay.NoResults
             else -> SearchDisplay.Results
         }
 
@@ -50,7 +57,7 @@ class SearchState(
         return "State query: $query, " +
                 "focused: $focused, " +
                 "searching: $searching," +
-                " searchResults: ${searchResults.size}," +
+                " searchResults: ${trackResults.size}," +
                 " searchDisplay: $searchDisplay"
     }
 }
@@ -60,14 +67,18 @@ fun rememberSearchState(
     query: TextFieldValue = TextFieldValue(""),
     focused: Boolean = false,
     searching: Boolean = false,
-    searchResults: List<Track> = emptyList()
+    tracks: List<Track> = emptyList(),
+    playlists: List<Playlist> = emptyList(),
+    users: List<User> = emptyList()
 ): SearchState {
     return remember {
         SearchState(
             query,
             focused,
             searching,
-            searchResults
+            tracks,
+            playlists,
+            users
         )
     }
 }
