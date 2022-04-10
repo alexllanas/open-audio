@@ -28,6 +28,7 @@ class TrackDataSourceImpl(
         }.asFlow().getResult()
 
     override suspend fun addTrackToPlaylist(
+        id: String,
         title: String,
         mediaUrl: String,
         image: String,
@@ -38,6 +39,7 @@ class TrackDataSourceImpl(
         suspend {
             trackApiService
                 .addTrackToPlaylist(
+                    id,
                     title,
                     mediaUrl,
                     image,
@@ -46,7 +48,8 @@ class TrackDataSourceImpl(
                     sessionToken
                 )
                 .toDomainTrack()
-        }.asFlow().getResult()
+        }.asFlow()
+            .getResult()
 
     override suspend fun deleteTrack(
         trackId: String,
@@ -57,7 +60,7 @@ class TrackDataSourceImpl(
                 .deleteTrack(
                     trackId,
                     sessionToken
-                ).toDomainTrack()
-            track.id == null
+                )?.toDomainTrack()
+            track == null
         }.asFlow().getResult()
 }

@@ -7,6 +7,7 @@ import arrow.core.computations.result
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
+import com.alexllanas.core.domain.models.canLike
 import com.alexllanas.core.interactors.home.HomeInteractors
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.main.state.MainState
@@ -14,6 +15,7 @@ import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -51,12 +53,15 @@ class HomeViewModel @Inject constructor(
                     .map { result ->
                         result.fold(
                             ifLeft = { StreamChange.Error(it) },
-                            ifRight = { StreamChange.Data(it) }
+                            ifRight = {
+                                StreamChange.Data(it)
+                            }
                         )
                     }.onStart { StreamChange.Loading }
             }
         val executeGetUserTracks: suspend (String) -> Flow<PartialStateChange<HomeState>> =
             { userId ->
+                delay(300)
                 homeInteractors.getUserTracks(userId)
                     .map { result ->
                         result.fold(
@@ -65,12 +70,10 @@ class HomeViewModel @Inject constructor(
                         )
                     }.onStart { UserTracksChange.Loading }
             }
-        val executeLikeTrack: suspend (String, String, String, String, User) -> Flow<PartialStateChange<HomeState>> =
-            { title, mediaUrl, image, sessionToken, loggedInUser ->
+        val executeLikeTrack: suspend (Track, String, User) -> Flow<PartialStateChange<HomeState>> =
+            { track, sessionToken, loggedInUser ->
                 homeInteractors.likeTrack(
-                    title,
-                    mediaUrl,
-                    image,
+                    track,
                     sessionToken,
                     loggedInUser
                 )
@@ -143,9 +146,7 @@ class HomeViewModel @Inject constructor(
             filterIsInstance<HomeAction.LikeTrack>()
                 .flatMapConcat {
                     executeLikeTrack(
-                        it.title,
-                        it.mediaUrl,
-                        it.image,
+                        it.track,
                         it.sessionToken,
                         it.loggedInUser
                     )
@@ -201,4 +202,29 @@ class HomeViewModel @Inject constructor(
                 )
             }.onStart { SearchChange.Loading }
 
+    fun onHeartClick(
+        shouldLike: Boolean,
+        track: Track,
+        loggedInUser: User?,
+        sessionToken: String?
+    ) {
+        if (track.canLike() && loggedInUser != null && sessionToken?.isNotEmpty() == true) {
+            if (shouldLike) {
+                dispatch(
+                    HomeAction.LikeTrack(
+                        track,
+                        sessionToken,
+                        loggedInUser
+                    )
+                )
+            } else {
+                dispatch(
+                    HomeAction.UnlikeTrack(
+                        track,
+                        sessionToken,
+                    )
+                )
+            }
+        }
+    }
 }

@@ -6,49 +6,36 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.sp
 import androidx.fragment.app.activityViewModels
-import com.alexllanas.core.domain.models.Playlist
-import com.alexllanas.core.domain.models.Track
-import com.alexllanas.core.domain.models.User
+import androidx.lifecycle.lifecycleScope
 import com.alexllanas.core.util.Constants.Companion.TAG
-import com.alexllanas.openaudio.presentation.compose.OpenAudioTheme
+import com.alexllanas.openaudio.presentation.auth.state.AuthAction
+import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeState
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
+import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private val viewModel: HomeViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+
+    // for testing
+    private val authViewModel: AuthViewModel by activityViewModels()
+
     private val actions = Channel<HomeAction>()
     private fun viewActions(): Flow<HomeAction> = actions.consumeAsFlow()
     private fun actionFlow(): Flow<HomeAction> = merge(
 //        flowOf(login("testOpenAudio@gmail.com", "ducksquad1!")),
         flowOf(loadStream("whydSid=s%3Alcz9zAORxGMGh--F54iY6W-B-6Dh2GaX.dcbKBd8CjbvZNKiUzqrI3WaQrXW4qy3Xtm%2FQVZQWFjI")),
-//        flowOf(getUserTracks("4d94501d1f758ac091dbc9b4d")),
-//        flowOf(search("bowie")),
     )
 
     override fun onCreateView(
@@ -57,129 +44,23 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         observeActions()
-        viewModel.dispatch(HomeAction.SearchAction("cocteau"))
-        viewModel.dispatch(HomeAction.LoadStream("whydSid=s%3AbS7XKNXe0m5ZaNR7HIwCmtDSL_HDYIBx.KIlQu%2F0PrwEfbReaCMebbWKeE2LKRKznRTAzSxGidto"))
+//        viewModel.dispatch(HomeAction.SearchAction("cocteau"))
 
+        mainViewModel.dispatch(
+            AuthAction.Login.LoginAction(
+                "testOpenAudio@gmail.com",
+                "ducksquad1!"
+            )
+        )
+        homeViewModel.dispatch(HomeAction.LoadStream("whydSid=s%3AbS7XKNXe0m5ZaNR7HIwCmtDSL_HDYIBx.KIlQu%2F0PrwEfbReaCMebbWKeE2LKRKznRTAzSxGidto"))
         return ComposeView(requireContext()).apply {
             setContent {
-                OpenAudioTheme {
-                    MainScreen(viewModel = viewModel)
-                }
+                StreamScreen(
+                    homeViewModel = homeViewModel,
+                    mainViewModel = mainViewModel,
+                )
             }
         }
-    }
-
-    @Composable
-    fun MainScreen(
-        modifier: Modifier = Modifier,
-        viewModel: HomeViewModel,
-        state: SearchState = rememberSearchState()
-    ) {
-//        val state by viewModel.homeState.collectAsState()
-//        val scrollState = rememberScrollState()
-
-        Column(
-            modifier = modifier.fillMaxSize()
-        ) {
-            SearchBar(
-                query = state.query,
-                onQueryChange = { state.query = it },
-                onSearchFocusChange = { state.focused = it },
-                onClearQuery = { state.query = TextFieldValue("") },
-                onBack = { state.query = TextFieldValue("") },
-                searching = state.searching,
-                focused = state.focused,
-                modifier = modifier
-            )
-            LaunchedEffect(state.query.text) {
-                state.searching = true
-                delay(100)
-                viewModel.dispatch(HomeAction.SearchAction(state.query.text))
-                state.searchResults = viewModel.homeState.value.searchTrackResults
-                state.searching = false
-            }
-            when (state.searchDisplay) {
-                SearchDisplay.Initial -> {
-                    Log.d(TAG, "MainScreen: Initial state")
-                }
-                SearchDisplay.Results -> {
-                    Log.d(TAG, "MainScreen: ${state.searchResults.size}")
-                    TrackList(state.searchResults)
-                }
-                SearchDisplay.NoResults -> {
-
-                }
-
-            }
-        }
-
-    }
-
-    @Composable
-    fun TrackList(items: List<Track?>) {
-        LazyColumn {
-            items(items) { track ->
-                track?.title?.let { Text(it) }
-            }
-        }
-    }
-
-    @Composable
-    fun PlaylistList(items: List<Playlist>) {
-        LazyColumn {
-            items(items) { playlist ->
-                playlist.name?.let { Text(it) }
-            }
-        }
-    }
-
-    @Composable
-    fun UserList(items: List<User>) {
-        LazyColumn {
-            items(items) { user ->
-                user.name?.let { Text(it) }
-            }
-        }
-    }
-
-    @Composable
-    private fun SomeText(name: String) {
-        Column {
-            Text(
-                text = "hello $name",
-                color = Color.Cyan,
-                fontSize = 22.sp,
-                fontFamily = FontFamily.Monospace
-            )
-            Text(
-                text = "hello blank",
-                color = Color.Cyan,
-                fontSize = 22.sp,
-                fontFamily = FontFamily.Monospace
-            )
-        }
-    }
-
-    private fun render(state: HomeState) {
-//        Log.d(TAG, "render: LOGIN ======== ${state.loggedInUser?.name}")
-//        state.stream.forEach {
-//            Log.d(TAG, "render: STREAM === $it")
-//        }
-//        state.userTracks.forEach {
-//            Log.d(TAG, "render: USER TRACKS === $it")
-//        }
-        state.searchTrackResults.forEach {
-            Log.d(TAG, "render: SEARCH === $it")
-        }
-//        state.searchUserResults.forEach {
-//            Log.d(TAG, "render: SEARCH === ${it.name}")
-//        }
-//        state.searchPostResults.forEach {
-//            Log.d(TAG, "render: SEARCH === $it")
-//        }
-//        state.searchPlaylistResults.forEach {
-//            Log.d(TAG, "render: SEARCH === ${it.name}")
-//        }
     }
 
 

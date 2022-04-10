@@ -13,9 +13,7 @@ sealed class HomeAction {
     data class GetUserTracks(val userId: String) : HomeAction()
     data class SearchAction(val query: String) : HomeAction()
     data class LikeTrack(
-        val title: String,
-        val mediaUrl: String,
-        val image: String,
+        val track: Track,
         val sessionToken: String,
         val loggedInUser: User
     ) : HomeAction()
@@ -36,9 +34,7 @@ sealed class HomeAction {
     ) : HomeAction()
 
     data class AddTrackToPlaylist(
-        val title: String,
-        val mediaUrl: String,
-        val image: String,
+        val track: Track,
         val playlistName: String,
         val playListId: String,
         val sessionToken: String
@@ -317,6 +313,7 @@ private fun Track.updateLikeTrack(
     state: HomeState,
     isLiked: Boolean
 ): HomeState {
+    Log.d(TAG, "updateLikeTrack: Track Id: $id")
     val updateSearchTracks = arrayListOf<Track>()
     val updateStream = arrayListOf<Track>()
     if (state.searchTrackResults.find { it.id == id } != null) {
@@ -327,7 +324,9 @@ private fun Track.updateLikeTrack(
                 updateSearchTracks.add(it.copy())
             }
         }
-    } else if (state.stream.find { it.id == id } != null) {
+    } else if (state.stream.find {
+            it.id == id
+        } != null) {
         state.stream.map {
             if (it.id == id) {
                 updateStream.add(it.copy(liked = isLiked))

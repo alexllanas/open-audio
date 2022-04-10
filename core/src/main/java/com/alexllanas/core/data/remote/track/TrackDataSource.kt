@@ -14,6 +14,7 @@ interface TrackDataSource {
     ): Flow<Either<Throwable, Track>>
 
     suspend fun addTrackToPlaylist(
+        id: String,
         title: String,
         mediaUrl: String,
         image: String,

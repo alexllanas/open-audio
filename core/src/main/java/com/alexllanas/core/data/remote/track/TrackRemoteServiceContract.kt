@@ -13,6 +13,7 @@ interface TrackRemoteServiceContract {
     ): Any
 
     suspend fun addTrackToPlaylist(
+        trackId: String,
         title: String,
         mediaUrl: String,
         image: String,
@@ -24,6 +25,6 @@ interface TrackRemoteServiceContract {
     suspend fun deleteTrack(
         trackId: String,
         sessionToken: String
-    ) : Any
+    ): Any?
 
 }

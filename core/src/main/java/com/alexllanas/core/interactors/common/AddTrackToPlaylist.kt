@@ -12,17 +12,16 @@ open class AddTrackToPlaylist(
     private val trackDataSource: TrackDataSource
 ) {
     suspend operator fun invoke(
-        title: String,
-        mediaUrl: String,
-        image: String,
+        track: Track,
         playlistName: String,
         playListId: String,
         sessionToken: String
     ): Flow<Either<Throwable, Track>> = flow {
         trackDataSource.addTrackToPlaylist(
-            title,
-            mediaUrl,
-            image,
+            id = track.id ?: "",
+            track.title ?: "",
+            track.mediaUrl ?: "",
+            track.image ?: "",
             playlistName,
             playListId,
             sessionToken

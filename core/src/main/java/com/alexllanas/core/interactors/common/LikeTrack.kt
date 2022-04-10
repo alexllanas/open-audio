@@ -5,6 +5,7 @@ import com.alexllanas.core.data.remote.track.TrackDataSource
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 
 class LikeTrack(private val trackDataSource: TrackDataSource) {
@@ -13,20 +14,21 @@ class LikeTrack(private val trackDataSource: TrackDataSource) {
      * Add track to 'Liked Songs' playlist, create if does not exist.
      */
     suspend operator fun invoke(
-        title: String,
-        mediaUrl: String,
-        image: String,
+        track: Track,
         sessionToken: String,
         loggedInUser: User
     ): Flow<Either<Throwable, Track>> = flow {
         val likedPlaylist = loggedInUser.playlists.find { it.name == "Liked Songs" }
-        trackDataSource.addTrackToPlaylist(
-            title,
-            mediaUrl,
-            image,
-            "Liked Songs",
-            likedPlaylist?.id ?: "create",
-            sessionToken
+        emitAll(
+            trackDataSource.addTrackToPlaylist(
+                id = track.id ?: "",
+                track.title ?: "",
+                track.mediaUrl ?: "",
+                track.image ?: "",
+                "Liked Songs",
+                likedPlaylist?.id ?: "create",
+                sessionToken
+            )
         )
     }
 }

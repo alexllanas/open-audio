@@ -5,6 +5,7 @@ import androidx.compose.ui.semantics.SemanticsProperties.Error
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arrow.core.computations.result
+import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.interactors.auth.AuthInteractors
 import com.alexllanas.core.interactors.home.HomeInteractors
 import com.alexllanas.core.interactors.profile.ChangeAvatar
@@ -69,12 +70,10 @@ class MainViewModel @Inject constructor(
                         )
                     }.onStart { LoginChange.Loading }
             }
-        val executeAddTrackToPlaylist: suspend (String, String, String, String, String, String) -> Flow<PartialStateChange<MainState>> =
-            { title, mediaUrl, image, playlistName, playlistId, sessionToken ->
+        val executeAddTrackToPlaylist: suspend (Track, String, String, String) -> Flow<PartialStateChange<MainState>> =
+            { track, playlistName, playlistId, sessionToken ->
                 homeInteractors.addTrackToPlaylist(
-                    title,
-                    mediaUrl,
-                    image,
+                    track,
                     playlistName,
                     playlistId,
                     sessionToken
@@ -166,9 +165,7 @@ class MainViewModel @Inject constructor(
             filterIsInstance<HomeAction.AddTrackToPlaylist>()
                 .flatMapConcat {
                     executeAddTrackToPlaylist(
-                        it.title,
-                        it.mediaUrl,
-                        it.image,
+                        it.track,
                         it.playlistName,
                         it.playListId,
                         it.sessionToken

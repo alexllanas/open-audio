@@ -23,6 +23,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.alexllanas.core.domain.models.Track
 
+enum class SearchDisplay {
+    Initial, Results, NoResults
+}
+
 @Stable
 class SearchState(
     query: TextFieldValue,

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexllanas.core.interactors.auth.AuthInteractors
 import com.alexllanas.core.util.Constants
+import com.alexllanas.openaudio.presentation.home.state.StreamChange
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,7 +14,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor() : ViewModel() {
+class AuthViewModel @Inject constructor(
+    private val authInteractors: AuthInteractors
+) : ViewModel() {
     private val initialAuthState: AuthState by lazy { AuthState() }
 
     val authState: StateFlow<AuthState>
@@ -41,6 +44,8 @@ class AuthViewModel @Inject constructor() : ViewModel() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun SharedFlow<AuthAction>.toChangeFlow(): Flow<PartialStateChange<AuthState>> {
+
+
         return merge(
             filterIsInstance<AuthAction.Login.EmailTextChangedAction>()
                 .map {

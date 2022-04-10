@@ -14,13 +14,14 @@ interface TrackApiService : TrackRemoteServiceContract {
         @Header("Cookie") sessionToken: String
     ): TrackResponse
 
-    @GET("/api/post?action=insert&pl[id]={pId}&pl[name]={ptName}")
+    @GET("/api/post?action=insert")
     override suspend fun addTrackToPlaylist(
+        @Query("_id") trackId: String,
         @Query("name") title: String,
         @Query("eId") mediaUrl: String,
         @Query("img") image: String,
-        @Path("pName") playlistName: String,
-        @Path("pId") playListId: String,
+        @Query("pl[name]") playlistName: String,
+        @Query("pl[id]") playListId: String,
         @Header("Cookie") sessionToken: String
     ): TrackResponse
 
@@ -28,5 +29,5 @@ interface TrackApiService : TrackRemoteServiceContract {
     override suspend fun deleteTrack(
         @Query("_id") trackId: String,
         @Header("Cookie") sessionToken: String
-    ): TrackResponse
+    ): TrackResponse?
 }
