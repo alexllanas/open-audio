@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.util.Constants
+import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -55,7 +56,12 @@ fun PlaylistItem(
                 )
             },
             modifier = Modifier
-                .clickable { playlist?.let { onPlaylistClick(it) } }
+                .clickable {
+                    playlist?.let {
+                        Log.d(TAG, "PlaylistItem: ${it.coverImage}")
+                        onPlaylistClick(it)
+                    }
+                }
         )
     }
 }

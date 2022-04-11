@@ -7,6 +7,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class PlaylistUIModel(
     val name: String? = null,
-    val coverImage: String? = null,
+    var coverImage: String? = null,
+    val url: String,
     var author: UserUIModel? = null
 ) : Parcelable

@@ -10,9 +10,9 @@ interface PlaylistApiService : PlaylistRemoteServiceContract {
     @GET("/api/playlist/{id}")
     override suspend fun getPlaylist(@Path("id") playlistId: String): PlaylistResponse
 
-    @GET("/{playlistUrl}?format=json")
+    @GET(" {playlistUrl}?limit=${Int.MAX_VALUE}&format=json")
     override suspend fun getPlaylistTracks(
-        @Path("playlistUrl") playlistUrl: String
+        @Path("playlistUrl", encoded = true) playlistUrl: String
     ): List<TrackResponse>
 
     @FormUrlEncoded

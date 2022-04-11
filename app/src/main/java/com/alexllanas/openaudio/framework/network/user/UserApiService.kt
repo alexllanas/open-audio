@@ -42,7 +42,7 @@ interface UserApiService :
         @Header("Cookie") sessionToken: String
     ): UserResponse
 
-    @GET("?format=json")
+    @GET("?limit=${Int.MAX_VALUE}&format=json")
     override suspend fun getStream(@Header("Cookie") sessionToken: String): List<TrackResponse>
 
     @GET("/api/user?isSubscr=true&includeSubscr=true")

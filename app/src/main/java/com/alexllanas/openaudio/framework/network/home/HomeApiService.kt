@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface HomeApiService : HomeRemoteServiceContract {
 
-    @GET("search?format=json")
+    @GET("search?limit=${Int.MAX_VALUE}&format=json")
     override suspend fun search(
         @Query("q") query: String,
     ): SearchResponse

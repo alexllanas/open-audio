@@ -20,6 +20,7 @@ fun PlaylistList(
 ) {
     LazyColumn {
         items(playlists) { playlist ->
+            Log.d(TAG, "PlaylistList: ${playlist.coverImage}")
             PlaylistItem(playlist = playlist, onPlaylistClick = onPlaylistClick)
             if (playlists.last() == playlist) {
                 Spacer(Modifier.height(64.dp))

@@ -7,5 +7,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class UserUIModel(
     val name: String? = null,
-    val avatarUrl: String? = null
+    var avatarUrl: String? = null
 ) : Parcelable
