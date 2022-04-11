@@ -19,16 +19,17 @@ import androidx.compose.ui.unit.dp
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.util.Constants
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.models.TrackUIModel
 import com.skydoves.landscapist.glide.GlideImage
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TrackItem(
     modifier: Modifier = Modifier,
-    track: Track?,
-    onTrackClick: (Track) -> Unit = {},
-    onHeartClick: (Boolean, Track) -> Unit = { _: Boolean, _: Track -> },
-    onMoreClick: (Track) -> Unit = {},
+    track: TrackUIModel?,
+    onTrackClick: (TrackUIModel) -> Unit = {},
+    onHeartClick: (Boolean, TrackUIModel) -> Unit = { _: Boolean, _: TrackUIModel -> },
+    onMoreClick: (TrackUIModel) -> Unit = {},
     isSelected: Boolean = false
 ) {
     val background = if (isSelected)

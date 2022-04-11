@@ -8,10 +8,12 @@ import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.domain.models.canLike
+import com.alexllanas.core.interactors.home.GetPlaylistTracks
 import com.alexllanas.core.interactors.home.HomeInteractors
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
+import com.alexllanas.openaudio.presentation.models.TrackUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -43,6 +45,13 @@ class HomeViewModel @Inject constructor(
                     SharingStarted.Eagerly,
                     initialState
                 )
+    }
+
+    fun dispatch(action: HomeAction) {
+        Log.d(TAG, "dispatch: $action")
+        viewModelScope.launch {
+            _actions.emit(action)
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -132,9 +141,49 @@ class HomeViewModel @Inject constructor(
                         )
                     }.onStart { GetFollowersChange.Loading }
             }
+        val executeGetPlaylistTracks: suspend (String) -> Flow<PartialStateChange<HomeState>> =
+            { playlistUrl ->
+                homeInteractors.getPlaylistTracks(playlistUrl)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { GetPlaylistTracksChange.Error(it) },
+                            ifRight = { GetPlaylistTracksChange.Data(it) }
+                        )
+
+                    }.onStart { GetPlaylistTracksChange.Loading }
+            }
+        val executeGetFollowing: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
+            { userId, sessionToken ->
+                homeInteractors.getFollowing(userId, sessionToken)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { GetFollowingChange.Error(it) },
+                            ifRight = { GetFollowingChange.Data(it) }
+                        )
+                    }.onStart { GetFollowingChange.Loading }
+            }
+        val executeSearch: suspend (String) -> Flow<PartialStateChange<HomeState>> =
+            { query ->
+                homeInteractors.search(query)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { SearchChange.Error(it) },
+                            ifRight = {
+                                SearchChange.Data(
+                                    searchTrackResults = it["tracks"] as List<Track>,
+                                    searchPlaylistResults = it["playlists"] as List<Playlist>,
+                                    searchUserResults = it["users"] as List<User>,
+                                    searchPostResults = it["posts"] as List<Track>
+                                )
+                            }
+                        )
+                    }.onStart { SearchChange.Loading }
+            }
         return merge(
+            filterIsInstance<HomeAction.GetPlaylistTracks>()
+                .flatMapConcat { executeGetPlaylistTracks(it.playlistUrl) },
             filterIsInstance<HomeAction.GetFollowing>()
-                .flatMapConcat { getFollowing(it.userId, it.sessionToken) },
+                .flatMapConcat { executeGetFollowing(it.userId, it.sessionToken) },
             filterIsInstance<HomeAction.GetFollowers>()
                 .flatMapConcat { executeGetFollowers(it.userId, it.sessionToken) },
             filterIsInstance<HomeAction.UnfollowUser>()
@@ -164,43 +213,10 @@ class HomeViewModel @Inject constructor(
             filterIsInstance<HomeAction.SearchAction>()
                 .flatMapConcat
                 {
-                    search(it.query)
+                    executeSearch(it.query)
                 },
         )
     }
-
-    fun dispatch(action: HomeAction) {
-        Log.d(TAG, "dispatch: $action")
-        viewModelScope.launch {
-            _actions.emit(action)
-        }
-    }
-
-
-    private suspend fun getFollowing(userId: String, sessionToken: String) =
-        homeInteractors.getFollowing(userId, sessionToken)
-            .map { result ->
-                result.fold(
-                    ifLeft = { GetFollowingChange.Error(it) },
-                    ifRight = { GetFollowingChange.Data(it) }
-                )
-            }.onStart { GetFollowingChange.Loading }
-
-    private suspend fun search(query: String) =
-        homeInteractors.search(query)
-            .map { result ->
-                result.fold(
-                    ifLeft = { SearchChange.Error(it) },
-                    ifRight = {
-                        SearchChange.Data(
-                            searchTrackResults = it["tracks"] as List<Track>,
-                            searchPlaylistResults = it["playlists"] as List<Playlist>,
-                            searchUserResults = it["users"] as List<User>,
-                            searchPostResults = it["posts"] as List<Track>
-                        )
-                    }
-                )
-            }.onStart { SearchChange.Loading }
 
     fun onHeartClick(
         shouldLike: Boolean,

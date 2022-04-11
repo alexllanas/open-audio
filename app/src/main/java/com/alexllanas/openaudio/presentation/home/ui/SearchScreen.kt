@@ -1,6 +1,6 @@
 package com.alexllanas.openaudio.presentation.home.ui
 
-import androidx.compose.foundation.background
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,8 +9,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.compose.components.SearchResultTabLayout
-import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeState
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
@@ -19,10 +20,15 @@ import kotlinx.coroutines.delay
 
 
 @Composable
-fun SearchScreen(homeViewModel: HomeViewModel, mainViewModel: MainViewModel) {
+fun SearchScreen(
+    homeViewModel: HomeViewModel,
+    mainViewModel: MainViewModel,
+    navHostController: NavHostController
+) {
     val homeState by homeViewModel.homeState.collectAsState()
     val mainState by mainViewModel.mainState.collectAsState()
 
+    Log.d(TAG, "SearchScreen: ${navHostController.currentBackStackEntry?.destination}")
 //    var searchedText by remember { mutableStateOf(homeState.query) }
 //
 //    Column {
@@ -56,7 +62,12 @@ fun SearchScreen(homeViewModel: HomeViewModel, mainViewModel: MainViewModel) {
 
     Scaffold(
         topBar = {
-            SearchBar(modifier = Modifier, homeViewModel, homeState = homeState)
+            SearchBarUI(
+                modifier = Modifier,
+                homeViewModel,
+                homeState = homeState,
+                navHostController = navHostController
+            )
         }
     ) {
     }
@@ -64,11 +75,12 @@ fun SearchScreen(homeViewModel: HomeViewModel, mainViewModel: MainViewModel) {
 }
 
 @Composable
-fun SearchBar(
+fun SearchBarUI(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
     state: SearchState = rememberSearchState(),
-    homeState: HomeState
+    homeState: HomeState,
+    navHostController: NavHostController
 ) {
 
     Column(
@@ -97,10 +109,10 @@ fun SearchBar(
         }
         when (state.searchDisplay) {
             SearchDisplay.Initial -> {
-                SearchResultTabLayout(state)
+                SearchResultTabLayout(state, navHostController)
             }
             SearchDisplay.Results -> {
-                SearchResultTabLayout(state)
+                SearchResultTabLayout(state, navHostController)
             }
             SearchDisplay.NoResults -> {
             }

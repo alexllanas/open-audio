@@ -9,23 +9,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.alexllanas.core.domain.models.Track
+import com.alexllanas.openaudio.presentation.models.TrackUIList
+import com.alexllanas.openaudio.presentation.models.TrackUIModel
 
 @Composable
 fun TrackList(
-    stream: List<Track>,
-    onTrackClick: (Track) -> Unit = {},
-    onHeartClick: (Boolean, Track) -> Unit = { _: Boolean, _: Track -> },
-    onMoreClick: (Track) -> Unit = {},
+    tracks: TrackUIList,
+    onTrackClick: (TrackUIModel) -> Unit = {},
+    onHeartClick: (Boolean, TrackUIModel) -> Unit = { _: Boolean, _: TrackUIModel -> },
+    onMoreClick: (TrackUIModel) -> Unit = {},
 ) {
     LazyColumn {
-        items(stream) { track ->
+        items(tracks.tracks) { track ->
             TrackItem(
                 track = track,
                 onTrackClick = onTrackClick,
                 onHeartClick = onHeartClick,
                 onMoreClick = onMoreClick
             )
-            if (stream.last() == track)
+            if (tracks.tracks.last() == track)
                 Spacer(Modifier.height(64.dp))
         }
     }

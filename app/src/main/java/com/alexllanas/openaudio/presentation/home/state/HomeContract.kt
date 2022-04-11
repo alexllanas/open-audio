@@ -50,9 +50,36 @@ sealed class HomeAction {
         val sessionToken: String
     ) : HomeAction()
 
+    data class GetPlaylistTracks(val playlistUrl: String) : HomeAction()
+
     data class QueryTextChanged(val query: String) : HomeAction()
 }
 
+sealed class GetPlaylistTracksChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    selectedPlaylistTracks = tracks,
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val tracks: List<Track>) : GetPlaylistTracksChange()
+    data class Error(val throwable: Throwable) : GetPlaylistTracksChange()
+    object Loading : GetPlaylistTracksChange()
+}
 
 sealed class GetFollowersChange : PartialStateChange<HomeState> {
     override fun reduce(state: HomeState): HomeState {

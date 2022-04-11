@@ -5,4 +5,5 @@
     <string name="search_tracks_users_playlists">Search tracks, users, and playlists</string>
     <string name="follow">follow</string>
     <string name="unfollow">unfollow</string>
+    <string name="back_arrow">back arrow</string>
 </resources>
