@@ -15,6 +15,7 @@ import com.alexllanas.openaudio.presentation.compose.components.SearchResultTabL
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeState
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
+import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import kotlinx.coroutines.delay
 
@@ -65,8 +66,8 @@ fun SearchScreen(
             SearchBarUI(
                 modifier = Modifier,
                 homeViewModel,
-                homeState = homeState,
-                navHostController = navHostController
+                navHostController = navHostController,
+                mainState = mainState
             )
         }
     ) {
@@ -77,12 +78,12 @@ fun SearchScreen(
 @Composable
 fun SearchBarUI(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel,
+    homeViewModel: HomeViewModel,
+    mainState: MainState,
     state: SearchState = rememberSearchState(),
-    homeState: HomeState,
     navHostController: NavHostController
 ) {
-
+    val homeState by homeViewModel.homeState.collectAsState()
     Column(
         modifier = modifier.fillMaxSize()
             .padding(top = 5.dp)
@@ -101,7 +102,7 @@ fun SearchBarUI(
         LaunchedEffect(state.query.text) {
             state.searching = true
             delay(100)
-            viewModel.dispatch(HomeAction.SearchAction(state.query.text))
+            homeViewModel.dispatch(HomeAction.SearchAction(state.query.text))
             state.trackResults = homeState.searchTrackResults
             state.playlistResults = homeState.searchPlaylistResults
             state.userResults = homeState.searchUserResults
@@ -109,10 +110,15 @@ fun SearchBarUI(
         }
         when (state.searchDisplay) {
             SearchDisplay.Initial -> {
-                SearchResultTabLayout(state, navHostController)
+                SearchResultTabLayout(
+                    state,
+                    navHostController,
+                    homeViewModel,
+                    mainState = mainState
+                )
             }
             SearchDisplay.Results -> {
-                SearchResultTabLayout(state, navHostController)
+                SearchResultTabLayout(state, navHostController, homeViewModel, mainState)
             }
             SearchDisplay.NoResults -> {
             }

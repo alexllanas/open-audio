@@ -2,6 +2,7 @@ package com.alexllanas.openaudio.framework.network.user
 
 import com.alexllanas.core.data.remote.user.UserRemoteServiceContract
 import com.alexllanas.core.domain.models.User
+import com.alexllanas.core.util.Constants.Companion.PAGE_LIMIT
 import com.alexllanas.openaudio.framework.network.models.LoginResponse
 import com.alexllanas.openaudio.framework.network.models.TrackResponse
 import com.alexllanas.openaudio.framework.network.models.UploadResponse
@@ -42,7 +43,7 @@ interface UserApiService :
         @Header("Cookie") sessionToken: String
     ): UserResponse
 
-    @GET("?limit=${Int.MAX_VALUE}&format=json")
+    @GET("?limit=${PAGE_LIMIT}&format=json")
     override suspend fun getStream(@Header("Cookie") sessionToken: String): List<TrackResponse>
 
     @GET("/api/user?isSubscr=true&includeSubscr=true")

@@ -11,6 +11,7 @@ class Constants {
          * Network
          */
         const val BASE_URL = "https://openwhyd.org"
+        const val PAGE_LIMIT = 50
 
         /**
          * Database

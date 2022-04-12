@@ -15,11 +15,8 @@ import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 import com.alexllanas.openaudio.presentation.models.TrackUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -49,13 +46,14 @@ class HomeViewModel @Inject constructor(
 
     fun dispatch(action: HomeAction) {
         Log.d(TAG, "dispatch: $action")
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _actions.emit(action)
         }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun SharedFlow<HomeAction>.toChangeFlow(): Flow<PartialStateChange<HomeState>> {
+
         val executeLoadStream: suspend (String) -> Flow<PartialStateChange<HomeState>> =
             { sessionToken ->
                 homeInteractors.getStream(sessionToken)
@@ -68,9 +66,20 @@ class HomeViewModel @Inject constructor(
                         )
                     }.onStart { StreamChange.Loading }
             }
+        val executeGetUser: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
+            { userId, sessionToken ->
+//                delay(300)
+                homeInteractors.getUser(userId, sessionToken)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { GetUserChange.Error(it) },
+                            ifRight = { GetUserChange.Data(it) }
+                        )
+                    }.onStart { GetUserChange.Loading }
+            }
         val executeGetUserTracks: suspend (String) -> Flow<PartialStateChange<HomeState>> =
             { userId ->
-                delay(300)
+//                delay(300)
                 homeInteractors.getUserTracks(userId)
                     .map { result ->
                         result.fold(
@@ -179,7 +188,22 @@ class HomeViewModel @Inject constructor(
                         )
                     }.onStart { SearchChange.Loading }
             }
+        val executeSelectPlaylist: suspend (playlist: Playlist) -> Flow<PartialStateChange<HomeState>> =
+            { playlist ->
+                flowOf(SelectPlaylistChange.Data(playlist))
+            }
+
         return merge(
+            filterIsInstance<HomeAction.GetUser>()
+                .flatMapConcat { executeGetUser(it.id, it.sessionToken) },
+            filterIsInstance<HomeAction.SelectTab>()
+                .flatMapConcat { flowOf(SelectTabChange.Data(it.tabIndex)) },
+            filterIsInstance<HomeAction.QueryTextChanged>()
+                .flatMapConcat { flowOf(TextChange.QueryTextChange(it.query)) },
+//            filterIsInstance<HomeAction.SelectUser>()
+//                .flatMapConcat { flowOf(SelectUserChange.Data(it.selectedUser)) },
+            filterIsInstance<HomeAction.SelectPlaylist>()
+                .flatMapConcat { executeSelectPlaylist(it.selectedPlaylist) },
             filterIsInstance<HomeAction.GetPlaylistTracks>()
                 .flatMapConcat { executeGetPlaylistTracks(it.playlistUrl) },
             filterIsInstance<HomeAction.GetFollowing>()

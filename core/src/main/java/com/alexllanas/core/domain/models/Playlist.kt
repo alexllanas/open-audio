@@ -2,7 +2,7 @@ package com.alexllanas.core.domain.models
 
 import com.alexllanas.core.util.Constants
 
-class Playlist(
+data class Playlist(
     val id: String? = null,
     val name: String? = null,
     val trackCount: Int = 0,

@@ -22,12 +22,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import com.alexllanas.core.domain.models.Playlist
+import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.common.ui.PlaylistDetailScreen
+import com.alexllanas.openaudio.presentation.common.ui.UserDetailScreen
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.home.ui.SearchScreen
 import com.alexllanas.openaudio.presentation.home.ui.StreamScreen
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.mappers.toUI
 import com.alexllanas.openaudio.presentation.models.PlaylistUIModel
 import com.alexllanas.openaudio.presentation.models.TrackUIList
 import com.alexllanas.openaudio.presentation.models.UserUIModel
@@ -41,7 +45,11 @@ sealed class NavItem(var title: String, var icon: ImageVector? = null, var scree
     object Upload : NavItem("Upload", Icons.Filled.Upload, "upload")
     object Profile : NavItem("Profile", Icons.Filled.Person, "profile")
     object PlaylistDetail :
-        NavItem("PlaylistDetail", null, "playlist_detail/{playlistUIModel}")
+        NavItem("PlaylistDetail", null, "playlist_detail")
+//        NavItem("PlaylistDetail", null, "playlist_detail/{playlistUIModel}")
+
+    object UserDetail :
+        NavItem("UserDetail", null, "user_detail")
 }
 
 @Composable
@@ -67,22 +75,27 @@ fun NavigationGraph(
         composable(NavItem.Profile.screenRoute) {
             ProfileScreen()
         }
+        composable(NavItem.UserDetail.screenRoute) {
+            UserDetailScreen(Modifier, homeViewModel, mainState, navHostController)
+        }
         composable(
-            NavItem.PlaylistDetail.screenRoute, arguments = listOf(
-                navArgument("playlistUIModel") {
-                    type = PlaylistUIModelType()
-                }
-            )
+            NavItem.PlaylistDetail.screenRoute,
+//            arguments = listOf(
+//                navArgument("playlistUIModel") {
+//                    type = PlaylistUIModelType()
+//                }
+//            )
         ) { backStackEntry ->
-            backStackEntry.arguments?.getParcelable<PlaylistUIModel>("playlistUIModel")
-                ?.let { playlist ->
-                    PlaylistDetailScreen(
-                        modifier = Modifier,
-                        mainState = mainState,
-                        playlist = playlist,
-                        homeViewModel = homeViewModel
-                    )
-                }
+//            backStackEntry.arguments?.getParcelable<PlaylistUIModel>("playlistUIModel")
+//                ?.let { playlist ->
+            PlaylistDetailScreen(
+                modifier = Modifier,
+                mainState = mainState,
+//                        playlist = playlist,
+                homeViewModel = homeViewModel,
+                navController = navHostController
+            )
+//                }
         }
     }
 }
@@ -161,4 +174,20 @@ class UserUIModelType : NavType<UserUIModel>(isNullableAllowed = true) {
         bundle.putParcelable(key, value)
     }
 
+}
+
+fun navigateToPlaylist(
+//    selectedPlaylist: Playlist,
+    navHostController: NavHostController
+) {
+//    val playlistUIModel = selectedPlaylist.toUI()
+//    val json = Gson().toJson(playlistUIModel)
+//    navHostController.navigate("playlist_detail/$json")
+    navHostController.navigate("playlist_detail")
+}
+
+fun navigateToUserDetail(
+    navHostController: NavHostController
+) {
+    navHostController.navigate("user_detail")
 }

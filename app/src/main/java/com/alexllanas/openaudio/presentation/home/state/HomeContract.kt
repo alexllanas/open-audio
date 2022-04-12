@@ -50,9 +50,117 @@ sealed class HomeAction {
         val sessionToken: String
     ) : HomeAction()
 
+    data class SelectTab(val tabIndex: Int) : HomeAction()
+    data class SelectPlaylist(val selectedPlaylist: Playlist) : HomeAction()
+    data class SelectUser(val selectedUser: User) : HomeAction()
     data class GetPlaylistTracks(val playlistUrl: String) : HomeAction()
-
     data class QueryTextChanged(val query: String) : HomeAction()
+    data class GetUser(val id: String, val sessionToken: String) : HomeAction()
+
+}
+
+sealed class GetUserChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    selectedUser = user,
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val user: User) : GetUserChange()
+    data class Error(val throwable: Throwable) : GetUserChange()
+    object Loading : GetUserChange()
+}
+
+sealed class SelectTabChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    searchScreenState = state.searchScreenState?.copy(currentTab = tabIndex),
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val tabIndex: Int) : SelectTabChange()
+    data class Error(val throwable: Throwable) : SelectTabChange()
+    object Loading : SelectTabChange()
+}
+
+//sealed class SelectUserChange : PartialStateChange<HomeState> {
+//    override fun reduce(state: HomeState): HomeState {
+//        return when (this) {
+//            is Data -> {
+//                state.copy(
+//                    selectedUser = user,
+//                    isLoading = false,
+//                    error = null,
+//                )
+//            }
+//            is Error -> state.copy(
+//                isLoading = false,
+//                error = throwable
+//            )
+//            Loading -> state.copy(
+//                isLoading = true,
+//                error = null
+//            )
+//        }
+//    }
+//
+//    data class Data(val user: User) : SelectUserChange()
+//    data class Error(val throwable: Throwable) : SelectUserChange()
+//    object Loading : SelectUserChange()
+//}
+
+sealed class SelectPlaylistChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    selectedPlaylist = playlist,
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val playlist: Playlist) : SelectPlaylistChange()
+    data class Error(val throwable: Throwable) : SelectPlaylistChange()
+    object Loading : SelectPlaylistChange()
 }
 
 sealed class GetPlaylistTracksChange : PartialStateChange<HomeState> {
@@ -111,7 +219,7 @@ sealed class TextChange : PartialStateChange<HomeState> {
     override fun reduce(state: HomeState): HomeState {
         return when (this) {
             is QueryTextChange -> state.copy(
-                query = query
+                searchScreenState = state.searchScreenState?.copy(query = query)
             )
         }
     }

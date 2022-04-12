@@ -20,5 +20,6 @@ data class HomeState(
     val selectedUserFollowers: List<User> = emptyList(),
     val selectedUserFollowing: List<User> = emptyList(),
     val isLoading: Boolean = false,
-    val error: Throwable? = null
+    val error: Throwable? = null,
+    val searchScreenState: SearchScreenState? = SearchScreenState()
 ) : BaseState

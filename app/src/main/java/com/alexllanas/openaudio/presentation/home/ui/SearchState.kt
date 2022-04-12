@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -98,6 +100,7 @@ private fun SearchHint(modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchTextField(
     query: TextFieldValue,
@@ -106,9 +109,12 @@ fun SearchTextField(
     onClearQuery: () -> Unit,
     searching: Boolean,
     focused: Boolean,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Surface(
         modifier = modifier
@@ -144,7 +150,15 @@ fun SearchTextField(
                             }
                             .focusRequester(focusRequester)
                             .padding(top = 9.dp, bottom = 8.dp, start = 24.dp, end = 8.dp),
-                        singleLine = true
+                        singleLine = true,
+//                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.clearFocus()
+                                keyboardController?.hide()
+                                onBack()
+                            }
+                        )
                     )
 
                     when {
@@ -205,6 +219,7 @@ fun SearchBar(
             onClearQuery,
             searching,
             focused,
+            onBack,
             modifier.weight(1f)
         )
     }
