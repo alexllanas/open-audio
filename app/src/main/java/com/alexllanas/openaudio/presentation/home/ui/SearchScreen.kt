@@ -17,6 +17,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeState
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import kotlinx.coroutines.delay
 
 
@@ -69,10 +70,11 @@ fun SearchScreen(
                 navHostController = navHostController,
                 mainState = mainState
             )
-        }
+        },
+        bottomBar = { BottomNav(navController = navHostController) }
+
     ) {
     }
-
 }
 
 @Composable

@@ -7,6 +7,7 @@ fun PlaylistResponse.toDomainPlaylist(): Playlist =
     Playlist(
         id = id,
         name = name,
+        url = url,
         trackCount = trackCount,
     ).also { playlist ->
         playlist.author = author?.toDomainUser()

@@ -26,6 +26,7 @@ import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
+import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.mappers.toUI
 import com.alexllanas.openaudio.presentation.models.PlaylistUIModel
@@ -42,7 +43,6 @@ fun PlaylistDetailScreen(
     navController: NavHostController
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
-    Log.d(TAG, "PlaylistDetailScreen: ${homeState.selectedPlaylist?.url}")
     homeViewModel.dispatch(
         HomeAction.GetPlaylistTracks(
             playlistUrl = homeState.selectedPlaylist?.url ?: return
@@ -60,7 +60,10 @@ fun PlaylistDetailScreen(
                 )
             }
         }
-    }) {
+
+    },
+        bottomBar = { BottomNav(navController = navController) }
+    ) {
         Column(modifier = Modifier) {
             homeState.selectedPlaylist?.let {
                 Header(modifier, it.toUI())

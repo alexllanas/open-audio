@@ -1,6 +1,5 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
-import android.widget.TextView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -19,16 +18,13 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
-import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.components.lists.PlaylistList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
-import com.alexllanas.openaudio.presentation.home.state.HomeState
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
-import com.alexllanas.openaudio.presentation.main.ui.navigateToPlaylist
-import com.alexllanas.openaudio.presentation.mappers.toDomain
+import com.alexllanas.openaudio.presentation.main.ui.BottomNav
+import com.alexllanas.openaudio.presentation.main.ui.navigateToPlaylistDetail
 import com.alexllanas.openaudio.presentation.mappers.toUI
 import com.alexllanas.openaudio.presentation.models.UserUIModel
 import com.skydoves.landscapist.glide.GlideImage
@@ -57,7 +53,9 @@ fun UserDetailScreen(
                 )
             }
         }
-    }) {
+    },
+        bottomBar = { BottomNav(navController = navHostController) }
+    ) {
 
         homeState.selectedUser?.let { user ->
             Column(
@@ -89,7 +87,7 @@ fun UserDetailScreen(
                     val newPlaylist = selectedPlaylist.copy()
                     newPlaylist.author = user
                     homeViewModel.dispatch(HomeAction.SelectPlaylist(newPlaylist))
-                    navigateToPlaylist(navHostController)
+                    navigateToPlaylistDetail(navHostController)
                 }
             }
         }

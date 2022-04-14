@@ -25,6 +25,9 @@ import androidx.navigation.navArgument
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.auth.ui.LandingScreen
+import com.alexllanas.openaudio.presentation.auth.ui.LoginScreen
+import com.alexllanas.openaudio.presentation.auth.ui.RegisterScreen
 import com.alexllanas.openaudio.presentation.common.ui.PlaylistDetailScreen
 import com.alexllanas.openaudio.presentation.common.ui.UserDetailScreen
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
@@ -40,6 +43,9 @@ import com.alexllanas.openaudio.presentation.upload.ui.UploadScreen
 import com.google.gson.Gson
 
 sealed class NavItem(var title: String, var icon: ImageVector? = null, var screenRoute: String) {
+    object Landing : NavItem("Landing", null, "landing")
+    object Login : NavItem("Login", null, "login")
+    object Register : NavItem("Register", null, "register")
     object Stream : NavItem("Stream", Icons.Filled.Home, "stream")
     object Search : NavItem("Search", Icons.Outlined.Search, "search")
     object Upload : NavItem("Upload", Icons.Filled.Upload, "upload")
@@ -61,41 +67,57 @@ fun NavigationGraph(
     val mainState by mainViewModel.mainState.collectAsState()
     NavHost(
         navController = navHostController,
-        startDestination = NavItem.Stream.screenRoute
+        startDestination = NavItem.Landing.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
-            StreamScreen(homeViewModel, mainViewModel)
+            StreamScreen(homeViewModel, mainViewModel, navHostController)
         }
-        composable(NavItem.Search.screenRoute) {
-            SearchScreen(homeViewModel, mainViewModel, navHostController)
+        composable(NavItem.Login.screenRoute) {
+            LoginScreen()
         }
-        composable(NavItem.Upload.screenRoute) {
-            UploadScreen()
+        composable(NavItem.Register.screenRoute) {
+            RegisterScreen()
         }
-        composable(NavItem.Profile.screenRoute) {
-            ProfileScreen()
-        }
-        composable(NavItem.UserDetail.screenRoute) {
-            UserDetailScreen(Modifier, homeViewModel, mainState, navHostController)
-        }
-        composable(
-            NavItem.PlaylistDetail.screenRoute,
+        composable(NavItem.Landing.screenRoute) {
+            LandingScreen(
+                {
+                    navHostController.navigate(NavItem.Register.screenRoute)
+                },
+                {
+                    navHostController.navigate(NavItem.Login.screenRoute)
+                }
+            )
+            composable(NavItem.Search.screenRoute) {
+                SearchScreen(homeViewModel, mainViewModel, navHostController)
+            }
+            composable(NavItem.Upload.screenRoute) {
+                UploadScreen()
+            }
+            composable(NavItem.Profile.screenRoute) {
+                ProfileScreen()
+            }
+            composable(NavItem.UserDetail.screenRoute) {
+                UserDetailScreen(Modifier, homeViewModel, mainState, navHostController)
+            }
+            composable(
+                NavItem.PlaylistDetail.screenRoute,
 //            arguments = listOf(
 //                navArgument("playlistUIModel") {
 //                    type = PlaylistUIModelType()
 //                }
 //            )
-        ) { backStackEntry ->
+            ) { backStackEntry ->
 //            backStackEntry.arguments?.getParcelable<PlaylistUIModel>("playlistUIModel")
 //                ?.let { playlist ->
-            PlaylistDetailScreen(
-                modifier = Modifier,
-                mainState = mainState,
+                PlaylistDetailScreen(
+                    modifier = Modifier,
+                    mainState = mainState,
 //                        playlist = playlist,
-                homeViewModel = homeViewModel,
-                navController = navHostController
-            )
+                    homeViewModel = homeViewModel,
+                    navController = navHostController
+                )
 //                }
+            }
         }
     }
 }
@@ -130,6 +152,7 @@ fun BottomNav(navController: NavController) {
                 alwaysShowLabel = true,
                 selected = currentRoute == item.screenRoute,
                 onClick = {
+                    Log.d(TAG, "BottomNav: ${navController.currentDestination}")
                     navController.navigate(item.screenRoute) {
                         navController.graph.startDestinationRoute?.let { screenRoute ->
                             popUpTo(screenRoute) {
@@ -176,13 +199,9 @@ class UserUIModelType : NavType<UserUIModel>(isNullableAllowed = true) {
 
 }
 
-fun navigateToPlaylist(
-//    selectedPlaylist: Playlist,
+fun navigateToPlaylistDetail(
     navHostController: NavHostController
 ) {
-//    val playlistUIModel = selectedPlaylist.toUI()
-//    val json = Gson().toJson(playlistUIModel)
-//    navHostController.navigate("playlist_detail/$json")
     navHostController.navigate("playlist_detail")
 }
 
