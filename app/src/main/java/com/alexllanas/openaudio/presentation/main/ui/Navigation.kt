@@ -25,6 +25,7 @@ import androidx.navigation.navArgument
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.auth.ui.LandingScreen
 import com.alexllanas.openaudio.presentation.auth.ui.LoginScreen
 import com.alexllanas.openaudio.presentation.auth.ui.RegisterScreen
@@ -62,7 +63,8 @@ sealed class NavItem(var title: String, var icon: ImageVector? = null, var scree
 fun NavigationGraph(
     navHostController: NavHostController,
     homeViewModel: HomeViewModel,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    authViewModel: AuthViewModel
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
     NavHost(
@@ -73,7 +75,7 @@ fun NavigationGraph(
             StreamScreen(homeViewModel, mainViewModel, navHostController)
         }
         composable(NavItem.Login.screenRoute) {
-            LoginScreen()
+            LoginScreen(authViewModel)
         }
         composable(NavItem.Register.screenRoute) {
             RegisterScreen()

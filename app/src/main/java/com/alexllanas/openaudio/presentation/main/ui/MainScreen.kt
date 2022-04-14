@@ -5,12 +5,17 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.NavItem.Landing.screenRoute
 
 @Composable
-fun MainScreen(mainViewModel: MainViewModel, homeViewModel: HomeViewModel) {
+fun MainScreen(
+    mainViewModel: MainViewModel,
+    homeViewModel: HomeViewModel,
+    authViewModel: AuthViewModel
+) {
     val navController = rememberNavController()
     Scaffold(
 //        bottomBar = {
@@ -20,7 +25,8 @@ fun MainScreen(mainViewModel: MainViewModel, homeViewModel: HomeViewModel) {
         NavigationGraph(
             navHostController = navController,
             mainViewModel = mainViewModel,
-            homeViewModel = homeViewModel
-        )
+            homeViewModel = homeViewModel,
+            authViewModel = authViewModel
+            )
     }
 }

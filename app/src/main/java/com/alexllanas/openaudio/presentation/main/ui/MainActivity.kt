@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
+import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     private val homeViewModel: HomeViewModel by viewModels()
     private val mainViewModel: MainViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +34,11 @@ class MainActivity : AppCompatActivity() {
         )
         homeViewModel.dispatch(HomeAction.LoadStream("whydSid=s%3AbS7XKNXe0m5ZaNR7HIwCmtDSL_HDYIBx.KIlQu%2F0PrwEfbReaCMebbWKeE2LKRKznRTAzSxGidto"))
         setContent {
-            MainScreen(homeViewModel = homeViewModel, mainViewModel = mainViewModel)
+            MainScreen(
+                homeViewModel = homeViewModel,
+                mainViewModel = mainViewModel,
+                authViewModel = authViewModel
+            )
         }
     }
 }
