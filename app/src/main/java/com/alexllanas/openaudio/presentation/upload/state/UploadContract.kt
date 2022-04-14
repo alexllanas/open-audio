@@ -11,6 +11,20 @@ sealed class UploadAction {
         val image: String,
         val sessionToken: String
     ) : UploadAction()
+
+    data class SetUrlText(val url: String) : UploadAction()
+}
+
+sealed class SetUrlTextChange : PartialStateChange<UploadState> {
+    override fun reduce(state: UploadState): UploadState {
+        return when (this) {
+            is Data -> {
+                state.copy(trackUrl = url)
+            }
+        }
+    }
+
+    data class Data(val url: String) : SetUrlTextChange()
 }
 
 sealed class UploadTrackChange : PartialStateChange<UploadState> {

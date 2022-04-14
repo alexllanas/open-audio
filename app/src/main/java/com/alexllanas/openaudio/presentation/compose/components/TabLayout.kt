@@ -1,10 +1,18 @@
 package com.alexllanas.openaudio.presentation.compose.components
 
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.presentation.compose.components.lists.PlaylistList
 import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
@@ -46,21 +54,50 @@ fun SearchResultTabLayout(
         }
     }
     when (tabIndex) {
-        0 -> TrackList(state.trackResults.toUI())
-        1 -> PlaylistList(state.playlistResults) { selectedPlaylist ->
-            homeViewModel.dispatch(HomeAction.SelectPlaylist(selectedPlaylist))
-            navigateToPlaylistDetail(navHostController)
+        0 -> {
+            if (state.trackResults.isEmpty()) {
+                SearchBackground(state)
+            } else {
+                TrackList(state.trackResults.toUI())
+            }
         }
-        2 -> UserList(state.userResults, { selectedUser ->
-            selectedUser.id?.let { userId ->
-                mainState.sessionToken?.let { sessionToken ->
-                    homeViewModel.dispatch(HomeAction.GetUser(userId, sessionToken))
+        1 -> {
+            if (state.playlistResults.isEmpty()) {
+                SearchBackground(state)
+            } else {
+                PlaylistList(state.playlistResults) { selectedPlaylist ->
+                    homeViewModel.dispatch(HomeAction.SelectPlaylist(selectedPlaylist))
+                    navigateToPlaylistDetail(navHostController)
                 }
             }
+        }
+        2 -> {
+            if (state.userResults.isEmpty()) {
+                SearchBackground(state)
+            } else {
+                UserList(state.userResults, { selectedUser ->
+                    selectedUser.id?.let { userId ->
+                        mainState.sessionToken?.let { sessionToken ->
+                            homeViewModel.dispatch(HomeAction.GetUser(userId, sessionToken))
+                        }
+                    }
 //            homeViewModel.dispatch(HomeAction.SelectUser(selectedUser))
-            navigateToUserDetail(navHostController)
-        })
+                    navigateToUserDetail(navHostController)
+                })
+            }
+        }
     }
 }
 
 
+@Composable
+fun SearchBackground(state: SearchState) {
+    Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxSize()) {
+        Icon(
+            imageVector = Icons.Default.Search,
+            contentDescription = "search",
+            modifier = Modifier.size(256.dp).padding(top = 96.dp).alpha(0.2f)
+//                .clickable { state.focused = true }
+        )
+    }
+}

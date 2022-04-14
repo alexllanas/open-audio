@@ -15,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.floor
 
 @HiltViewModel
 class UploadViewModel @Inject constructor(
@@ -53,6 +54,8 @@ class UploadViewModel @Inject constructor(
                     }.onStart { UploadTrackChange.Loading }
             }
         return merge(
+            filterIsInstance<UploadAction.SetUrlText>()
+                .flatMapConcat { flowOf(SetUrlTextChange.Data(it.url)) },
             filterIsInstance<UploadAction.UploadTrack>()
                 .flatMapConcat {
                     executeUploadTrack(

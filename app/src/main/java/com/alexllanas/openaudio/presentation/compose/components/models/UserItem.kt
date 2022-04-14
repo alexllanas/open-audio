@@ -1,4 +1,6 @@
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +17,7 @@ import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
@@ -56,7 +59,11 @@ fun UserItem(
             secondaryText = { Text(text = "${user?.lastTrack?.title}") },
             icon = {
                 GlideImage(
-                    modifier = modifier.size(50.dp).clip(CircleShape),
+                    modifier = modifier.size(50.dp).clip(CircleShape)
+                        .border(
+                            BorderStroke(1.dp, Color.Black),
+                            shape = CircleShape,
+                        ),
                     imageModel = user?.avatarUrl,
                     contentScale = ContentScale.Crop,
                     placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),

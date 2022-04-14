@@ -21,9 +21,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.navArgument
-import com.alexllanas.core.domain.models.Playlist
-import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.auth.ui.LandingScreen
@@ -35,11 +32,10 @@ import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.home.ui.SearchScreen
 import com.alexllanas.openaudio.presentation.home.ui.StreamScreen
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.mappers.toUI
 import com.alexllanas.openaudio.presentation.models.PlaylistUIModel
-import com.alexllanas.openaudio.presentation.models.TrackUIList
 import com.alexllanas.openaudio.presentation.models.UserUIModel
-import com.alexllanas.openaudio.presentation.profile.ui.ProfileScreen
+import com.alexllanas.openaudio.presentation.profile.ui.EditScreen
+import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
 import com.alexllanas.openaudio.presentation.upload.ui.UploadScreen
 import com.google.gson.Gson
 
@@ -47,6 +43,7 @@ sealed class NavItem(var title: String, var icon: ImageVector? = null, var scree
     object Landing : NavItem("Landing", null, "landing")
     object Login : NavItem("Login", null, "login")
     object Register : NavItem("Register", null, "register")
+    object Edit : NavItem("Edit", null, "edit")
     object Stream : NavItem("Stream", Icons.Filled.Home, "stream")
     object Search : NavItem("Search", Icons.Outlined.Search, "search")
     object Upload : NavItem("Upload", Icons.Filled.Upload, "upload")
@@ -64,18 +61,22 @@ fun NavigationGraph(
     navHostController: NavHostController,
     homeViewModel: HomeViewModel,
     mainViewModel: MainViewModel,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    uploadViewModel: UploadViewModel
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
     NavHost(
         navController = navHostController,
-        startDestination = NavItem.Landing.screenRoute
+        startDestination = NavItem.Stream.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
             StreamScreen(homeViewModel, mainViewModel, navHostController)
         }
         composable(NavItem.Login.screenRoute) {
             LoginScreen(authViewModel)
+        }
+        composable(NavItem.Edit.screenRoute) {
+            EditScreen(mainViewModel)
         }
         composable(NavItem.Register.screenRoute) {
             RegisterScreen()
@@ -89,37 +90,41 @@ fun NavigationGraph(
                     navHostController.navigate(NavItem.Login.screenRoute)
                 }
             )
-            composable(NavItem.Search.screenRoute) {
-                SearchScreen(homeViewModel, mainViewModel, navHostController)
+        }
+        composable(NavItem.Search.screenRoute) {
+            SearchScreen(homeViewModel, mainViewModel, navHostController)
+        }
+        composable(NavItem.Upload.screenRoute) {
+            UploadScreen(navController = navHostController, uploadViewModel)
+        }
+        composable(NavItem.Profile.screenRoute) {
+            UserDetailScreen(Modifier, homeViewModel, mainState, navHostController, true) {
+                navHostController.navigate(NavItem.Edit.screenRoute)
             }
-            composable(NavItem.Upload.screenRoute) {
-                UploadScreen()
+        }
+        composable(NavItem.UserDetail.screenRoute) {
+            UserDetailScreen(Modifier, homeViewModel, mainState, navHostController, false) {
+                navHostController.navigate(NavItem.Edit.screenRoute)
             }
-            composable(NavItem.Profile.screenRoute) {
-                ProfileScreen()
-            }
-            composable(NavItem.UserDetail.screenRoute) {
-                UserDetailScreen(Modifier, homeViewModel, mainState, navHostController)
-            }
-            composable(
-                NavItem.PlaylistDetail.screenRoute,
+        }
+        composable(
+            NavItem.PlaylistDetail.screenRoute,
 //            arguments = listOf(
 //                navArgument("playlistUIModel") {
 //                    type = PlaylistUIModelType()
 //                }
 //            )
-            ) { backStackEntry ->
+        ) { backStackEntry ->
 //            backStackEntry.arguments?.getParcelable<PlaylistUIModel>("playlistUIModel")
 //                ?.let { playlist ->
-                PlaylistDetailScreen(
-                    modifier = Modifier,
-                    mainState = mainState,
+            PlaylistDetailScreen(
+                modifier = Modifier,
+                mainState = mainState,
 //                        playlist = playlist,
-                    homeViewModel = homeViewModel,
-                    navController = navHostController
-                )
+                homeViewModel = homeViewModel,
+                navController = navHostController
+            )
 //                }
-            }
         }
     }
 }

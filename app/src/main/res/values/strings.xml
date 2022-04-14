@@ -7,4 +7,7 @@
     <string name="unfollow">unfollow</string>
     <string name="back_arrow">back arrow</string>
     <string name="facebook_login_button">facebook login button</string>
+    <string name="add_icon">add icon</string>
+    <string name="add_to_playlist">Add to playlist</string>
+    <string name="settings">settings</string>
 </resources>

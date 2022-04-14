@@ -2,8 +2,9 @@ package com.alexllanas.openaudio.presentation.profile.ui
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import com.alexllanas.openaudio.presentation.common.ui.UserDetailScreen
 
 @Composable
-fun ProfileScreen() {
-    Text("Profile Screen")
+fun SettingsScreen() {
+    Text("settings")
 }
