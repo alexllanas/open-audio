@@ -12,6 +12,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -53,8 +54,8 @@ fun MediaPlayerControls(modifier: Modifier = Modifier, mainViewModel: MainViewMo
                     .align(Alignment.CenterVertically)
             )
             Icon(
-                modifier = Modifier.align(Alignment.CenterVertically),
-                imageVector = Icons.Default.PlayCircle,
+                modifier = Modifier.align(Alignment.CenterVertically).size(40.dp),
+                imageVector = Icons.Default.PlayArrow,
                 contentDescription = stringResource(R.string.play_pause_button)
             )
         }

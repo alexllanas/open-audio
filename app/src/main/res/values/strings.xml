@@ -23,4 +23,5 @@
     <string name="skip">SKIP</string>
     <string name="playlist_name">playlist name</string>
     <string name="play_pause_button">play pause button</string>
+    <string name="nav_icon">navigation icon</string>
 </resources>

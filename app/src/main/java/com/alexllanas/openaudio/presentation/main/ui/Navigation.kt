@@ -22,14 +22,19 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
+import com.alexllanas.core.util.Constants
 import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.auth.ui.LandingScreen
 import com.alexllanas.openaudio.presentation.auth.ui.LoginScreen
 import com.alexllanas.openaudio.presentation.auth.ui.RegisterScreen
 import com.alexllanas.openaudio.presentation.common.ui.AddToPlaylistScreen
+import com.alexllanas.openaudio.presentation.common.ui.FollowScreen
 import com.alexllanas.openaudio.presentation.common.ui.PlaylistDetailScreen
 import com.alexllanas.openaudio.presentation.common.ui.UserDetailScreen
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.home.ui.SearchScreen
 import com.alexllanas.openaudio.presentation.home.ui.StreamScreen
@@ -37,6 +42,7 @@ import com.alexllanas.openaudio.presentation.home.ui.TrackOptionsScreen
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.models.PlaylistUIModel
 import com.alexllanas.openaudio.presentation.models.UserUIModel
+import com.alexllanas.openaudio.presentation.profile.state.ProfileAction
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 import com.alexllanas.openaudio.presentation.profile.ui.EditScreen
 import com.alexllanas.openaudio.presentation.profile.ui.SettingsScreen
@@ -47,6 +53,7 @@ import com.google.gson.Gson
 
 sealed class NavItem(var title: String, var icon: ImageVector? = null, var screenRoute: String) {
     object Landing : NavItem("Landing", null, "landing")
+    object Follow : NavItem("Follow", null, "follow/{title}")
     object NewTrack : NavItem("NewTrack", null, "new_track")
     object TrackOptions : NavItem("TrackOptions", null, "track_options")
     object AddToPlaylist : NavItem("AddToPlaylist", null, "add_to_playlist")
@@ -76,12 +83,24 @@ fun NavigationGraph(
     profileViewModel: ProfileViewModel
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
+    val homeState by homeViewModel.homeState.collectAsState()
     NavHost(
         navController = navHostController,
-        startDestination = NavItem.Stream.screenRoute
+        startDestination = NavItem.Follow.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
             StreamScreen(homeViewModel, mainViewModel, navHostController)
+        }
+        composable(
+            NavItem.Follow.screenRoute,
+            arguments = listOf(navArgument("title") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val title = backStackEntry.arguments?.getString("title")
+            FollowScreen(
+                navHostController,
+                homeViewModel,
+                title ?: "No Title"
+            )
         }
         composable(NavItem.NewTrack.screenRoute) {
             NewTrackScreen(uploadViewModel)
