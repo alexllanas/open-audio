@@ -1,6 +1,7 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,11 +10,13 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
@@ -21,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.openaudio.R
@@ -49,31 +53,55 @@ fun UserDetailScreen(
     val homeState by homeViewModel.homeState.collectAsState()
 
     Scaffold(topBar = {
-        TopAppBar {
-            Row(
-                modifier = modifier.fillMaxWidth(),
-                horizontalArrangement = if (isCurrentUser) Arrangement.End else Arrangement.Start
-            ) {
-                if (isCurrentUser) {
-                    Icon(
-                        modifier = Modifier.padding(8.dp)
-                            .clickable {
-                                // TODO: dialog for creating new playlist
-                            },
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.add_to_playlist)
-                    )
-                } else {
-                    Icon(
-                        modifier = Modifier.padding(8.dp)
-                            .clickable { },
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = stringResource(
-                            R.string.back_arrow
-                        )
-                    )
-                }
-            }
+//        TopAppBar(
+//            backgroundColor = MaterialTheme.colors.background
+//        ) {
+//            Row(
+//                modifier = modifier.fillMaxWidth(),
+//                horizontalArrangement = if (isCurrentUser) Arrangement.End else Arrangement.Start
+//            ) {
+//                if (isCurrentUser) {
+//                    Icon(
+//                        modifier = Modifier
+//                            .padding(8.dp)
+//                            .clickable {
+//                                // TODO: dialog for creating new playlist
+//                            },
+//                        imageVector = Icons.Default.Add,
+//                        contentDescription = stringResource(R.string.add_to_playlist)
+//                    )
+//                } else {
+//                    Icon(
+//                        modifier = Modifier.padding(8.dp)
+//                            .clickable { },
+//                        imageVector = Icons.Default.ArrowBack,
+//                        contentDescription = stringResource(
+//                            R.string.back_arrow
+//                        )
+//                    )
+//                }
+//            }
+//        }
+        ConstraintLayout(
+            Modifier.fillMaxWidth().height(height = 56.dp).background(MaterialTheme.colors.primary)
+        ) {
+            val (gearIcon) = createRefs()
+
+            Icon(
+                imageVector = Icons.Default.Add,
+                tint = MaterialTheme.colors.onPrimary,
+                contentDescription = stringResource(R.string.settings),
+                modifier = Modifier
+                    .alpha(0.8f)
+                    .clickable {
+
+                    }
+                    .padding(end = 16.dp)
+                    .constrainAs(gearIcon) {
+                        end.linkTo(parent.end)
+                        centerVerticallyTo(parent)
+                    }
+            )
         }
     },
         bottomBar = { BottomNav(navController = navHostController) }

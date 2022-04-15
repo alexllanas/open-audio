@@ -10,4 +10,16 @@
     <string name="add_icon">add icon</string>
     <string name="add_to_playlist">Add to playlist</string>
     <string name="settings">settings</string>
+    <string name="current_password">current password</string>
+    <string name="new_password">new password</string>
+    <string name="confirm_password">confirm password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="close">close</string>
+    <string name="like_track">Like track</string>
+    <string name="share">share</string>
+    <string name="give_playlist_name">Give your playlist a name</string>
+    <string name="cancel">CANCEL</string>
+    <string name="skip">SKIP</string>
+    <string name="playlist_name">playlist name</string>
 </resources>

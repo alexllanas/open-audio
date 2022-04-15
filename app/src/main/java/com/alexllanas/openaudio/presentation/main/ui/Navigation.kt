@@ -26,21 +26,27 @@ import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.auth.ui.LandingScreen
 import com.alexllanas.openaudio.presentation.auth.ui.LoginScreen
 import com.alexllanas.openaudio.presentation.auth.ui.RegisterScreen
+import com.alexllanas.openaudio.presentation.common.ui.AddToPlaylistScreen
 import com.alexllanas.openaudio.presentation.common.ui.PlaylistDetailScreen
 import com.alexllanas.openaudio.presentation.common.ui.UserDetailScreen
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.home.ui.SearchScreen
 import com.alexllanas.openaudio.presentation.home.ui.StreamScreen
+import com.alexllanas.openaudio.presentation.home.ui.TrackOptionsScreen
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.models.PlaylistUIModel
 import com.alexllanas.openaudio.presentation.models.UserUIModel
+import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 import com.alexllanas.openaudio.presentation.profile.ui.EditScreen
+import com.alexllanas.openaudio.presentation.profile.ui.SettingsScreen
 import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
 import com.alexllanas.openaudio.presentation.upload.ui.UploadScreen
 import com.google.gson.Gson
 
 sealed class NavItem(var title: String, var icon: ImageVector? = null, var screenRoute: String) {
     object Landing : NavItem("Landing", null, "landing")
+    object TrackOptions : NavItem("TrackOptions", null, "track_options")
+    object AddToPlaylist : NavItem("AddToPlaylist", null, "add_to_playlist")
     object Login : NavItem("Login", null, "login")
     object Register : NavItem("Register", null, "register")
     object Edit : NavItem("Edit", null, "edit")
@@ -48,6 +54,7 @@ sealed class NavItem(var title: String, var icon: ImageVector? = null, var scree
     object Search : NavItem("Search", Icons.Outlined.Search, "search")
     object Upload : NavItem("Upload", Icons.Filled.Upload, "upload")
     object Profile : NavItem("Profile", Icons.Filled.Person, "profile")
+    object Settings : NavItem("Settings", null, "settings")
     object PlaylistDetail :
         NavItem("PlaylistDetail", null, "playlist_detail")
 //        NavItem("PlaylistDetail", null, "playlist_detail/{playlistUIModel}")
@@ -62,21 +69,37 @@ fun NavigationGraph(
     homeViewModel: HomeViewModel,
     mainViewModel: MainViewModel,
     authViewModel: AuthViewModel,
-    uploadViewModel: UploadViewModel
+    uploadViewModel: UploadViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
     NavHost(
         navController = navHostController,
-        startDestination = NavItem.Stream.screenRoute
+        startDestination = NavItem.AddToPlaylist.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
             StreamScreen(homeViewModel, mainViewModel, navHostController)
+        }
+        composable(NavItem.TrackOptions.screenRoute) {
+            TrackOptionsScreen(homeViewModel)
+        }
+        composable(NavItem.AddToPlaylist.screenRoute) {
+            AddToPlaylistScreen()
+        }
+        composable(NavItem.Settings.screenRoute) {
+            SettingsScreen(
+                profileViewModel = profileViewModel,
+                mainState = mainState,
+                navHostController
+            )
         }
         composable(NavItem.Login.screenRoute) {
             LoginScreen(authViewModel)
         }
         composable(NavItem.Edit.screenRoute) {
-            EditScreen(mainViewModel)
+            EditScreen(mainViewModel, navHostController = navHostController) {
+                navHostController.navigate(NavItem.Settings.screenRoute)
+            }
         }
         composable(NavItem.Register.screenRoute) {
             RegisterScreen()

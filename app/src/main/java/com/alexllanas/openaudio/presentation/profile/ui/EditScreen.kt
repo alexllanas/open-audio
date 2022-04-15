@@ -1,19 +1,17 @@
 package com.alexllanas.openaudio.presentation.profile.ui
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
@@ -21,37 +19,48 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.compose.components.SaveTopBar
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import com.skydoves.landscapist.glide.GlideImage
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun EditScreen(mainViewModel: MainViewModel) {
+fun EditScreen(
+    mainViewModel: MainViewModel,
+    navHostController: NavHostController,
+    onSettingsClick: () -> Unit
+) {
     val mainState by mainViewModel.mainState.collectAsState()
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Edit Profile")
-                },
-                navigationIcon = {
-                    Text("Save", modifier = Modifier.padding(8.dp))
+//            TopAppBar(
+//                title = {
+//                    Text("Edit Profile")
+//                },
+//                navigationIcon = {
+//                    Text("Save", modifier = Modifier.padding(8.dp))
+////                    Icon(
+////                        imageVector = Icons.Default.ArrowBack,
+////                        contentDescription = stringResource(R.string.back_arrow)
+////                    )
+//                },
+//                actions = {
 //                    Icon(
-//                        imageVector = Icons.Default.ArrowBack,
-//                        contentDescription = stringResource(R.string.back_arrow)
+//                        imageVector = Icons.Default.Settings,
+//                        contentDescription = stringResource(R.string.settings),
+//                        modifier = Modifier.padding(end = 4.dp)
+//                            .clickable { onSettingsClick() }
 //                    )
-                },
-                actions = {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(R.string.settings),
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                }
-            )
-        }
+//                }
+//            )
+            SaveTopBar("Edit Profile", {}, true, onSettingsClick)
+        },
+        bottomBar = { BottomNav(navController = navHostController) }
     ) {
         Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
             Column(
@@ -101,3 +110,4 @@ fun EditScreen(mainViewModel: MainViewModel) {
         }
     }
 }
+

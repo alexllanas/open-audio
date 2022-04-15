@@ -14,6 +14,7 @@ data class HomeState(
     val searchUserResults: List<User> = emptyList(),
     val searchPostResults: List<Track> = emptyList(),
     val query: String = "",
+    val selectedTrack: Track? = null,
     val selectedPlaylist: Playlist? = null,
     val selectedPlaylistTracks: List<Track> = emptyList(),
     val selectedUser: User? = null,

@@ -9,6 +9,7 @@ import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.NavItem.Landing.screenRoute
+import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
 
 @Composable
@@ -16,7 +17,8 @@ fun MainScreen(
     mainViewModel: MainViewModel,
     homeViewModel: HomeViewModel,
     authViewModel: AuthViewModel,
-    uploadViewModel: UploadViewModel
+    uploadViewModel: UploadViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -29,7 +31,8 @@ fun MainScreen(
             mainViewModel = mainViewModel,
             homeViewModel = homeViewModel,
             authViewModel = authViewModel,
-            uploadViewModel = uploadViewModel
-            )
+            uploadViewModel = uploadViewModel,
+            profileViewModel = profileViewModel
+        )
     }
 }
