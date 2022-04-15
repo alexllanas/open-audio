@@ -28,7 +28,7 @@ fun TrackList(
                 onMoreClick = onMoreClick
             )
             if (tracks.tracks.last() == track)
-                Spacer(Modifier.height(64.dp))
+                Spacer(Modifier.height(144.dp))
         }
     }
 }

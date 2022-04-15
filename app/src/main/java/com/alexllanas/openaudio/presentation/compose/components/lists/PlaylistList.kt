@@ -23,7 +23,7 @@ fun PlaylistList(
             Log.d(TAG, "PlaylistList: ${playlist.coverImage}")
             PlaylistItem(playlist = playlist, onPlaylistClick = onPlaylistClick)
             if (playlists.last() == playlist) {
-                Spacer(Modifier.height(64.dp))
+                Spacer(Modifier.height(144.dp))
             }
         }
     }

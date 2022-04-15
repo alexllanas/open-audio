@@ -26,7 +26,7 @@ fun UserList(
                 onFollowClick = onFollowClick,
             )
             if (users.last() == user)
-                Spacer(Modifier.height(64.dp))
+                Spacer(Modifier.height(144.dp))
         }
     }
 }

@@ -38,26 +38,6 @@ fun EditScreen(
     val mainState by mainViewModel.mainState.collectAsState()
     Scaffold(
         topBar = {
-//            TopAppBar(
-//                title = {
-//                    Text("Edit Profile")
-//                },
-//                navigationIcon = {
-//                    Text("Save", modifier = Modifier.padding(8.dp))
-////                    Icon(
-////                        imageVector = Icons.Default.ArrowBack,
-////                        contentDescription = stringResource(R.string.back_arrow)
-////                    )
-//                },
-//                actions = {
-//                    Icon(
-//                        imageVector = Icons.Default.Settings,
-//                        contentDescription = stringResource(R.string.settings),
-//                        modifier = Modifier.padding(end = 4.dp)
-//                            .clickable { onSettingsClick() }
-//                    )
-//                }
-//            )
             SaveTopBar("Edit Profile", {}, true, onSettingsClick)
         },
         bottomBar = { BottomNav(navController = navHostController) }

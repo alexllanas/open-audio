@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
@@ -40,11 +41,13 @@ import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 import com.alexllanas.openaudio.presentation.profile.ui.EditScreen
 import com.alexllanas.openaudio.presentation.profile.ui.SettingsScreen
 import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
+import com.alexllanas.openaudio.presentation.upload.ui.NewTrackScreen
 import com.alexllanas.openaudio.presentation.upload.ui.UploadScreen
 import com.google.gson.Gson
 
 sealed class NavItem(var title: String, var icon: ImageVector? = null, var screenRoute: String) {
     object Landing : NavItem("Landing", null, "landing")
+    object NewTrack : NavItem("NewTrack", null, "new_track")
     object TrackOptions : NavItem("TrackOptions", null, "track_options")
     object AddToPlaylist : NavItem("AddToPlaylist", null, "add_to_playlist")
     object Login : NavItem("Login", null, "login")
@@ -75,10 +78,13 @@ fun NavigationGraph(
     val mainState by mainViewModel.mainState.collectAsState()
     NavHost(
         navController = navHostController,
-        startDestination = NavItem.AddToPlaylist.screenRoute
+        startDestination = NavItem.Stream.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
             StreamScreen(homeViewModel, mainViewModel, navHostController)
+        }
+        composable(NavItem.NewTrack.screenRoute) {
+            NewTrackScreen(uploadViewModel)
         }
         composable(NavItem.TrackOptions.screenRoute) {
             TrackOptionsScreen(homeViewModel)
@@ -161,6 +167,7 @@ fun BottomNav(navController: NavController) {
         NavItem.Profile
     )
     BottomNavigation(
+        modifier = Modifier.alpha(0.97f),
         backgroundColor = MaterialTheme.colors.background,
         contentColor = Color.Black
     ) {
