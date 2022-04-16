@@ -86,7 +86,7 @@ fun NavigationGraph(
     val homeState by homeViewModel.homeState.collectAsState()
     NavHost(
         navController = navHostController,
-        startDestination = NavItem.Follow.screenRoute
+        startDestination = NavItem.Stream.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
             StreamScreen(homeViewModel, mainViewModel, navHostController)
@@ -106,7 +106,7 @@ fun NavigationGraph(
             NewTrackScreen(uploadViewModel)
         }
         composable(NavItem.TrackOptions.screenRoute) {
-            TrackOptionsScreen(homeViewModel)
+            TrackOptionsScreen(homeViewModel, navHostController)
         }
         composable(NavItem.AddToPlaylist.screenRoute) {
             AddToPlaylistScreen()

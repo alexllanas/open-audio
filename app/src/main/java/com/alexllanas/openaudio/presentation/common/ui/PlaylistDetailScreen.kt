@@ -77,7 +77,9 @@ fun PlaylistDetailScreen(
                         mainState.sessionToken
                     )
                 },
-                onMoreClick = {})
+                onMoreClick = {
+                    navController.navigate("track_options")
+                })
         }
 
     }

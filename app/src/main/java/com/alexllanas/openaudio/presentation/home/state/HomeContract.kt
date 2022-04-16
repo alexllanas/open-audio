@@ -51,12 +51,25 @@ sealed class HomeAction {
     ) : HomeAction()
 
     data class SelectTab(val tabIndex: Int) : HomeAction()
+    data class SelectTrack(val selectedTrack: Track) : HomeAction()
     data class SelectPlaylist(val selectedPlaylist: Playlist) : HomeAction()
     data class SelectUser(val selectedUser: User) : HomeAction()
     data class GetPlaylistTracks(val playlistUrl: String) : HomeAction()
     data class QueryTextChanged(val query: String) : HomeAction()
     data class GetUser(val id: String, val sessionToken: String) : HomeAction()
 
+}
+
+sealed class SelectTrackChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> state.copy(
+                selectedTrack = selectedTrack
+            )
+        }
+    }
+
+    data class Data(val selectedTrack: Track) : SelectTrackChange()
 }
 
 sealed class GetUserChange : PartialStateChange<HomeState> {

@@ -58,7 +58,9 @@ fun SearchResultTabLayout(
             if (state.trackResults.isEmpty()) {
                 SearchBackground(state)
             } else {
-                TrackList(state.trackResults.toUI())
+                TrackList(state.trackResults.toUI(), onMoreClick = {
+                    navHostController.navigate("track_options")
+                })
             }
         }
         1 -> {

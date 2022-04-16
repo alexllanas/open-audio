@@ -192,8 +192,9 @@ class HomeViewModel @Inject constructor(
             { playlist ->
                 flowOf(SelectPlaylistChange.Data(playlist))
             }
-
         return merge(
+            filterIsInstance<HomeAction.SelectTrack>()
+                .flatMapConcat { flowOf(SelectTrackChange.Data(selectedTrack = it.selectedTrack)) },
             filterIsInstance<HomeAction.GetUser>()
                 .flatMapConcat { executeGetUser(it.id, it.sessionToken) },
             filterIsInstance<HomeAction.SelectTab>()

@@ -1,5 +1,6 @@
 package com.alexllanas.openaudio.presentation.home.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -19,12 +20,13 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun TrackOptionsScreen(homeViewModel: HomeViewModel) {
+fun TrackOptionsScreen(homeViewModel: HomeViewModel, navHostController: NavHostController) {
     val homeState by homeViewModel.homeState.collectAsState()
 
     ConstraintLayout(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -32,10 +34,12 @@ fun TrackOptionsScreen(homeViewModel: HomeViewModel) {
 
         Icon(
             imageVector = Icons.Default.Close, contentDescription = stringResource(R.string.close),
-            Modifier.constrainAs(closeIcon) {
-                top.linkTo(parent.top)
-                end.linkTo(parent.end)
-            }
+            Modifier
+                .clickable { navHostController.popBackStack() }
+                .constrainAs(closeIcon) {
+                    top.linkTo(parent.top)
+                    end.linkTo(parent.end)
+                }
         )
         GlideImage(imageModel = homeState.selectedTrack?.image,
             contentScale = ContentScale.Crop,
