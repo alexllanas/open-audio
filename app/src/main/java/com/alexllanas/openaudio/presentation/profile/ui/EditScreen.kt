@@ -38,11 +38,13 @@ fun EditScreen(
     val mainState by mainViewModel.mainState.collectAsState()
     Scaffold(
         topBar = {
-            SaveTopBar("Edit Profile", {}, true, onSettingsClick)
+            SaveTopBar("Edit Profile", { navHostController.popBackStack() }, true, onSettingsClick)
         },
         bottomBar = { BottomNav(navController = navHostController) }
     ) {
-        Column(modifier = Modifier.padding(16.dp).fillMaxSize().verticalScroll(rememberScrollState())) {
+        Column(
+            modifier = Modifier.padding(16.dp).fillMaxSize().verticalScroll(rememberScrollState())
+        ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()

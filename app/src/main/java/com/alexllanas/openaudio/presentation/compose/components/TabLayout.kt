@@ -23,6 +23,7 @@ import com.alexllanas.openaudio.presentation.home.ui.SearchState
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.ui.navigateToPlaylistDetail
 import com.alexllanas.openaudio.presentation.main.ui.navigateToUserDetail
+import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.mappers.toUI
 
 @Composable
@@ -59,6 +60,7 @@ fun SearchResultTabLayout(
                 SearchBackground(state)
             } else {
                 TrackList(state.trackResults.toUI(), onMoreClick = {
+                    homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
                     navHostController.navigate("track_options")
                 })
             }

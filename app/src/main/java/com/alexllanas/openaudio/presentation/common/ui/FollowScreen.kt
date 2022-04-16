@@ -11,13 +11,17 @@ import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants
 import com.alexllanas.openaudio.presentation.compose.components.OpenAudioAppBar
 import com.alexllanas.openaudio.presentation.compose.components.lists.UserList
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
+import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
+import com.alexllanas.openaudio.presentation.main.ui.navigateToUserDetail
 
 @Composable
 fun FollowScreen(
     navHostController: NavHostController,
     homeViewModel: HomeViewModel,
+    mainState: MainState,
     title: String
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
@@ -36,11 +40,18 @@ fun FollowScreen(
 
     ) {
         UserList(
-            (when (title) {
-                Constants.FOLLOWERS -> homeState.selectedUser?.subscribers
-                Constants.FOLLOWING -> homeState.selectedUser?.subscriptions
+            when (title) {
+                Constants.FOLLOWERS -> homeState.selectedUserFollowers
+                Constants.FOLLOWING -> homeState.selectedUserFollowing
                 else -> emptyList()
-            }) as List<User>
+            }, onUserClick = { user ->
+                user.id?.let { id ->
+                    mainState.sessionToken?.let { token ->
+                        homeViewModel.dispatch(HomeAction.GetUser(id, token))
+                        navigateToUserDetail(navHostController)
+                    }
+                }
+            }
         )
     }
 }

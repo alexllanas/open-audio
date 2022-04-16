@@ -75,6 +75,7 @@ fun UploadScreen(navController: NavHostController, uploadViewModel: UploadViewMo
             )
             Button(onClick = {
 
+                navController.navigate("new_track")
             },
                 modifier = Modifier
                     .padding(top = 24.dp)

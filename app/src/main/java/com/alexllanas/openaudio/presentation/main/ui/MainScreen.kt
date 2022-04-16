@@ -41,10 +41,10 @@ fun MainScreen(
                 uploadViewModel = uploadViewModel,
                 profileViewModel = profileViewModel
             )
-            MediaPlayerControls(
-                mainViewModel = mainViewModel,
-                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 64.dp)
-            )
+//            MediaPlayerControls(
+//                mainViewModel = mainViewModel,
+//                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 64.dp)
+//            )
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.alexllanas.openaudio.presentation.home.ui
+package com.alexllanas.openaudio.presentation.common.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -67,14 +67,14 @@ fun TrackOptionsScreen(homeViewModel: HomeViewModel, navHostController: NavHostC
         OptionsMenu(modifier = Modifier.padding(8.dp).constrainAs(optionsMenu) {
             top.linkTo(title.bottom)
             start.linkTo(parent.start)
-        })
+        }, navHostController)
     }
 }
 
 @Composable
-fun OptionsMenu(modifier: Modifier = Modifier) {
+fun OptionsMenu(modifier: Modifier = Modifier, navHostController: NavHostController) {
     Column(modifier) {
-        Row(modifier = Modifier.padding(bottom = 24.dp)) {
+        Row(modifier = Modifier.padding(bottom = 24.dp).fillMaxWidth()) {
             Icon(
                 imageVector = Icons.Default.FavoriteBorder,
                 contentDescription = stringResource(R.string.like_track)
@@ -85,7 +85,12 @@ fun OptionsMenu(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.body1
             )
         }
-        Row(modifier = Modifier.padding(bottom = 24.dp)) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                navHostController.navigate("add_to_playlist")
+            }
+            .padding(bottom = 24.dp)) {
             Icon(
                 imageVector = Icons.Outlined.Queue,
                 contentDescription = stringResource(R.string.add_to_playlist)
@@ -96,7 +101,7 @@ fun OptionsMenu(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.body1
             )
         }
-        Row(modifier = Modifier.padding()) {
+        Row(modifier = Modifier.fillMaxWidth().padding()) {
             Icon(
                 imageVector = Icons.Outlined.Share,
                 contentDescription = stringResource(R.string.share)

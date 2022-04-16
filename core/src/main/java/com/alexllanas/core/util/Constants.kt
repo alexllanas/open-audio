@@ -2,8 +2,8 @@ package com.alexllanas.core.util
 
 class Constants {
     companion object {
-        const val FOLLOWERS: String = "followers"
-        const val FOLLOWING: String = "following"
+        const val FOLLOWERS: String = "Followers"
+        const val FOLLOWING: String = "Following"
 
         /**
          * Logging

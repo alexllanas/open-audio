@@ -9,8 +9,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
-import com.alexllanas.core.domain.models.User
+import com.alexllanas.core.util.Constants
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.components.lists.PlaylistList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
@@ -85,23 +83,24 @@ fun UserDetailScreen(
         ConstraintLayout(
             Modifier.fillMaxWidth().height(height = 56.dp).background(MaterialTheme.colors.primary)
         ) {
-            val (gearIcon) = createRefs()
-
-            Icon(
-                imageVector = Icons.Default.Add,
-                tint = MaterialTheme.colors.onPrimary,
-                contentDescription = stringResource(R.string.settings),
-                modifier = Modifier
-                    .alpha(0.8f)
-                    .clickable {
-
-                    }
-                    .padding(end = 16.dp)
-                    .constrainAs(gearIcon) {
-                        end.linkTo(parent.end)
-                        centerVerticallyTo(parent)
-                    }
-            )
+            val (addIcon) = createRefs()
+            if (isCurrentUser) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    tint = MaterialTheme.colors.onPrimary,
+                    contentDescription = stringResource(R.string.settings),
+                    modifier = Modifier
+                        .alpha(0.8f)
+                        .clickable {
+                            navHostController.navigate("add_to_playlist")
+                        }
+                        .padding(end = 16.dp)
+                        .constrainAs(addIcon) {
+                            end.linkTo(parent.end)
+                            centerVerticallyTo(parent)
+                        }
+                )
+            }
         }
     },
         bottomBar = { BottomNav(navController = navHostController) }
@@ -122,8 +121,11 @@ fun UserDetailScreen(
             ) {
                 UserHeader(
                     user.toUI(),
+                    homeViewModel = homeViewModel,
+                    mainState = mainState,
                     onEditClick = onEditClick,
-                    isCurrentUser = isCurrentUser
+                    isCurrentUser = isCurrentUser,
+                    navHostController = navHostController,
                 ) { isSubscribing ->
                     if (!isSubscribing) {
                         homeViewModel.dispatch(
@@ -161,9 +163,12 @@ fun UserDetailScreen(
 @Composable
 fun UserHeader(
     userUIModel: UserUIModel,
+    homeViewModel: HomeViewModel,
+    mainState: MainState,
     isCurrentUser: Boolean,
     onEditClick: () -> Unit,
-    onFollowButtonClick: (Boolean) -> Unit
+    navHostController: NavHostController,
+    onFollowButtonClick: (Boolean) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
@@ -188,9 +193,38 @@ fun UserHeader(
             modifier = Modifier.padding(4.dp)
         )
         Row(Modifier.padding(vertical = 8.dp)) {
-            Text(text = "${userUIModel.subscriptionCount} following")
+            Text(
+                text = "${userUIModel.subscriptionCount} following",
+                modifier = Modifier.clickable {
+                    userUIModel.id?.let {
+                        mainState.sessionToken?.let {
+                            homeViewModel.dispatch(
+                                HomeAction.GetFollowing(
+                                    userUIModel.id,
+                                    mainState.sessionToken
+                                )
+                            )
+                        }
+                    }
+                    navHostController.navigate("follow/${Constants.FOLLOWING}")
+                }
+            )
             Spacer(modifier = Modifier.width(24.dp))
-            Text(text = "${userUIModel.subscriberCount} followers")
+            Text(text = "${userUIModel.subscriberCount} followers",
+                modifier = Modifier.clickable {
+                    userUIModel.id?.let {
+                        mainState.sessionToken?.let {
+                            homeViewModel.dispatch(
+                                HomeAction.GetFollowers(
+                                    userUIModel.id,
+                                    mainState.sessionToken
+                                )
+                            )
+                        }
+                    }
+                    navHostController.navigate("follow/${Constants.FOLLOWERS}")
+                }
+            )
         }
         if (isCurrentUser) {
             Button(

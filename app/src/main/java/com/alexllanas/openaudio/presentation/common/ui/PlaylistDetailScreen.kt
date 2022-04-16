@@ -78,6 +78,7 @@ fun PlaylistDetailScreen(
                     )
                 },
                 onMoreClick = {
+                    homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
                     navController.navigate("track_options")
                 })
         }

@@ -57,7 +57,7 @@ fun SettingsScreen(
 //                    //                    )
 //                }
 //            )
-            SaveTopBar("Settings", {}, false)
+            SaveTopBar("Settings", { navHostController.popBackStack() }, false)
         },
         bottomBar = { BottomNav(navController = navHostController) }
 

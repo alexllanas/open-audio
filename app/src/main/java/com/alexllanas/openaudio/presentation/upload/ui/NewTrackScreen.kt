@@ -9,7 +9,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.Composable
@@ -26,17 +25,25 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.compose.components.appbars.TitleBackBar
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
+import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import com.alexllanas.openaudio.presentation.upload.state.UploadState
 import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun NewTrackScreen(uploadViewModel: UploadViewModel) {
+fun NewTrackScreen(
+    uploadViewModel: UploadViewModel,
+    navHostController: NavHostController,
+    homeViewModel: HomeViewModel
+) {
     val uploadState by uploadViewModel.uploadState.collectAsState()
 
     Scaffold(
-        topBar = { NewTrackAppBar() }
+        topBar = { TitleBackBar("Upload") { navHostController.popBackStack() } },
+        bottomBar = { BottomNav(navController = navHostController) }
     ) {
         ConstraintLayout(modifier = Modifier.padding(16.dp).fillMaxSize()) {
             val (image, trackInfo) = createRefs()
@@ -61,9 +68,10 @@ fun NewTrackScreen(uploadViewModel: UploadViewModel) {
                         start.linkTo(parent.start)
                         top.linkTo(image.bottom)
                     },
-                uploadState
+                homeViewModel = homeViewModel,
+                uploadState = uploadState,
+                navHostController = navHostController,
             )
-
         }
 
     }
@@ -72,7 +80,9 @@ fun NewTrackScreen(uploadViewModel: UploadViewModel) {
 @Composable
 fun TrackDetail(
     modifier: Modifier = Modifier,
-    uploadState: UploadState
+    uploadState: UploadState,
+    homeViewModel: HomeViewModel,
+    navHostController: NavHostController
 ) {
     Row(modifier = modifier) {
         Text(
@@ -88,40 +98,13 @@ fun TrackDetail(
         )
         Icon(
             imageVector = Icons.Outlined.MoreVert,
-            contentDescription = stringResource(R.string.like_track)
-        )
-    }
-}
-
-@Composable
-fun NewTrackAppBar() {
-    ConstraintLayout(
-        Modifier.fillMaxWidth().height(height = 56.dp).background(MaterialTheme.colors.primary)
-    ) {
-        val (backArrow, title) = createRefs()
-
-        Icon(
-            imageVector = Icons.Default.ArrowBack,
-            tint = MaterialTheme.colors.onPrimary,
-            contentDescription = stringResource(R.string.back_arrow),
-            modifier = Modifier
-                .alpha(0.8f)
-                .clickable { }
-                .padding(start = 16.dp)
-                .constrainAs(backArrow) {
-                    start.linkTo(parent.start)
-                    centerVerticallyTo(parent)
+            contentDescription = stringResource(R.string.like_track),
+            modifier = Modifier.clickable {
+                uploadState.uploadedTrack?.let { track ->
+                    homeViewModel.dispatch(HomeAction.SelectTrack(track))
+                    navHostController.navigate("track_options")
                 }
+            }
         )
-        Text(
-            text = "Upload",
-            color = MaterialTheme.colors.onPrimary,
-            modifier = Modifier.constrainAs(title) {
-                centerHorizontallyTo(parent)
-                centerVerticallyTo(parent)
-            },
-            style = MaterialTheme.typography.h5
-        )
-
     }
 }

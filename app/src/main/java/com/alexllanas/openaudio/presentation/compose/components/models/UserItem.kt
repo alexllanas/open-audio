@@ -56,7 +56,11 @@ fun UserItem(
     ) {
         ListItem(
             text = { Text(text = user?.name.toString(), maxLines = 1) },
-            secondaryText = { Text(text = "${user?.lastTrack?.title}") },
+            secondaryText = {
+                user?.lastTrack?.let {
+                    Text(text = "${it.title}")
+                }
+            },
             icon = {
                 GlideImage(
                     modifier = modifier.size(50.dp).clip(CircleShape)

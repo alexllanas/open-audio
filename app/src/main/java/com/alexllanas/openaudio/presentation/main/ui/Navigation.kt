@@ -23,26 +23,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import com.alexllanas.core.util.Constants
 import com.alexllanas.core.util.Constants.Companion.TAG
-import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.auth.ui.LandingScreen
 import com.alexllanas.openaudio.presentation.auth.ui.LoginScreen
 import com.alexllanas.openaudio.presentation.auth.ui.RegisterScreen
-import com.alexllanas.openaudio.presentation.common.ui.AddToPlaylistScreen
-import com.alexllanas.openaudio.presentation.common.ui.FollowScreen
-import com.alexllanas.openaudio.presentation.common.ui.PlaylistDetailScreen
-import com.alexllanas.openaudio.presentation.common.ui.UserDetailScreen
-import com.alexllanas.openaudio.presentation.home.state.HomeAction
+import com.alexllanas.openaudio.presentation.common.ui.*
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.home.ui.SearchScreen
 import com.alexllanas.openaudio.presentation.home.ui.StreamScreen
-import com.alexllanas.openaudio.presentation.home.ui.TrackOptionsScreen
+import com.alexllanas.openaudio.presentation.common.ui.TrackOptionsScreen
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.models.PlaylistUIModel
 import com.alexllanas.openaudio.presentation.models.UserUIModel
-import com.alexllanas.openaudio.presentation.profile.state.ProfileAction
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 import com.alexllanas.openaudio.presentation.profile.ui.EditScreen
 import com.alexllanas.openaudio.presentation.profile.ui.SettingsScreen
@@ -55,8 +48,9 @@ sealed class NavItem(var title: String, var icon: ImageVector? = null, var scree
     object Landing : NavItem("Landing", null, "landing")
     object Follow : NavItem("Follow", null, "follow/{title}")
     object NewTrack : NavItem("NewTrack", null, "new_track")
-    object TrackOptions : NavItem("TrackOptions", null, "track_options")
     object AddToPlaylist : NavItem("AddToPlaylist", null, "add_to_playlist")
+    object TrackOptions : NavItem("TrackOptions", null, "track_options")
+    object CreatePlaylist : NavItem("CreatePlaylist", null, "create_playlist")
     object Login : NavItem("Login", null, "login")
     object Register : NavItem("Register", null, "register")
     object Edit : NavItem("Edit", null, "edit")
@@ -89,41 +83,55 @@ fun NavigationGraph(
         startDestination = NavItem.Stream.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
-            StreamScreen(homeViewModel, mainViewModel, navHostController)
+            MediaScreen(mainViewModel) {
+                StreamScreen(homeViewModel, mainViewModel, navHostController)
+            }
         }
         composable(
             NavItem.Follow.screenRoute,
             arguments = listOf(navArgument("title") { type = NavType.StringType })
         ) { backStackEntry ->
             val title = backStackEntry.arguments?.getString("title")
-            FollowScreen(
-                navHostController,
-                homeViewModel,
-                title ?: "No Title"
-            )
+            MediaScreen(mainViewModel) {
+                FollowScreen(
+                    navHostController,
+                    homeViewModel,
+                    mainState = mainState,
+                    title ?: "No Title"
+                )
+            }
         }
         composable(NavItem.NewTrack.screenRoute) {
-            NewTrackScreen(uploadViewModel)
+            MediaScreen(mainViewModel) {
+                NewTrackScreen(uploadViewModel, navHostController, homeViewModel)
+            }
         }
         composable(NavItem.TrackOptions.screenRoute) {
             TrackOptionsScreen(homeViewModel, navHostController)
         }
+        composable(NavItem.CreatePlaylist.screenRoute) {
+            CreatePlaylistScreen(navHostController)
+        }
         composable(NavItem.AddToPlaylist.screenRoute) {
-            AddToPlaylistScreen()
+            AddToPlaylistScreen(mainState, homeViewModel, navHostController)
         }
         composable(NavItem.Settings.screenRoute) {
-            SettingsScreen(
-                profileViewModel = profileViewModel,
-                mainState = mainState,
-                navHostController
-            )
+            MediaScreen(mainViewModel) {
+                SettingsScreen(
+                    profileViewModel = profileViewModel,
+                    mainState = mainState,
+                    navHostController
+                )
+            }
         }
         composable(NavItem.Login.screenRoute) {
             LoginScreen(authViewModel)
         }
         composable(NavItem.Edit.screenRoute) {
-            EditScreen(mainViewModel, navHostController = navHostController) {
-                navHostController.navigate(NavItem.Settings.screenRoute)
+            MediaScreen(mainViewModel) {
+                EditScreen(mainViewModel, navHostController = navHostController) {
+                    navHostController.navigate(NavItem.Settings.screenRoute)
+                }
             }
         }
         composable(NavItem.Register.screenRoute) {
@@ -140,19 +148,27 @@ fun NavigationGraph(
             )
         }
         composable(NavItem.Search.screenRoute) {
-            SearchScreen(homeViewModel, mainViewModel, navHostController)
+            MediaScreen(mainViewModel) {
+                SearchScreen(homeViewModel, mainViewModel, navHostController)
+            }
         }
         composable(NavItem.Upload.screenRoute) {
-            UploadScreen(navController = navHostController, uploadViewModel)
+            MediaScreen(mainViewModel) {
+                UploadScreen(navController = navHostController, uploadViewModel)
+            }
         }
         composable(NavItem.Profile.screenRoute) {
-            UserDetailScreen(Modifier, homeViewModel, mainState, navHostController, true) {
-                navHostController.navigate(NavItem.Edit.screenRoute)
+            MediaScreen(mainViewModel) {
+                UserDetailScreen(Modifier, homeViewModel, mainState, navHostController, true) {
+                    navHostController.navigate(NavItem.Edit.screenRoute)
+                }
             }
         }
         composable(NavItem.UserDetail.screenRoute) {
-            UserDetailScreen(Modifier, homeViewModel, mainState, navHostController, false) {
-                navHostController.navigate(NavItem.Edit.screenRoute)
+            MediaScreen(mainViewModel) {
+                UserDetailScreen(Modifier, homeViewModel, mainState, navHostController, false) {
+                    navHostController.navigate(NavItem.Edit.screenRoute)
+                }
             }
         }
         composable(
@@ -165,13 +181,15 @@ fun NavigationGraph(
         ) { backStackEntry ->
 //            backStackEntry.arguments?.getParcelable<PlaylistUIModel>("playlistUIModel")
 //                ?.let { playlist ->
-            PlaylistDetailScreen(
-                modifier = Modifier,
-                mainState = mainState,
+            MediaScreen(mainViewModel) {
+                PlaylistDetailScreen(
+                    modifier = Modifier,
+                    mainState = mainState,
 //                        playlist = playlist,
-                homeViewModel = homeViewModel,
-                navController = navHostController
-            )
+                    homeViewModel = homeViewModel,
+                    navController = navHostController
+                )
+            }
 //                }
         }
     }
