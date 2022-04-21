@@ -2,11 +2,19 @@ package com.alexllanas.testing.data.remote.user
 
 import arrow.core.Either
 import com.alexllanas.core.data.remote.user.UserDataSource
+import com.alexllanas.core.domain.models.Post
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import kotlinx.coroutines.flow.Flow
 
 class FakeUserDataSourceImpl : UserDataSource {
+    override suspend fun toggleLike(
+        trackId: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, Post>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun login(email: String, password: String): Flow<Either<Throwable, User>> {
         TODO("Not yet implemented")
     }

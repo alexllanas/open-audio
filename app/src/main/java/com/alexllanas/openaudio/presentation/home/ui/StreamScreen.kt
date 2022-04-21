@@ -1,10 +1,12 @@
 package com.alexllanas.openaudio.presentation.home.ui
 
+import android.util.Log
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
+import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
@@ -35,20 +37,28 @@ fun StreamScreen(
         bottomBar = { BottomNav(navController = navController) }
 
     ) {
+
+        Log.d(TAG, "StreamScreen: ${homeState.stream}")
+
         TrackList(
             homeState.stream.toUI(),
-            onHeartClick = { shouldLike, track ->
-                homeViewModel.onHeartClick(
-                    shouldLike,
-                    track.toDomain(),
-                    mainState.loggedInUser,
-                    mainState.sessionToken
-                )
+            onHeartClick = { track ->
+                track.id?.let { id ->
+                    mainState.sessionToken?.let { token ->
+                        homeViewModel.dispatch(
+                            HomeAction.ToggleLikeStreamTrack(
+                                trackId = id,
+                                token
+                            )
+                        )
+                    }
+                }
             },
             onMoreClick = {
                 homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
                 navController.navigate("track_options")
-            }
+            },
+            mainState = mainState
         )
     }
 }

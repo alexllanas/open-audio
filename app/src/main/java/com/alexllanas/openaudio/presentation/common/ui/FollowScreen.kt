@@ -51,6 +51,9 @@ fun FollowScreen(
                         navigateToUserDetail(navHostController)
                     }
                 }
+            },
+            onFollowClick = { isSubscribing, user ->
+                homeViewModel.onFollowClick(isSubscribing, user, mainState)
             }
         )
     }

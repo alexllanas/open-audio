@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
@@ -14,9 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.compose.components.SearchResultTabLayout
-import com.alexllanas.openaudio.presentation.home.state.HomeAction
-import com.alexllanas.openaudio.presentation.home.state.HomeState
-import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
+import com.alexllanas.openaudio.presentation.home.state.*
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav

@@ -1,7 +1,6 @@
 package com.alexllanas.openaudio.presentation.util
 
 import com.alexllanas.core.domain.models.Track
-import com.alexllanas.core.domain.models.User
 
 val SAMPLE_TRACKS = listOf<Track>(
     Track(

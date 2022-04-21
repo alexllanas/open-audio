@@ -6,6 +6,10 @@ import com.alexllanas.core.domain.models.User
 import java.io.File
 
 class FakeUserRemoteService : UserRemoteServiceContract {
+    override suspend fun toggleLike(trackId: String, sessionToken: String): Any {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun login(email: String, password: String): User {
         TODO("Not yet implemented")
     }

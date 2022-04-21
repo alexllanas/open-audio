@@ -12,7 +12,7 @@ fun User.toUI(): UserUIModel =
         URLEncoder.encode(avatarUrl, StandardCharsets.UTF_8.toString()),
         subscriptionCount,
         subscriberCount,
-        isSubscribing
+        isSubscribing = isSubscribing
     )
 
 fun UserUIModel.toDomain(): User =

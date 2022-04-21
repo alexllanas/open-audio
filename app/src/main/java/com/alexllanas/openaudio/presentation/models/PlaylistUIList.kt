@@ -6,5 +6,5 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class TrackUIList(
-    val tracks : List<TrackUIModel>
+    val tracks : List<TrackUIModel?>
 ) : Parcelable

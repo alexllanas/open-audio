@@ -1,10 +1,8 @@
 package com.alexllanas.openaudio.presentation.mappers
 
 import com.alexllanas.core.domain.models.Track
-import com.alexllanas.core.domain.models.User
 import com.alexllanas.openaudio.presentation.models.TrackUIList
 import com.alexllanas.openaudio.presentation.models.TrackUIModel
-import com.alexllanas.openaudio.presentation.models.UserUIModel
 
 fun Track.toUI(): TrackUIModel =
     TrackUIModel(id, title, image, mediaUrl, userLikeIds, liked)

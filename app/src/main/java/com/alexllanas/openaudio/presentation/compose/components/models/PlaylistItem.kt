@@ -45,7 +45,11 @@ fun PlaylistItem(
     ) {
         ListItem(
             text = { Text(text = playlist?.name.toString(), maxLines = 1) },
-            secondaryText = { Text(text = "${playlist?.trackCount?.toString()} tracks") },
+            secondaryText = {
+                playlist?.trackCount?.let { count ->
+                    Text(text = "$count tracks")
+                }
+            },
             icon = {
                 GlideImage(
                     modifier = modifier.size(50.dp),

@@ -14,8 +14,8 @@ class ResponseInterceptor : Interceptor {
         val res = chain.proceed(req)
         sessionToken = res.getSessionToken()
 //        val body = res.body()?.string()
-        Log.d(TAG, "intercept: ${req.url()}")
-        Log.d(TAG, "intercept: ${res.peekBody(Long.MAX_VALUE).string()}")
+//        Log.d(TAG, "intercept: ${req.url}")
+//        Log.d(TAG, "intercept: ${res.peekBody(Long.MAX_VALUE).string()}")
 //        Log.d(Constants.TAG, "provideOkHttpClientBuilder: Session Token: $sessionToken")
         return res
     }

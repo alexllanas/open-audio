@@ -1,5 +1,6 @@
 package com.alexllanas.openaudio.framework.network.models
 
+import com.alexllanas.core.domain.models.Playlist
 import com.google.gson.annotations.SerializedName
 
 data class TrackResponse(
@@ -13,5 +14,7 @@ data class TrackResponse(
     val image: String? = null,
     @SerializedName(value = "lov")
     val userLikeIds: List<String> = emptyList(),
-    val liked: Boolean = false
+    val liked: Boolean = false,
+//    @SerializedName(value = "pl")
+//    val playlists: List<PlaylistResponse> = emptyList()
 )

@@ -3,20 +3,18 @@ package com.alexllanas.openaudio.presentation.home.state
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import arrow.core.computations.result
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.domain.models.canLike
-import com.alexllanas.core.interactors.home.GetPlaylistTracks
 import com.alexllanas.core.interactors.home.HomeInteractors
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
-import com.alexllanas.openaudio.presentation.models.TrackUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -54,6 +52,30 @@ class HomeViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun SharedFlow<HomeAction>.toChangeFlow(): Flow<PartialStateChange<HomeState>> {
 
+        val executeToggleLike: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
+            { trackId, sessionToken ->
+                homeInteractors.toggleLike(trackId, sessionToken)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { ToggleLikeSearchTrackChange.Error(it) },
+                            ifRight = {
+                                ToggleLikeSearchTrackChange.Data(it, trackId)
+                            }
+                        )
+                    }.onStart { ToggleLikeSearchTrackChange.Loading }
+            }
+        val executeToggleLikeStreamTrack: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
+            { trackId, sessionToken ->
+                homeInteractors.toggleLike(trackId, sessionToken)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { ToggleLikeStreamTrackChange.Error(it) },
+                            ifRight = {
+                                ToggleLikeStreamTrackChange.Data(it, trackId)
+                            }
+                        )
+                    }.onStart { ToggleLikeStreamTrackChange.Loading }
+            }
         val executeLoadStream: suspend (String) -> Flow<PartialStateChange<HomeState>> =
             { sessionToken ->
                 homeInteractors.getStream(sessionToken)
@@ -193,6 +215,10 @@ class HomeViewModel @Inject constructor(
                 flowOf(SelectPlaylistChange.Data(playlist))
             }
         return merge(
+            filterIsInstance<HomeAction.ToggleLikeStreamTrack>()
+                .flatMapConcat { executeToggleLikeStreamTrack(it.trackId, it.sessionToken) },
+            filterIsInstance<HomeAction.ToggleLikeSearchTracks>()
+                .flatMapConcat { executeToggleLike(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.SelectTrack>()
                 .flatMapConcat { flowOf(SelectTrackChange.Data(selectedTrack = it.selectedTrack)) },
             filterIsInstance<HomeAction.GetUser>()
@@ -201,8 +227,6 @@ class HomeViewModel @Inject constructor(
                 .flatMapConcat { flowOf(SelectTabChange.Data(it.tabIndex)) },
             filterIsInstance<HomeAction.QueryTextChanged>()
                 .flatMapConcat { flowOf(TextChange.QueryTextChange(it.query)) },
-//            filterIsInstance<HomeAction.SelectUser>()
-//                .flatMapConcat { flowOf(SelectUserChange.Data(it.selectedUser)) },
             filterIsInstance<HomeAction.SelectPlaylist>()
                 .flatMapConcat { executeSelectPlaylist(it.selectedPlaylist) },
             filterIsInstance<HomeAction.GetPlaylistTracks>()
@@ -243,29 +267,21 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun onHeartClick(
-        shouldLike: Boolean,
-        track: Track,
-        loggedInUser: User?,
-        sessionToken: String?
-    ) {
-        if (track.canLike() && loggedInUser != null && sessionToken?.isNotEmpty() == true) {
-            if (shouldLike) {
-                dispatch(
-                    HomeAction.LikeTrack(
-                        track,
-                        sessionToken,
-                        loggedInUser
-                    )
+    fun onFollowClick(isSubscribing: Boolean, user: User, mainState: MainState) {
+        if (!isSubscribing) {
+            dispatch(
+                HomeAction.FollowUser(
+                    user,
+                    mainState.sessionToken ?: throw IllegalArgumentException()
                 )
-            } else {
-                dispatch(
-                    HomeAction.UnlikeTrack(
-                        track,
-                        sessionToken,
-                    )
+            )
+        } else {
+            dispatch(
+                HomeAction.UnfollowUser(
+                    user,
+                    mainState.sessionToken ?: throw IllegalArgumentException()
                 )
-            }
+            )
         }
     }
 }

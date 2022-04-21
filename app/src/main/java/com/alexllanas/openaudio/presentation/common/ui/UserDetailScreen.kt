@@ -17,24 +17,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.alexllanas.core.util.Constants
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.compose.components.GallerySelector
 import com.alexllanas.openaudio.presentation.compose.components.lists.PlaylistList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
+import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import com.alexllanas.openaudio.presentation.main.ui.navigateToPlaylistDetail
 import com.alexllanas.openaudio.presentation.mappers.toUI
 import com.alexllanas.openaudio.presentation.models.UserUIModel
-import com.skydoves.landscapist.glide.GlideImage
 import java.lang.IllegalArgumentException
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
@@ -43,6 +46,7 @@ import java.nio.charset.StandardCharsets
 fun UserDetailScreen(
     modifier: Modifier,
     homeViewModel: HomeViewModel,
+    mainViewModel: MainViewModel,
     mainState: MainState,
     navHostController: NavHostController,
     isCurrentUser: Boolean,
@@ -92,7 +96,7 @@ fun UserDetailScreen(
                     modifier = Modifier
                         .alpha(0.8f)
                         .clickable {
-                            navHostController.navigate("add_to_playlist")
+                            navHostController.navigate("create_playlist")
                         }
                         .padding(end = 16.dp)
                         .constrainAs(addIcon) {
@@ -122,6 +126,7 @@ fun UserDetailScreen(
                 UserHeader(
                     user.toUI(),
                     homeViewModel = homeViewModel,
+                    mainViewModel = mainViewModel,
                     mainState = mainState,
                     onEditClick = onEditClick,
                     isCurrentUser = isCurrentUser,
@@ -164,6 +169,7 @@ fun UserDetailScreen(
 fun UserHeader(
     userUIModel: UserUIModel,
     homeViewModel: HomeViewModel,
+    mainViewModel: MainViewModel,
     mainState: MainState,
     isCurrentUser: Boolean,
     onEditClick: () -> Unit,
@@ -174,18 +180,21 @@ fun UserHeader(
         Box(
             modifier = Modifier.padding(top = 16.dp, bottom = 4.dp)
         ) {
-            GlideImage(
-                modifier = Modifier.size(160.dp)
-                    .clip(CircleShape)
+            AsyncImage(
+                modifier = Modifier.size(160.dp).clip(CircleShape)
                     .border(BorderStroke(1.dp, Color.Black), shape = CircleShape),
-                imageModel = URLDecoder.decode(
+                model =
+                URLDecoder.decode(
                     userUIModel.avatarUrl,
                     StandardCharsets.UTF_8.toString()
                 ),
-                contentScale = ContentScale.Crop,
-                placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
-                error = ImageBitmap.imageResource(R.drawable.blank_user)
+//                    )
+                contentDescription = null,
+                placeholder = painterResource(R.drawable.blank_user),
+                error = painterResource(R.drawable.blank_user),
+                contentScale = ContentScale.Crop
             )
+//            }
         }
         Text(
             text = userUIModel.name.toString(),

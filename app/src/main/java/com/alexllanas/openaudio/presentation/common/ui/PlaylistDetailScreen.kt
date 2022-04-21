@@ -1,6 +1,5 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -18,9 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
@@ -31,7 +28,6 @@ import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.mappers.toUI
 import com.alexllanas.openaudio.presentation.models.PlaylistUIModel
 import com.skydoves.landscapist.glide.GlideImage
-import java.lang.IllegalArgumentException
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
@@ -69,18 +65,18 @@ fun PlaylistDetailScreen(
                 Header(modifier, it.toUI())
             }
             TrackList(tracks = homeState.selectedPlaylistTracks.toUI(),
-                onHeartClick = { shouldLike, track ->
-                    homeViewModel.onHeartClick(
-                        shouldLike,
-                        track.toDomain(),
-                        mainState.loggedInUser,
-                        mainState.sessionToken
-                    )
+                onHeartClick = { track ->
+                    track.id?.let { id ->
+                        mainState.sessionToken?.let { token ->
+                            homeViewModel.dispatch(HomeAction.ToggleLikeSearchTracks(trackId = id, token))
+                        }
+                    }
                 },
                 onMoreClick = {
                     homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
                     navController.navigate("track_options")
-                })
+                },
+            mainState = mainState)
         }
 
     }

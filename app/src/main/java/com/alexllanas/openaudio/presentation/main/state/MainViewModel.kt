@@ -1,20 +1,24 @@
 package com.alexllanas.openaudio.presentation.main.state
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.Uri
 import android.util.Log
-import androidx.compose.ui.semantics.SemanticsProperties.Error
+import android.util.SparseArray
+import androidx.compose.ui.text.substring
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import arrow.core.computations.result
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.interactors.auth.AuthInteractors
 import com.alexllanas.core.interactors.home.HomeInteractors
-import com.alexllanas.core.interactors.profile.ChangeAvatar
-import com.alexllanas.core.interactors.profile.ChangeBio
 import com.alexllanas.core.interactors.profile.ProfileInteractors
 import com.alexllanas.core.util.Constants
-import com.alexllanas.core.util.getResult
+import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.framework.network.YoutubeApi
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.auth.state.LoginChange
+import com.alexllanas.openaudio.presentation.common.state.Action
+import com.alexllanas.openaudio.presentation.common.ui.MyDownloader
 import com.alexllanas.openaudio.presentation.home.state.AddTrackToPlaylistChange
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.profile.state.ChangeInfo
@@ -24,18 +28,25 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import org.schabi.newpipe.extractor.timeago.patterns.it
+import java.net.URLDecoder
+import java.net.URLEncoder
+import java.nio.charset.CharsetEncoder
+import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val authInteractors: AuthInteractors,
     private val homeInteractors: HomeInteractors,
-    private val profileInteractors: ProfileInteractors
+    private val profileInteractors: ProfileInteractors,
+    private val youtubeApi: YoutubeApi
 ) : ViewModel() {
     private val initialMainState: MainState by lazy { MainState() }
     val mainState: StateFlow<MainState>
 
-    private val _actions = MutableSharedFlow<AuthAction>()
+
+    private val _actions = MutableSharedFlow<Action>()
     private val actions = _actions.asSharedFlow()
 
     init {
@@ -51,7 +62,7 @@ class MainViewModel @Inject constructor(
 
     }
 
-    fun dispatch(action: AuthAction) {
+    fun dispatch(action: Action) {
         Log.d(Constants.TAG, "dispatch: $action")
         viewModelScope.launch {
             _actions.emit(action)
@@ -59,7 +70,7 @@ class MainViewModel @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class, kotlinx.coroutines.FlowPreview::class)
-    private fun SharedFlow<AuthAction>.toChangeFlow(): Flow<PartialStateChange<MainState>> {
+    private fun SharedFlow<Action>.toChangeFlow(): Flow<PartialStateChange<MainState>> {
         val executeLogin: suspend (String, String) -> Flow<PartialStateChange<MainState>> =
             { email, password ->
                 authInteractors.login(email, password)
@@ -176,5 +187,18 @@ class MainViewModel @Inject constructor(
                     executeLogin(it.email, it.password)
                 }
         )
+    }
+
+    fun getVideo(url: String) {
+
+//        val encodedUrl = URLEncoder.encode(
+//            url,
+//            StandardCharsets.UTF_8.toString()
+//        )
+        viewModelScope.launch {
+            val response =
+                youtubeApi.getVideo()
+            Log.d(TAG, "getVideo: ${response.indexOf("streamingData")}")
+        }
     }
 }

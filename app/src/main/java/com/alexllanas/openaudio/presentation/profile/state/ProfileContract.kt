@@ -1,10 +1,11 @@
 package com.alexllanas.openaudio.presentation.profile.state
 
 import com.alexllanas.core.domain.models.User
+import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 
-sealed class ProfileAction {
+sealed class ProfileAction : Action() {
     data class ChangeAvatar(
         val imageFilePath: String,
         val sessionToken: String

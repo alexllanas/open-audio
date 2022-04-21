@@ -18,7 +18,7 @@ open class AddTrackToPlaylist(
         sessionToken: String
     ): Flow<Either<Throwable, Track>> = flow {
         trackDataSource.addTrackToPlaylist(
-            id = track.id ?: "",
+            id =  "",
             track.title ?: "",
             track.mediaUrl ?: "",
             track.image ?: "",

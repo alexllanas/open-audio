@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRemoteServiceContract {
 
+    suspend fun toggleLike(trackId: String, sessionToken: String): Any
+
     suspend fun login(email: String, password: String): Any
 
     suspend fun logout(sessionToken: String)

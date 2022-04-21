@@ -6,8 +6,10 @@ data class Track(
     val mediaUrl: String? = null,
     val image: String? = null,
     val userLikeIds: List<String> = emptyList(),
-    var liked: Boolean = false
+    var liked: Boolean = false,
+    val playlists: List<Playlist> = emptyList()
 )
+
 
 fun Track.setIsLiked(block: () -> Boolean) {
     liked = block()

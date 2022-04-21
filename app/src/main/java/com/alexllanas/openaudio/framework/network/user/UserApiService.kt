@@ -3,10 +3,7 @@ package com.alexllanas.openaudio.framework.network.user
 import com.alexllanas.core.data.remote.user.UserRemoteServiceContract
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants.Companion.PAGE_LIMIT
-import com.alexllanas.openaudio.framework.network.models.LoginResponse
-import com.alexllanas.openaudio.framework.network.models.TrackResponse
-import com.alexllanas.openaudio.framework.network.models.UploadResponse
-import com.alexllanas.openaudio.framework.network.models.UserResponse
+import com.alexllanas.openaudio.framework.network.models.*
 import okhttp3.MultipartBody
 import retrofit2.http.*
 import java.io.File
@@ -14,6 +11,12 @@ import java.io.File
 
 interface UserApiService :
     UserRemoteServiceContract {
+
+    @GET("/api/post?action=toggleLovePost")
+    override suspend fun toggleLike(
+        @Query("pId") trackId: String,
+        @Header("Cookie") sessionToken: String
+    ): PostResponse
 
     @GET("login?action=login&ajax=true&includeUser=true")
     override suspend fun login(

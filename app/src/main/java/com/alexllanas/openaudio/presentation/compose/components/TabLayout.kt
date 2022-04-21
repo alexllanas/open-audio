@@ -1,6 +1,5 @@
 package com.alexllanas.openaudio.presentation.compose.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,7 +18,7 @@ import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
 import com.alexllanas.openaudio.presentation.compose.components.lists.UserList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
-import com.alexllanas.openaudio.presentation.home.ui.SearchState
+import com.alexllanas.openaudio.presentation.home.state.SearchState
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.ui.navigateToPlaylistDetail
 import com.alexllanas.openaudio.presentation.main.ui.navigateToUserDetail
@@ -59,10 +58,24 @@ fun SearchResultTabLayout(
             if (state.trackResults.isEmpty()) {
                 SearchBackground(state)
             } else {
-                TrackList(state.trackResults.toUI(), onMoreClick = {
-                    homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
-                    navHostController.navigate("track_options")
-                })
+                TrackList(state.trackResults.toUI(),
+                    onMoreClick = {
+                        homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
+                        navHostController.navigate("track_options")
+                    },
+                    mainState = mainState,
+                    onHeartClick = { track ->
+                        track.id?.let { id ->
+                            mainState.sessionToken?.let { token ->
+                                homeViewModel.dispatch(
+                                    HomeAction.ToggleLikeSearchTracks(
+                                        trackId = id,
+                                        token
+                                    )
+                                )
+                            }
+                        }
+                    })
             }
         }
         1 -> {
@@ -85,8 +98,9 @@ fun SearchResultTabLayout(
                             homeViewModel.dispatch(HomeAction.GetUser(userId, sessionToken))
                         }
                     }
-//            homeViewModel.dispatch(HomeAction.SelectUser(selectedUser))
                     navigateToUserDetail(navHostController)
+                }, onFollowClick = { isSubscribing, user ->
+                    homeViewModel.onFollowClick(isSubscribing, user, mainState)
                 })
             }
         }

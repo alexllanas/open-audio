@@ -26,16 +26,18 @@ class HomeDataSourceImpl(
                 .search(query)
             val resultMap = hashMapOf<String, List<*>>()
             resultMap["tracks"] =
-                response.results?.tracks?.map { trackResponse -> trackResponse?.toDomainTrack() }
+                response.results?.tracks?.mapNotNull { trackResponse ->
+                    trackResponse?.toDomainTrack()
+                }
                     ?: emptyList<Track>()
             resultMap["playlists"] =
-                response.results?.playlists?.map { playlistResponse -> playlistResponse?.toDomainPlaylist() }
+                response.results?.playlists?.mapNotNull { playlistResponse -> playlistResponse?.toDomainPlaylist() }
                     ?: emptyList<Playlist>()
             resultMap["users"] =
-                response.results?.users?.map { userResponse -> userResponse?.toDomainUser() }
+                response.results?.users?.mapNotNull { userResponse -> userResponse?.toDomainUser() }
                     ?: emptyList<User>()
             resultMap["posts"] =
-                response.results?.posts?.map { trackResponse -> trackResponse?.toDomainTrack() }
+                response.results?.posts?.mapNotNull { trackResponse -> trackResponse?.toDomainTrack() }
                     ?: emptyList<Track>()
             emit(resultMap)
         }.getResult()

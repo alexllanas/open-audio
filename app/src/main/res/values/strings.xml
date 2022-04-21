@@ -18,10 +18,12 @@
     <string name="close">close</string>
     <string name="like_track">Like track</string>
     <string name="share">share</string>
-    <string name="give_playlist_name">Give your playlist a name</string>
+    <string name="give_playlist_name">Give your new playlist a name</string>
     <string name="cancel">CANCEL</string>
     <string name="skip">SKIP</string>
     <string name="playlist_name">playlist name</string>
     <string name="play_pause_button">play pause button</string>
     <string name="nav_icon">navigation icon</string>
+    <string name="favorite">favorite</string>
+    <string name="unfavorite">unfavorite</string>
 </resources>

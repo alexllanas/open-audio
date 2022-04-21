@@ -15,7 +15,8 @@ fun UserResponse.toDomainUser() = User(
     subscriberCount = subscriberCount,
     lastTrack = lastTrack?.toDomainTrack(),
     location = location,
-    bio = bio
+    bio = bio,
+    isSubscribing = isSubscribing
 )
 
 fun List<UserResponse>.toDomainUserList(): List<User> {

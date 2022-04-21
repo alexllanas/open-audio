@@ -33,10 +33,10 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.dispatch(
             AuthAction.Login.LoginAction(
                 "testOpenAudio@gmail.com",
-                "ducksquad1!"
+                "doghaus1!"
             )
         )
-        homeViewModel.dispatch(HomeAction.LoadStream("whydSid=s%3AbS7XKNXe0m5ZaNR7HIwCmtDSL_HDYIBx.KIlQu%2F0PrwEfbReaCMebbWKeE2LKRKznRTAzSxGidto"))
+        homeViewModel.dispatch(HomeAction.LoadStream("whydSid=s%3AdyOSwMKzpQJzr20IiEnErLq-FsQyqJDq.CTk77QTUqe1b4NyupQQsbI0CBrn57lpxoYxvBlJDVs8"))
         setContent {
             MainScreen(
                 homeViewModel = homeViewModel,

@@ -1,5 +1,6 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
@@ -9,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.presentation.compose.components.appbars.TitleBackBar
@@ -16,15 +18,17 @@ import com.alexllanas.openaudio.presentation.compose.components.lists.PlaylistLi
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
+import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 
 @Composable
 fun AddToPlaylistScreen(
     mainState: MainState,
+    mainViewModel: MainViewModel,
     homeViewModel: HomeViewModel,
     navHostController: NavHostController
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
-
+    val context = LocalContext.current
     Scaffold(
         topBar = { TitleBackBar("Add to playlist") { navHostController.popBackStack() } }
     ) {
@@ -40,12 +44,12 @@ fun AddToPlaylistScreen(
                     Text(text = "New Playlist")
                 }
             }
-            PlaylistList(playlists = homeState.loggedInUser?.playlists ?: emptyList()) { playlist ->
+            PlaylistList(playlists = mainState.loggedInUser?.playlists ?: emptyList()) { playlist ->
                 playlist.id?.let { id ->
                     playlist.name?.let { name ->
                         homeState.selectedTrack?.let { track ->
                             mainState.sessionToken?.let { token ->
-                                homeViewModel.dispatch(
+                                mainViewModel.dispatch(
                                     HomeAction.AddTrackToPlaylist(
                                         track = track,
                                         playlistName = name,
@@ -53,6 +57,11 @@ fun AddToPlaylistScreen(
                                         sessionToken = token
                                     )
                                 )
+                                Toast.makeText(
+                                    context,
+                                    "Added to ${playlist.name}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 navHostController.popBackStack()
                             }
                         }

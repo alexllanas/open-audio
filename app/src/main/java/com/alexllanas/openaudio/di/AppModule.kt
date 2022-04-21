@@ -25,6 +25,7 @@ import com.alexllanas.openaudio.framework.local.PlaylistDao
 import com.alexllanas.openaudio.framework.local.TrackDao
 import com.alexllanas.openaudio.framework.local.UserDao
 import com.alexllanas.openaudio.framework.network.ResponseInterceptor
+import com.alexllanas.openaudio.framework.network.YoutubeApi
 import com.alexllanas.openaudio.framework.network.home.HomeApiService
 import com.alexllanas.openaudio.framework.network.playlist.PlaylistApiService
 import com.alexllanas.openaudio.framework.network.playlist.PlaylistDataSourceImpl
@@ -32,6 +33,7 @@ import com.alexllanas.openaudio.framework.network.track.TrackApiService
 import com.alexllanas.openaudio.framework.network.track.TrackDataSourceImpl
 import com.alexllanas.openaudio.framework.network.user.UserApiService
 import com.alexllanas.openaudio.presentation.MainApplication
+import com.alexllanas.openaudio.presentation.common.ui.MyDownloader
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -39,6 +41,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import org.schabi.newpipe.extractor.downloader.Downloader
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -113,6 +116,21 @@ class AppModule {
             .addConverterFactory(
                 gsonConverterFactory
             )
+    }
+
+    @Singleton
+    @Provides
+    fun provideYoutubeApiService(
+        okHttpClientBuilder: OkHttpClient.Builder,
+        gsonConverterFactory: GsonConverterFactory
+    ): YoutubeApi {
+        return Retrofit.Builder()
+            .baseUrl("https://www.youtube.com")
+            .client(okHttpClientBuilder.build())
+            .addConverterFactory(
+                gsonConverterFactory
+            ).build()
+            .create(YoutubeApi::class.java)
     }
 
     @Singleton
@@ -192,7 +210,8 @@ class AppModule {
             Search(homeDataSource),
             FollowUser(userDataSource),
             UnfollowUser(userDataSource),
-            AddTrackToPlaylist(trackDataSource)
+            AddTrackToPlaylist(trackDataSource),
+            ToggleLike(userDataSource)
         )
     }
 

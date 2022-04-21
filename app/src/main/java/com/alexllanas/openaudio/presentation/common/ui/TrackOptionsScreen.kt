@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
@@ -55,13 +56,15 @@ fun TrackOptionsScreen(homeViewModel: HomeViewModel, navHostController: NavHostC
                 })
         Text(
             homeState.selectedTrack?.title ?: "Track Title",
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h5,
+            textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(top = 16.dp)
                 .constrainAs(title) {
                     top.linkTo(image.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
+                    centerHorizontallyTo(parent)
                 }
         )
         OptionsMenu(modifier = Modifier.padding(8.dp).constrainAs(optionsMenu) {
@@ -73,7 +76,7 @@ fun TrackOptionsScreen(homeViewModel: HomeViewModel, navHostController: NavHostC
 
 @Composable
 fun OptionsMenu(modifier: Modifier = Modifier, navHostController: NavHostController) {
-    Column(modifier) {
+    Column(modifier.padding(top = 24.dp)) {
         Row(modifier = Modifier.padding(bottom = 24.dp).fillMaxWidth()) {
             Icon(
                 imageVector = Icons.Default.FavoriteBorder,

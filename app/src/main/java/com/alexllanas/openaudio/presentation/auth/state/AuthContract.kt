@@ -1,10 +1,11 @@
 package com.alexllanas.openaudio.presentation.auth.state
 
 import com.alexllanas.core.domain.models.User
+import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 
-sealed class AuthAction {
+sealed class AuthAction : Action() {
     sealed class Login {
         data class LoginAction(val email: String, val password: String) : AuthAction()
         data class EmailTextChangedAction(val email: String) : AuthAction()

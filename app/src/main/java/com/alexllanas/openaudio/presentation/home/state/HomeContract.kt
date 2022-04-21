@@ -2,13 +2,15 @@ package com.alexllanas.openaudio.presentation.home.state
 
 import android.util.Log
 import com.alexllanas.core.domain.models.Playlist
+import com.alexllanas.core.domain.models.Post
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 
-sealed class HomeAction {
+sealed class HomeAction : Action() {
     data class LoadStream(val sessionToken: String) : HomeAction()
     data class GetUserTracks(val userId: String) : HomeAction()
     data class SearchAction(val query: String) : HomeAction()
@@ -20,6 +22,16 @@ sealed class HomeAction {
 
     data class UnlikeTrack(
         val track: Track,
+        val sessionToken: String
+    ) : HomeAction()
+
+    data class ToggleLikeSearchTracks(
+        val trackId: String,
+        val sessionToken: String
+    ) : HomeAction()
+
+    data class ToggleLikeStreamTrack(
+        val trackId: String,
         val sessionToken: String
     ) : HomeAction()
 
@@ -70,6 +82,58 @@ sealed class SelectTrackChange : PartialStateChange<HomeState> {
     }
 
     data class Data(val selectedTrack: Track) : SelectTrackChange()
+}
+
+sealed class ToggleLikeStreamTrackChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    stream = updateTrackList(post, state.stream, trackId),
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val post: Post, val trackId: String) : ToggleLikeStreamTrackChange()
+    data class Error(val throwable: Throwable) : ToggleLikeStreamTrackChange()
+    object Loading : ToggleLikeStreamTrackChange()
+}
+
+sealed class ToggleLikeSearchTrackChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    searchTrackResults = updateTrackList(post, state.searchTrackResults, trackId),
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val post: Post, val trackId: String) : ToggleLikeSearchTrackChange()
+    data class Error(val throwable: Throwable) : ToggleLikeSearchTrackChange()
+    object Loading : ToggleLikeSearchTrackChange()
 }
 
 sealed class GetUserChange : PartialStateChange<HomeState> {
@@ -123,32 +187,6 @@ sealed class SelectTabChange : PartialStateChange<HomeState> {
     data class Error(val throwable: Throwable) : SelectTabChange()
     object Loading : SelectTabChange()
 }
-
-//sealed class SelectUserChange : PartialStateChange<HomeState> {
-//    override fun reduce(state: HomeState): HomeState {
-//        return when (this) {
-//            is Data -> {
-//                state.copy(
-//                    selectedUser = user,
-//                    isLoading = false,
-//                    error = null,
-//                )
-//            }
-//            is Error -> state.copy(
-//                isLoading = false,
-//                error = throwable
-//            )
-//            Loading -> state.copy(
-//                isLoading = true,
-//                error = null
-//            )
-//        }
-//    }
-//
-//    data class Data(val user: User) : SelectUserChange()
-//    data class Error(val throwable: Throwable) : SelectUserChange()
-//    object Loading : SelectUserChange()
-//}
 
 sealed class SelectPlaylistChange : PartialStateChange<HomeState> {
     override fun reduce(state: HomeState): HomeState {
@@ -273,6 +311,7 @@ sealed class AddTrackToPlaylistChange : PartialStateChange<MainState> {
                 // TODO("refresh logged in user to update playlist")
                 Log.d(TAG, "reduce: Track has been added to playlist.")
                 state.copy(
+
                     isLoading = false,
                     error = null
                 )
@@ -521,4 +560,23 @@ private fun User.updateFollowUser(
         isLoading = false,
         error = null
     )
+}
+
+private fun updateTrackList(post: Post, tracks: List<Track>, trackId: String): List<Track> {
+    val updateTracks = arrayListOf<Track>()
+    tracks.forEach { track ->
+        if (track.id == trackId) {
+            post.track?.let {
+                updateTracks.add(
+                    track.copy(
+                        liked = post.loved,
+                    )
+                )
+            } ?: updateTracks.add(track.copy(liked = false))
+        } else {
+            updateTracks.add(track.copy())
+        }
+
+    }
+    return updateTracks
 }

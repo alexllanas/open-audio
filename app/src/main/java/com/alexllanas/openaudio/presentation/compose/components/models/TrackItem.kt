@@ -1,4 +1,3 @@
-
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -8,17 +7,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.alexllanas.core.domain.models.Track
-import com.alexllanas.core.util.Constants
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.main.state.MainState
+import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.models.TrackUIModel
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -26,9 +28,10 @@ import com.skydoves.landscapist.glide.GlideImage
 @Composable
 fun TrackItem(
     modifier: Modifier = Modifier,
+    mainState: MainState,
     track: TrackUIModel?,
     onTrackClick: (TrackUIModel) -> Unit = {},
-    onHeartClick: (Boolean, TrackUIModel) -> Unit = { _: Boolean, _: TrackUIModel -> },
+    onHeartClick: (TrackUIModel) -> Unit = { },
     onMoreClick: (TrackUIModel) -> Unit = {},
     isSelected: Boolean = false
 ) {
@@ -61,21 +64,22 @@ fun TrackItem(
             },
             trailing = {
                 Row {
-                    Log.d(Constants.TAG, "TrackItem: ${track?.liked}")
-//                    if (track.liked) {
-//                        Icon(
-//                            Icons.Filled.Favorite,
-//                            contentDescription = null,
-//                            Modifier.clickable { onHeartClick(false, track) }
-//                        )
-//                    } else {
-//                        Icon(
-//                            Icons.Outlined.FavoriteBorder,
-//                            contentDescription = null,
-//                            Modifier.clickable { onHeartClick(true, track) }
-//                        )
-//
-//                    }
+                    track?.toDomain()?.let {
+                        if (track.liked) {
+                            Icon(
+                                Icons.Filled.Favorite,
+                                contentDescription = stringResource(R.string.favorite),
+                                Modifier.clickable { onHeartClick(track) }
+                            )
+                        } else {
+                            Icon(
+                                Icons.Outlined.FavoriteBorder,
+                                contentDescription = stringResource(R.string.unfavorite),
+                                Modifier.clickable { onHeartClick(track) }
+                            )
+
+                        }
+                    }
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = null,
@@ -86,7 +90,9 @@ fun TrackItem(
                 }
             },
             modifier = Modifier
-                .clickable { track?.let { onTrackClick(it) } }
+                .clickable {
+                    track?.let { onTrackClick(it) }
+                }
         )
     }
 }

@@ -1,11 +1,13 @@
 package com.alexllanas.core.data.remote.user
 
 import arrow.core.Either
+import com.alexllanas.core.domain.models.Post
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import kotlinx.coroutines.flow.Flow
 
 interface UserDataSource {
+    suspend fun toggleLike(trackId: String, sessionToken: String):  Flow<Either<Throwable, Post>>
 
     suspend fun login(email: String, password: String): Flow<Either<Throwable, User>>
 

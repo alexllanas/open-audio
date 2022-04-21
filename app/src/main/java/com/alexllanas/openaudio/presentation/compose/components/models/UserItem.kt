@@ -1,4 +1,6 @@
+import android.graphics.drawable.Icon
 import android.util.Log
+import androidx.compose.animation.core.animate
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants
+import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -76,11 +79,16 @@ fun UserItem(
             },
             trailing = {
                 Row {
+                    if (user?.name == "L.") {
+                        Log.d(TAG, "UserItem: $user")
+                    }
                     if (user?.isSubscribing == true) {
                         Icon(
                             Icons.Outlined.CheckCircle,
                             contentDescription = stringResource(R.string.unfollow),
-                            Modifier.clickable { onFollowClick(false, user) }
+                            Modifier.clickable {
+                                onFollowClick(user.isSubscribing, user)
+                            }
                         )
                     } else {
                         Icon(
@@ -88,7 +96,7 @@ fun UserItem(
                             contentDescription = stringResource(R.string.follow),
                             Modifier.clickable {
                                 user?.let {
-                                    onFollowClick(true, user)
+                                    onFollowClick(user.isSubscribing, user)
                                 }
                             }
                         )

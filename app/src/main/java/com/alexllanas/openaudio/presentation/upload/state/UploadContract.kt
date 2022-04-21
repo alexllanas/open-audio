@@ -2,9 +2,10 @@ package com.alexllanas.openaudio.presentation.upload.state
 
 import android.hardware.biometrics.BiometricManager
 import com.alexllanas.core.domain.models.Track
+import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 
-sealed class UploadAction {
+sealed class UploadAction : Action() {
     data class UploadTrack(
         val trackUrl: String,
         val title: String,

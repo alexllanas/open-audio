@@ -1,18 +1,24 @@
 package com.alexllanas.openaudio.framework.network.user
 
+import android.util.Log
 import arrow.core.Either
 import com.alexllanas.core.data.remote.user.UserDataSource
+import com.alexllanas.core.domain.models.Post
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
+import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.core.util.getResult
+import com.alexllanas.openaudio.framework.mappers.toDomainPost
 import com.alexllanas.openaudio.framework.mappers.toDomainTrack
 import com.alexllanas.openaudio.framework.mappers.toDomainUser
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 
@@ -23,8 +29,18 @@ import java.io.File
 class UserDataSourceImpl(
     private val userApiService: UserApiService
 ) : UserDataSource {
+    override suspend fun toggleLike(
+        trackId: String,
+        sessionToken: String
+    ): Flow<Either<Throwable, Post>> = suspend {
+        userApiService
+            .toggleLike(trackId, sessionToken)
+            .toDomainPost()
+    }.asFlow().getResult()
+
     override suspend fun login(email: String, password: String): Flow<Either<Throwable, User>> =
         suspend {
+            Log.d(TAG, "login: $email, $password")
             userApiService
                 .login(email, password)
                 .user!!.toDomainUser()
@@ -112,7 +128,7 @@ class UserDataSourceImpl(
     ): Flow<String> =
         suspend {
             val file = File(filePath)
-            val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+            val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
             userApiService
                 .uploadAvatar(body, sessionToken)

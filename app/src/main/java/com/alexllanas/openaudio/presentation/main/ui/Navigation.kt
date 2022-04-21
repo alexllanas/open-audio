@@ -83,6 +83,7 @@ fun NavigationGraph(
         startDestination = NavItem.Stream.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
+//            AudioTestScreen(mainViewModel)
             MediaScreen(mainViewModel) {
                 StreamScreen(homeViewModel, mainViewModel, navHostController)
             }
@@ -113,7 +114,7 @@ fun NavigationGraph(
             CreatePlaylistScreen(navHostController)
         }
         composable(NavItem.AddToPlaylist.screenRoute) {
-            AddToPlaylistScreen(mainState, homeViewModel, navHostController)
+            AddToPlaylistScreen(mainState, mainViewModel, homeViewModel, navHostController)
         }
         composable(NavItem.Settings.screenRoute) {
             MediaScreen(mainViewModel) {
@@ -159,14 +160,28 @@ fun NavigationGraph(
         }
         composable(NavItem.Profile.screenRoute) {
             MediaScreen(mainViewModel) {
-                UserDetailScreen(Modifier, homeViewModel, mainState, navHostController, true) {
+                UserDetailScreen(
+                    Modifier,
+                    homeViewModel,
+                    mainViewModel,
+                    mainState,
+                    navHostController,
+                    true
+                ) {
                     navHostController.navigate(NavItem.Edit.screenRoute)
                 }
             }
         }
         composable(NavItem.UserDetail.screenRoute) {
             MediaScreen(mainViewModel) {
-                UserDetailScreen(Modifier, homeViewModel, mainState, navHostController, false) {
+                UserDetailScreen(
+                    Modifier,
+                    homeViewModel,
+                    mainViewModel,
+                    mainState,
+                    navHostController,
+                    false
+                ) {
                     navHostController.navigate(NavItem.Edit.screenRoute)
                 }
             }
