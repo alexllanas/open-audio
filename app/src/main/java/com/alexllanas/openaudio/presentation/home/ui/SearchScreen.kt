@@ -1,26 +1,74 @@
 package com.alexllanas.openaudio.presentation.home.ui
 
 import android.util.Log
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.components.SearchResultTabLayout
 import com.alexllanas.openaudio.presentation.home.state.*
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import kotlinx.coroutines.delay
+import org.schabi.newpipe.extractor.timeago.patterns.it
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchScreen(
+    homeViewModel: HomeViewModel,
+    mainViewModel: MainViewModel,
+    navHostController: NavHostController
+) {
+    Log.d(TAG, "SearchScreen: ${navHostController.currentBackStackEntry?.destination}")
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Search") },
+                navigationIcon = {
+                    IconButton(onClick = {}) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back_arrow)
+                        )
+                    }
+                },
+                actions = {
+                }
+            )
+        },
+        bottomBar = { BottomNav(navController = navHostController) }
+
+    ) {
+        SearchBarUI(homeViewModel, mainViewModel, navHostController)
+    }
+}
+
+@Composable
+fun SearchBarUI(
     homeViewModel: HomeViewModel,
     mainViewModel: MainViewModel,
     navHostController: NavHostController
@@ -28,104 +76,100 @@ fun SearchScreen(
     val homeState by homeViewModel.homeState.collectAsState()
     val mainState by mainViewModel.mainState.collectAsState()
 
-    Log.d(TAG, "SearchScreen: ${navHostController.currentBackStackEntry?.destination}")
-//    var searchedText by remember { mutableStateOf(homeState.query) }
-//
-//    Column {
-//        TextField(
-//            value = searchedText,
-//            onValueChange = { query ->
-//                searchedText = query
-//                homeViewModel.dispatch(HomeAction.SearchAction(query))
-//            },
-//            maxLines = 1,
-//            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "search") },
-//            label = { Text(stringResource(R.string.search_tracks_users_playlists)) },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(
-//                    horizontal = 8.dp
-//                )
-//        )
-//        TrackList(
-//            homeState.searchTrackResults,
-//            onHeartClick = { shouldLike, track ->
-//                homeViewModel.onHeartClick(
-//                    shouldLike,
-//                    track,
-//                    mainState.loggedInUser,
-//                    mainState.sessionToken
-//                )
-//            }
-//        )
-//    }
-
-    Scaffold(
-        topBar = {
-            SearchBarUI(
-                modifier = Modifier,
-                homeViewModel,
-                navHostController = navHostController,
-                mainState = mainState
-            )
-        },
-        bottomBar = { BottomNav(navController = navHostController) }
-
-    ) {
+    Box {
+        Column(modifier = Modifier.fillMaxSize()) {
+            SearchBar(homeViewModel, mainViewModel, navHostController)
+            when (homeState.searchDisplay) {
+                SearchDisplay.Initial -> {
+                    SearchResultTabLayout(navHostController, homeViewModel, mainState)
+                }
+                SearchDisplay.Results -> {
+                    SearchResultTabLayout(navHostController, homeViewModel, mainState)
+                }
+                SearchDisplay.NoResults -> {
+                    NoSearchResults()
+                }
+            }
+        }
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SearchBarUI(
-    modifier: Modifier = Modifier,
+fun SearchBar(
     homeViewModel: HomeViewModel,
-    mainState: MainState,
-    state: SearchState = rememberSearchState(),
+    mainViewModel: MainViewModel,
     navHostController: NavHostController
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
-    Column(
-        modifier = modifier.fillMaxSize()
-            .padding(top = 5.dp)
-    ) {
-        SearchBar(
-            query = state.query,
-            onQueryChange = { state.query = it },
-            onSearchFocusChange = { state.focused = it },
-            onClearQuery = { state.query = TextFieldValue("") },
-            onBack = { state.query = TextFieldValue("") },
-//            onBack = { },
-            searching = state.searching,
-            focused = state.focused,
-            modifier = modifier
-        )
-        LaunchedEffect(state.query.text) {
-            state.searching = true
-            delay(100)
-            homeViewModel.dispatch(HomeAction.SearchAction(state.query.text))
-            state.trackResults = homeState.searchTrackResults
-            state.playlistResults = homeState.searchPlaylistResults
-            state.userResults = homeState.searchUserResults
-            state.searching = false
-        }
-        when (state.searchDisplay) {
-            SearchDisplay.Initial -> {
-                SearchResultTabLayout(
-                    state,
-                    navHostController,
-                    homeViewModel,
-                    mainState = mainState
-                )
+
+    var showClearButton by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp)
+            .onFocusChanged { focusState ->
+                showClearButton = (focusState.isFocused)
             }
-            SearchDisplay.Results -> {
-                SearchResultTabLayout(state, navHostController, homeViewModel, mainState)
+            .focusRequester(focusRequester),
+        value = homeState.searchScreenState?.query ?: "",
+        onValueChange = {
+
+            homeViewModel.dispatch(HomeAction.QueryTextChanged(it))
+            homeViewModel.dispatch(HomeAction.SearchAction(it))
+        },
+        placeholder = {
+            Text(text = stringResource(R.string.search_hint))
+        },
+        colors = TextFieldDefaults.textFieldColors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            backgroundColor = Color.Transparent,
+            cursorColor = LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
+        ),
+        trailingIcon = {
+            AnimatedVisibility(
+                visible = showClearButton,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                IconButton(onClick = {
+                    homeViewModel.dispatch(HomeAction.QueryTextChanged(""))
+                    homeViewModel.dispatch(HomeAction.SearchAction(""))
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = stringResource(R.string.close)
+                    )
+                }
+
             }
-            SearchDisplay.NoResults -> {
-            }
-        }
+        },
+        maxLines = 1,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(onDone = {
+            keyboardController?.hide()
+        }),
+    )
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 }
 
 
+@Composable
+fun NoSearchResults() {
 
+    Column(
+        modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
+        horizontalAlignment = CenterHorizontally
+    ) {
+        Text("No matches found")
+    }
+}
 

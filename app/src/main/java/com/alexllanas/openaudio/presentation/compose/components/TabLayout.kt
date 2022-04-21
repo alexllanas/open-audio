@@ -27,7 +27,6 @@ import com.alexllanas.openaudio.presentation.mappers.toUI
 
 @Composable
 fun SearchResultTabLayout(
-    state: SearchState,
     navHostController: NavHostController,
     homeViewModel: HomeViewModel,
     mainState: MainState
@@ -55,10 +54,10 @@ fun SearchResultTabLayout(
     }
     when (tabIndex) {
         0 -> {
-            if (state.trackResults.isEmpty()) {
-                SearchBackground(state)
+            if (homeState.searchTrackResults.isEmpty()) {
+//                SearchBackground()
             } else {
-                TrackList(state.trackResults.toUI(),
+                TrackList(homeState.searchTrackResults.toUI(),
                     onMoreClick = {
                         homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
                         navHostController.navigate("track_options")
@@ -79,20 +78,20 @@ fun SearchResultTabLayout(
             }
         }
         1 -> {
-            if (state.playlistResults.isEmpty()) {
-                SearchBackground(state)
+            if (homeState.searchPlaylistResults.isEmpty()) {
+                SearchBackground()
             } else {
-                PlaylistList(state.playlistResults) { selectedPlaylist ->
+                PlaylistList(homeState.searchPlaylistResults) { selectedPlaylist ->
                     homeViewModel.dispatch(HomeAction.SelectPlaylist(selectedPlaylist))
                     navigateToPlaylistDetail(navHostController)
                 }
             }
         }
         2 -> {
-            if (state.userResults.isEmpty()) {
-                SearchBackground(state)
+            if (homeState.searchUserResults.isEmpty()) {
+                SearchBackground()
             } else {
-                UserList(state.userResults, { selectedUser ->
+                UserList(homeState.searchUserResults, { selectedUser ->
                     selectedUser.id?.let { userId ->
                         mainState.sessionToken?.let { sessionToken ->
                             homeViewModel.dispatch(HomeAction.GetUser(userId, sessionToken))
@@ -109,7 +108,7 @@ fun SearchResultTabLayout(
 
 
 @Composable
-fun SearchBackground(state: SearchState) {
+fun SearchBackground() {
     Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxSize()) {
         Icon(
             imageVector = Icons.Default.Search,

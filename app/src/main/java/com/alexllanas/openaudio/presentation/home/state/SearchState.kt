@@ -36,14 +36,19 @@ class SearchState(
     searching: Boolean,
     tracks: List<Track>,
     playlists: List<Playlist>,
-    users: List<User>
+    users: List<User>,
+    homeState: HomeState
 ) {
     var query by mutableStateOf(query)
     var focused by mutableStateOf(focused)
     var searching by mutableStateOf(searching)
-    var trackResults by mutableStateOf(tracks)
-    var playlistResults by mutableStateOf(playlists)
-    var userResults by mutableStateOf(users)
+
+    //    var trackResults by mutableStateOf(tracks)
+//    var playlistResults by mutableStateOf(playlists)
+//    var userResults by mutableStateOf(users)
+    val trackResults = homeState.searchTrackResults
+    val playlistResults = homeState.searchPlaylistResults
+    val userResults = homeState.searchUserResults
 
     val searchDisplay: SearchDisplay
         get() = when {
@@ -70,7 +75,8 @@ fun rememberSearchState(
     searching: Boolean = false,
     tracks: List<Track> = emptyList(),
     playlists: List<Playlist> = emptyList(),
-    users: List<User> = emptyList()
+    users: List<User> = emptyList(),
+    homeState: HomeState
 ): SearchState {
     return remember {
         SearchState(
@@ -79,7 +85,8 @@ fun rememberSearchState(
             searching,
             tracks,
             playlists,
-            users
+            users,
+            homeState = homeState
         )
     }
 }

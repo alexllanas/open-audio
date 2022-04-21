@@ -15,7 +15,6 @@
     <string name="confirm_password">confirm password</string>
     <string name="hide_password">Hide password</string>
     <string name="show_password">Show password</string>
-    <string name="close">close</string>
     <string name="like_track">Like track</string>
     <string name="share">share</string>
     <string name="give_playlist_name">Give your new playlist a name</string>
@@ -26,4 +25,6 @@
     <string name="nav_icon">navigation icon</string>
     <string name="favorite">favorite</string>
     <string name="unfavorite">unfavorite</string>
+    <string name="search_hint">Search tracks, users or playlists</string>
+    <string name="close">close</string>
 </resources>
