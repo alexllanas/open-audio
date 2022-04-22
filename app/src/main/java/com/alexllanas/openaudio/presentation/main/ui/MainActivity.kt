@@ -36,7 +36,13 @@ class MainActivity : AppCompatActivity() {
                 "doghaus1!"
             )
         )
-        homeViewModel.dispatch(HomeAction.LoadStream("whydSid=s%3AdyOSwMKzpQJzr20IiEnErLq-FsQyqJDq.CTk77QTUqe1b4NyupQQsbI0CBrn57lpxoYxvBlJDVs8"))
+//        homeViewModel.dispatch(
+//            HomeAction.LoadStream(
+//                "621039ed3cb9c73d9c963ae6",
+//                "whydSid=s%3AdyOSwMKzpQJzr20IiEnErLq-FsQyqJDq.CTk77QTUqe1b4NyupQQsbI0CBrn57lpxoYxvBlJDVs8",
+//
+//                )
+//        )
         setContent {
             MainScreen(
                 homeViewModel = homeViewModel,

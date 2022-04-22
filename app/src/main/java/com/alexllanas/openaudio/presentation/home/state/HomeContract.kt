@@ -11,7 +11,7 @@ import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 
 sealed class HomeAction : Action() {
-    data class LoadStream(val sessionToken: String) : HomeAction()
+    data class LoadStream(val userId: String, val sessionToken: String) : HomeAction()
     data class GetUserTracks(val userId: String) : HomeAction()
     data class SearchAction(val query: String) : HomeAction()
     data class LikeTrack(
@@ -32,7 +32,7 @@ sealed class HomeAction : Action() {
 
     data class ToggleLikeStreamTrack(
         val trackId: String,
-        val sessionToken: String
+        val sessionToken: String,
     ) : HomeAction()
 
     data class FollowUser(
@@ -69,7 +69,34 @@ sealed class HomeAction : Action() {
     data class GetPlaylistTracks(val playlistUrl: String) : HomeAction()
     data class QueryTextChanged(val query: String) : HomeAction()
     data class GetUser(val id: String, val sessionToken: String) : HomeAction()
+    data class ToggleTrackOptionsLike(val trackId: String, val sessionToken: String) : HomeAction()
 
+}
+
+sealed class ToggleTrackOptionsLikeChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    selectedTrack = state.selectedTrack?.copy(liked = post.loved),
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val post: Post, val trackId: String) : ToggleTrackOptionsLikeChange()
+    data class Error(val throwable: Throwable) : ToggleTrackOptionsLikeChange()
+    object Loading : ToggleTrackOptionsLikeChange()
 }
 
 sealed class SelectTrackChange : PartialStateChange<HomeState> {
@@ -425,7 +452,8 @@ sealed class StreamChange : PartialStateChange<HomeState> {
             is Data -> state.copy(
                 isLoading = false,
                 error = null,
-                stream = stream
+                stream = setLikedTracks(stream, userId)
+
             )
             is Error -> state.copy(
                 isLoading = false,
@@ -434,7 +462,8 @@ sealed class StreamChange : PartialStateChange<HomeState> {
         }
     }
 
-    data class Data(val stream: List<Track>) : StreamChange()
+
+    data class Data(val userId: String, val stream: List<Track>) : StreamChange()
     data class Error(val throwable: Throwable) : StreamChange()
     object Loading : StreamChange()
 }
@@ -473,10 +502,10 @@ sealed class SearchChange : PartialStateChange<HomeState> {
             is Data -> state.copy(
                 isLoading = false,
                 error = null,
-                searchTrackResults = searchTrackResults,
+                searchTrackResults = setLikedTracks(searchTrackResults, "621039ed3cb9c73d9c963ae6"),
                 searchPlaylistResults = searchPlaylistResults,
                 searchUserResults = searchUserResults,
-                searchPostResults = searchPostResults
+                searchPostResults = setLikedTracks(searchPostResults, "621039ed3cb9c73d9c963ae6"),
             )
             is Error -> state.copy(
                 isLoading = false,
@@ -562,6 +591,9 @@ private fun User.updateFollowUser(
     )
 }
 
+//private fun updateTrackLike(post: Post, track: Track): Track {
+//}
+
 private fun updateTrackList(post: Post, tracks: List<Track>, trackId: String): List<Track> {
     val updateTracks = arrayListOf<Track>()
     tracks.forEach { track ->
@@ -579,4 +611,16 @@ private fun updateTrackList(post: Post, tracks: List<Track>, trackId: String): L
 
     }
     return updateTracks
+}
+
+private fun setLikedTracks(stream: List<Track>, userId: String): List<Track> {
+    val update = arrayListOf<Track>()
+    stream.onEach { track ->
+        if (track.userLikeIds.contains(userId)) {
+            update.add(track.copy(liked = true))
+        } else {
+            update.add(track.copy())
+        }
+    }
+    return update
 }

@@ -7,6 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Queue
 import androidx.compose.material.icons.outlined.Share
@@ -23,11 +24,17 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
+import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun TrackOptionsScreen(homeViewModel: HomeViewModel, navHostController: NavHostController) {
+fun TrackOptionsScreen(
+    homeViewModel: HomeViewModel,
+    navHostController: NavHostController,
+    mainViewModel: MainViewModel
+) {
     val homeState by homeViewModel.homeState.collectAsState()
 
     ConstraintLayout(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -70,18 +77,48 @@ fun TrackOptionsScreen(homeViewModel: HomeViewModel, navHostController: NavHostC
         OptionsMenu(modifier = Modifier.padding(8.dp).constrainAs(optionsMenu) {
             top.linkTo(title.bottom)
             start.linkTo(parent.start)
-        }, navHostController)
+        }, navHostController, homeViewModel, mainViewModel)
     }
 }
 
 @Composable
-fun OptionsMenu(modifier: Modifier = Modifier, navHostController: NavHostController) {
+fun OptionsMenu(
+    modifier: Modifier = Modifier,
+    navHostController: NavHostController,
+    homeViewModel: HomeViewModel,
+    mainViewModel: MainViewModel
+) {
+    val homeState by homeViewModel.homeState.collectAsState()
+    val mainState by mainViewModel.mainState.collectAsState()
     Column(modifier.padding(top = 24.dp)) {
-        Row(modifier = Modifier.padding(bottom = 24.dp).fillMaxWidth()) {
-            Icon(
-                imageVector = Icons.Default.FavoriteBorder,
-                contentDescription = stringResource(R.string.like_track)
-            )
+        Row(
+            modifier = Modifier
+                .padding(bottom = 24.dp)
+                .fillMaxWidth()
+                .clickable {
+                    homeState.selectedTrack?.id?.let { trackId ->
+                        mainState.sessionToken?.let { token ->
+                            mainState.loggedInUser?.id?.let { userId ->
+                                homeViewModel.toggleTrackOptionsLike(trackId, token, userId)
+//                                homeState.selectedTrack?.let {
+//                                    homeViewModel.dispatch(HomeAction.SelectTrack(it))
+//                                }
+                            }
+                        }
+                    }
+                }
+        ) {
+            if (homeState.selectedTrack?.liked == true) {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = stringResource(R.string.unfavorite)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.FavoriteBorder,
+                    contentDescription = stringResource(R.string.favorite)
+                )
+            }
             Text(
                 "Like",
                 modifier = Modifier.padding(start = 8.dp),

@@ -29,7 +29,8 @@ import com.alexllanas.openaudio.presentation.mappers.toUI
 fun SearchResultTabLayout(
     navHostController: NavHostController,
     homeViewModel: HomeViewModel,
-    mainState: MainState
+    mainState: MainState,
+    likeCallback : () -> Unit
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
     var tabIndex = homeState.searchScreenState?.currentTab ?: 0
@@ -72,6 +73,7 @@ fun SearchResultTabLayout(
                                         token
                                     )
                                 )
+                                likeCallback()
                             }
                         }
                     })

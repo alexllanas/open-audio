@@ -46,19 +46,7 @@ fun SearchScreen(
     Log.d(TAG, "SearchScreen: ${navHostController.currentBackStackEntry?.destination}")
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Search") },
-                navigationIcon = {
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back_arrow)
-                        )
-                    }
-                },
-                actions = {
-                }
-            )
+
         },
         bottomBar = { BottomNav(navController = navHostController) }
 
@@ -81,10 +69,18 @@ fun SearchBarUI(
             SearchBar(homeViewModel, mainViewModel, navHostController)
             when (homeState.searchDisplay) {
                 SearchDisplay.Initial -> {
-                    SearchResultTabLayout(navHostController, homeViewModel, mainState)
+                    SearchResultTabLayout(navHostController, homeViewModel, mainState) {
+                        homeState.searchScreenState?.query?.let {
+                            homeViewModel.dispatch(HomeAction.SearchAction(it))
+                        }
+                    }
                 }
                 SearchDisplay.Results -> {
-                    SearchResultTabLayout(navHostController, homeViewModel, mainState)
+                    SearchResultTabLayout(navHostController, homeViewModel, mainState) {
+                        homeState.searchScreenState?.query?.let {
+                            homeViewModel.dispatch(HomeAction.SearchAction(it))
+                        }
+                    }
                 }
                 SearchDisplay.NoResults -> {
                     NoSearchResults()
@@ -102,59 +98,72 @@ fun SearchBar(
     navHostController: NavHostController
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
-
+    var query by remember { mutableStateOf("") }
     var showClearButton by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
-
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 2.dp)
-            .onFocusChanged { focusState ->
-                showClearButton = (focusState.isFocused)
-            }
-            .focusRequester(focusRequester),
-        value = homeState.searchScreenState?.query ?: "",
-        onValueChange = {
-
-            homeViewModel.dispatch(HomeAction.QueryTextChanged(it))
-            homeViewModel.dispatch(HomeAction.SearchAction(it))
-        },
-        placeholder = {
-            Text(text = stringResource(R.string.search_hint))
-        },
-        colors = TextFieldDefaults.textFieldColors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            backgroundColor = Color.Transparent,
-            cursorColor = LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
-        ),
-        trailingIcon = {
-            AnimatedVisibility(
-                visible = showClearButton,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                IconButton(onClick = {
-                    homeViewModel.dispatch(HomeAction.QueryTextChanged(""))
-                    homeViewModel.dispatch(HomeAction.SearchAction(""))
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = stringResource(R.string.close)
-                    )
-                }
-
+    TopAppBar(
+        title = { Text("Search") },
+        navigationIcon = {
+            IconButton(onClick = { navHostController.popBackStack() }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back_arrow)
+                )
             }
         },
-        maxLines = 1,
-        singleLine = true,
-        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(onDone = {
-            keyboardController?.hide()
-        }),
+        actions = {
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 2.dp)
+                    .onFocusChanged { focusState ->
+                        showClearButton = (focusState.isFocused)
+                    }
+                    .focusRequester(focusRequester),
+                value = query,
+                onValueChange = {
+                    query = it
+                    homeViewModel.dispatch(HomeAction.QueryTextChanged(it))
+                    homeViewModel.dispatch(HomeAction.SearchAction(it))
+                },
+                placeholder = {
+                    Text(text = stringResource(R.string.search_hint))
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    backgroundColor = Color.Transparent,
+                    cursorColor = LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
+                ),
+                trailingIcon = {
+                    AnimatedVisibility(
+                        visible = showClearButton,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        IconButton(onClick = {
+                            query = ""
+                            homeViewModel.dispatch(HomeAction.SearchAction(""))
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = stringResource(R.string.close)
+                            )
+                        }
+
+                    }
+                },
+                maxLines = 1,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    keyboardController?.hide()
+                }),
+            )
+        }
     )
+
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()

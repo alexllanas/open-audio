@@ -108,7 +108,7 @@ fun NavigationGraph(
             }
         }
         composable(NavItem.TrackOptions.screenRoute) {
-            TrackOptionsScreen(homeViewModel, navHostController)
+            TrackOptionsScreen(homeViewModel, navHostController, mainViewModel)
         }
         composable(NavItem.CreatePlaylist.screenRoute) {
             CreatePlaylistScreen(navHostController)

@@ -64,6 +64,18 @@ class HomeViewModel @Inject constructor(
                         )
                     }.onStart { ToggleLikeSearchTrackChange.Loading }
             }
+        val executeToggleTrackOptionsLike: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
+            { trackId, sessionToken ->
+                homeInteractors.toggleLike(trackId, sessionToken)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { ToggleTrackOptionsLikeChange.Error(it) },
+                            ifRight = {
+                                ToggleTrackOptionsLikeChange.Data(it, trackId)
+                            }
+                        )
+                    }.onStart { ToggleLikeStreamTrackChange.Loading }
+            }
         val executeToggleLikeStreamTrack: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
             { trackId, sessionToken ->
                 homeInteractors.toggleLike(trackId, sessionToken)
@@ -76,21 +88,20 @@ class HomeViewModel @Inject constructor(
                         )
                     }.onStart { ToggleLikeStreamTrackChange.Loading }
             }
-        val executeLoadStream: suspend (String) -> Flow<PartialStateChange<HomeState>> =
-            { sessionToken ->
+        val executeLoadStream: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
+            { userId, sessionToken ->
                 homeInteractors.getStream(sessionToken)
                     .map { result ->
                         result.fold(
                             ifLeft = { StreamChange.Error(it) },
                             ifRight = {
-                                StreamChange.Data(it)
+                                StreamChange.Data(userId, it)
                             }
                         )
                     }.onStart { StreamChange.Loading }
             }
         val executeGetUser: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
             { userId, sessionToken ->
-//                delay(300)
                 homeInteractors.getUser(userId, sessionToken)
                     .map { result ->
                         result.fold(
@@ -215,6 +226,8 @@ class HomeViewModel @Inject constructor(
                 flowOf(SelectPlaylistChange.Data(playlist))
             }
         return merge(
+            filterIsInstance<HomeAction.ToggleTrackOptionsLike>()
+                .flatMapConcat { executeToggleTrackOptionsLike(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.ToggleLikeStreamTrack>()
                 .flatMapConcat { executeToggleLikeStreamTrack(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.ToggleLikeSearchTracks>()
@@ -252,7 +265,7 @@ class HomeViewModel @Inject constructor(
             filterIsInstance<HomeAction.LoadStream>()
                 .flatMapConcat
                 {
-                    executeLoadStream(it.sessionToken)
+                    executeLoadStream(it.userId, it.sessionToken)
                 },
             filterIsInstance<HomeAction.GetUserTracks>()
                 .flatMapConcat
@@ -283,5 +296,24 @@ class HomeViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    fun toggleTrackOptionsLike(id: String, sessionToken: String, userId: String) {
+        dispatch(
+            HomeAction.ToggleTrackOptionsLike(
+                trackId = id,
+                sessionToken
+            )
+        )
+    }
+
+    fun toggleStreamLike(id: String, sessionToken: String, userId: String) {
+        dispatch(
+            HomeAction.ToggleLikeStreamTrack(
+                trackId = id,
+                sessionToken
+            )
+        )
+        dispatch(HomeAction.LoadStream(userId, sessionToken))
     }
 }

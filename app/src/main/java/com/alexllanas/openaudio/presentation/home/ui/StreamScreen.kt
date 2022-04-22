@@ -2,9 +2,7 @@ package com.alexllanas.openaudio.presentation.home.ui
 
 import android.util.Log
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
@@ -24,7 +22,15 @@ fun StreamScreen(
 
     val homeState by homeViewModel.homeState.collectAsState()
     val mainState by mainViewModel.mainState.collectAsState()
+    mainState.loggedInUser?.id?.let { userId ->
+        homeViewModel.dispatch(
+            HomeAction.LoadStream(
+                userId,
+                "whydSid=s%3AdyOSwMKzpQJzr20IiEnErLq-FsQyqJDq.CTk77QTUqe1b4NyupQQsbI0CBrn57lpxoYxvBlJDVs8",
 
+                )
+        )
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -45,12 +51,9 @@ fun StreamScreen(
             onHeartClick = { track ->
                 track.id?.let { id ->
                     mainState.sessionToken?.let { token ->
-                        homeViewModel.dispatch(
-                            HomeAction.ToggleLikeStreamTrack(
-                                trackId = id,
-                                token
-                            )
-                        )
+                        mainState.loggedInUser?.id?.let { userId ->
+                            homeViewModel.toggleStreamLike(id, token, userId)
+                        }
                     }
                 }
             },
