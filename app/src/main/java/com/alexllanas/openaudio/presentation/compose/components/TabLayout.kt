@@ -30,7 +30,7 @@ fun SearchResultTabLayout(
     navHostController: NavHostController,
     homeViewModel: HomeViewModel,
     mainState: MainState,
-    likeCallback : () -> Unit
+    likeCallback: () -> Unit
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
     var tabIndex = homeState.searchScreenState?.currentTab ?: 0
@@ -83,7 +83,10 @@ fun SearchResultTabLayout(
             if (homeState.searchPlaylistResults.isEmpty()) {
                 SearchBackground()
             } else {
-                PlaylistList(homeState.searchPlaylistResults) { selectedPlaylist ->
+                PlaylistList(
+                    playlists = homeState.searchPlaylistResults,
+                    isCountVisible = true
+                ) { selectedPlaylist ->
                     homeViewModel.dispatch(HomeAction.SelectPlaylist(selectedPlaylist))
                     navigateToPlaylistDetail(navHostController)
                 }

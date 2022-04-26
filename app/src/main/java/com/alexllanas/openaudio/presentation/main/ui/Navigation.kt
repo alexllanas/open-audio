@@ -111,7 +111,7 @@ fun NavigationGraph(
             TrackOptionsScreen(homeViewModel, navHostController, mainViewModel)
         }
         composable(NavItem.CreatePlaylist.screenRoute) {
-            CreatePlaylistScreen(navHostController)
+            CreatePlaylistScreen(navHostController, mainViewModel)
         }
         composable(NavItem.AddToPlaylist.screenRoute) {
             AddToPlaylistScreen(mainState, mainViewModel, homeViewModel, navHostController)
@@ -130,7 +130,11 @@ fun NavigationGraph(
         }
         composable(NavItem.Edit.screenRoute) {
             MediaScreen(mainViewModel) {
-                EditScreen(mainViewModel, navHostController = navHostController) {
+                EditScreen(
+                    mainViewModel,
+                    navHostController = navHostController,
+                    homeViewModel = homeViewModel
+                ) {
                     navHostController.navigate(NavItem.Settings.screenRoute)
                 }
             }

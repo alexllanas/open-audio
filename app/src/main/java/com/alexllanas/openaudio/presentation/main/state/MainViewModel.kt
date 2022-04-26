@@ -8,7 +8,9 @@ import android.util.SparseArray
 import androidx.compose.ui.text.substring
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import arrow.core.computations.result
 import com.alexllanas.core.domain.models.Track
+import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.interactors.auth.AuthInteractors
 import com.alexllanas.core.interactors.home.HomeInteractors
 import com.alexllanas.core.interactors.profile.ProfileInteractors
@@ -20,6 +22,7 @@ import com.alexllanas.openaudio.presentation.auth.state.LoginChange
 import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.common.ui.MyDownloader
 import com.alexllanas.openaudio.presentation.home.state.AddTrackToPlaylistChange
+import com.alexllanas.openaudio.presentation.home.state.CreatePlaylistChange
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.profile.state.ChangeInfo
 import com.alexllanas.openaudio.presentation.profile.state.LogoutChange
@@ -81,6 +84,24 @@ class MainViewModel @Inject constructor(
                         )
                     }.onStart { LoginChange.Loading }
             }
+        val executeCreatePlaylist: suspend (String, User, String) -> Flow<PartialStateChange<MainState>> =
+            { playlistName, user, sessionToken ->
+                homeInteractors.createPlaylist(
+                    playlistName,
+                    user,
+                    sessionToken
+                )
+                    .map { result ->
+                        result.fold(
+                            ifLeft = {
+                                CreatePlaylistChange.Error(it)
+                            },
+                            ifRight = {
+                                CreatePlaylistChange.Data(it)
+                            }
+                        )
+                    }.onStart { CreatePlaylistChange.Loading }
+            }
         val executeAddTrackToPlaylist: suspend (Track, String, String, String) -> Flow<PartialStateChange<MainState>> =
             { track, playlistName, playlistId, sessionToken ->
                 homeInteractors.addTrackToPlaylist(
@@ -91,8 +112,12 @@ class MainViewModel @Inject constructor(
                 )
                     .map { result ->
                         result.fold(
-                            ifLeft = { AddTrackToPlaylistChange.Error(it) },
-                            ifRight = { AddTrackToPlaylistChange.Data(it) }
+                            ifLeft = {
+                                AddTrackToPlaylistChange.Error(it)
+                            },
+                            ifRight = {
+                                AddTrackToPlaylistChange.Data(it)
+                            }
                         )
                     }.onStart { AddTrackToPlaylistChange.Loading }
             }
@@ -155,6 +180,8 @@ class MainViewModel @Inject constructor(
                     }.onStart { ChangeInfo.Loading }
             }
         return merge(
+            filterIsInstance<HomeAction.CreatePlaylist>()
+                .flatMapConcat { executeCreatePlaylist(it.playlistName, it.user, it.sessionToken) },
             filterIsInstance<ProfileAction.ChangeAvatar>()
                 .flatMapConcat { executeChangeAvatar(it.imageFilePath, it.sessionToken) },
             filterIsInstance<ProfileAction.ChangePassword>()

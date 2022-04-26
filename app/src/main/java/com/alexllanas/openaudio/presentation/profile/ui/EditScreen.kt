@@ -22,16 +22,19 @@ import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.components.GallerySelector
 import com.alexllanas.openaudio.presentation.compose.components.SaveTopBar
+import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import com.alexllanas.openaudio.presentation.profile.state.ProfileAction
 import com.skydoves.landscapist.glide.GlideImage
+import org.schabi.newpipe.extractor.timeago.patterns.id
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
 @Composable
 fun EditScreen(
     mainViewModel: MainViewModel,
+    homeViewModel: HomeViewModel,
     navHostController: NavHostController,
     onSettingsClick: () -> Unit
 ) {
@@ -44,14 +47,24 @@ fun EditScreen(
         topBar = {
             SaveTopBar("Edit Profile", {
                 mainState.sessionToken?.let { token ->
-                    mainViewModel.dispatch(ProfileAction.ChangeName(name, sessionToken = token))
-                    mainViewModel.dispatch(
-                        ProfileAction.ChangeLocation(
-                            location,
-                            sessionToken = token
+                    if (name != mainState.loggedInUser?.name) {
+                        mainViewModel.dispatch(ProfileAction.ChangeName(name, sessionToken = token))
+                    }
+                    if (location != mainState.loggedInUser?.location) {
+                        mainViewModel.dispatch(
+                            ProfileAction.ChangeLocation(
+                                location,
+                                sessionToken = token
+                            )
                         )
-                    )
-                    mainViewModel.dispatch(ProfileAction.ChangeBio(bio, sessionToken = token))
+                    }
+                    if (bio != mainState.loggedInUser?.bio) {
+                        mainViewModel.dispatch(ProfileAction.ChangeBio(bio, sessionToken = token))
+                    }
+                    mainState.loggedInUser?.id?.let { userId ->
+                        homeViewModel.refreshSelectedUser(userId, token)
+                    }
+
                 }
                 if (!mainState.isLoading) {
                     navHostController.popBackStack()

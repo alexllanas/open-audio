@@ -44,7 +44,7 @@ fun AddToPlaylistScreen(
                     Text(text = "New Playlist")
                 }
             }
-            PlaylistList(playlists = mainState.loggedInUser?.playlists ?: emptyList()) { playlist ->
+            PlaylistList(playlists = mainState.loggedInUser?.playlists ?: emptyList(), false) { playlist ->
                 playlist.id?.let { id ->
                     playlist.name?.let { name ->
                         homeState.selectedTrack?.let { track ->

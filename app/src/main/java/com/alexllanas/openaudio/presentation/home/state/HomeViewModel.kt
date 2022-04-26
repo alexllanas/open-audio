@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
-import com.alexllanas.core.domain.models.canLike
 import com.alexllanas.core.interactors.home.HomeInteractors
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.main.state.MainState
@@ -14,6 +13,7 @@ import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import org.schabi.newpipe.extractor.timeago.patterns.id
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
@@ -76,7 +76,20 @@ class HomeViewModel @Inject constructor(
                         )
                     }.onStart { ToggleLikeStreamTrackChange.Loading }
             }
-        val executeToggleLikeStreamTrack: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
+        val executeTogglePlaylistTrackLike: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
+            { trackId, sessionToken ->
+                homeInteractors.toggleLike(trackId, sessionToken)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { TogglePlaylistTrackLikeChange.Error(it) },
+                            ifRight = {
+                                TogglePlaylistTrackLikeChange.Data(it, trackId)
+                            }
+                        )
+                    }.onStart { TogglePlaylistTrackLikeChange.Loading }
+            }
+
+        val executeToggleStreamTrackLike: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
             { trackId, sessionToken ->
                 homeInteractors.toggleLike(trackId, sessionToken)
                     .map { result ->
@@ -228,8 +241,10 @@ class HomeViewModel @Inject constructor(
         return merge(
             filterIsInstance<HomeAction.ToggleTrackOptionsLike>()
                 .flatMapConcat { executeToggleTrackOptionsLike(it.trackId, it.sessionToken) },
+            filterIsInstance<HomeAction.TogglePlaylistTrackLike>()
+                .flatMapConcat { executeToggleStreamTrackLike(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.ToggleLikeStreamTrack>()
-                .flatMapConcat { executeToggleLikeStreamTrack(it.trackId, it.sessionToken) },
+                .flatMapConcat { executeToggleStreamTrackLike(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.ToggleLikeSearchTracks>()
                 .flatMapConcat { executeToggleLike(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.SelectTrack>()
@@ -307,7 +322,7 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun toggleStreamLike(id: String, sessionToken: String, userId: String) {
+    fun refreshStream(id: String, sessionToken: String, userId: String) {
         dispatch(
             HomeAction.ToggleLikeStreamTrack(
                 trackId = id,
@@ -315,5 +330,27 @@ class HomeViewModel @Inject constructor(
             )
         )
         dispatch(HomeAction.LoadStream(userId, sessionToken))
+    }
+
+    fun refreshPlaylistTracks(id: String, sessionToken: String, url: String) {
+        dispatch(
+            HomeAction.TogglePlaylistTrackLike(
+                trackId = id,
+                sessionToken
+            )
+        )
+        getPlaylistTracks(url)
+    }
+
+    fun getPlaylistTracks(url: String) {
+        dispatch(
+            HomeAction.GetPlaylistTracks(
+                playlistUrl = url
+            )
+        )
+    }
+
+    fun refreshSelectedUser(userId: String, sessionToken: String) {
+        dispatch(HomeAction.GetUser(userId, sessionToken))
     }
 }

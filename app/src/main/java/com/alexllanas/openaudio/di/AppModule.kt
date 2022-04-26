@@ -211,7 +211,8 @@ class AppModule {
             FollowUser(userDataSource),
             UnfollowUser(userDataSource),
             AddTrackToPlaylist(trackDataSource),
-            ToggleLike(userDataSource)
+            ToggleLike(userDataSource),
+            CreatePlaylist(playlistDataSource)
         )
     }
 

@@ -52,7 +52,7 @@ fun StreamScreen(
                 track.id?.let { id ->
                     mainState.sessionToken?.let { token ->
                         mainState.loggedInUser?.id?.let { userId ->
-                            homeViewModel.toggleStreamLike(id, token, userId)
+                            homeViewModel.refreshStream(id, token, userId)
                         }
                     }
                 }

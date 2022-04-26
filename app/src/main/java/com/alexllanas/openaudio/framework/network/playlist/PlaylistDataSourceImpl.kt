@@ -38,6 +38,7 @@ class PlaylistDataSourceImpl(
             playlistApiService
                 .createPlaylist(
                     playlistName = playlistName,
+                    action = "create",
                     sessionToken = sessionToken
                 )
                 .toDomainPlaylist()

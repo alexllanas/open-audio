@@ -28,7 +28,8 @@ fun PlaylistItem(
     modifier: Modifier = Modifier,
     playlist: Playlist?,
     onPlaylistClick: (Playlist) -> Unit = {},
-    isSelected: Boolean = false
+    isSelected: Boolean = false,
+    countVisible: Boolean
 ) {
     val background = if (isSelected)
         Color.LightGray
@@ -46,8 +47,10 @@ fun PlaylistItem(
         ListItem(
             text = { Text(text = playlist?.name.toString(), maxLines = 1) },
             secondaryText = {
-                playlist?.trackCount?.let { count ->
-                    Text(text = "$count tracks")
+                if (countVisible) {
+                    playlist?.trackCount?.let { count ->
+                        Text(text = "$count tracks")
+                    }
                 }
             },
             icon = {

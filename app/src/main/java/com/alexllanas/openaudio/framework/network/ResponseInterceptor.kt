@@ -11,11 +11,18 @@ class ResponseInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val req = chain.request()
+        val start = System.currentTimeMillis()
         val res = chain.proceed(req)
+        if (req.url.toString().startsWith("https://openwhyd.org/api/user?")) {
+            Log.d(TAG, "+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            Log.d(TAG, "intercept: time= ${System.currentTimeMillis() - start} ")
+            Log.d(TAG, "intercept: request url= ${req.url} ")
+        }
+
         sessionToken = res.getSessionToken()
 //        val body = res.body()?.string()
 //        Log.d(TAG, "intercept: ${req.url}")
-        Log.d(TAG, "intercept: ${res.peekBody(Long.MAX_VALUE).string()}")
+//        Log.d(TAG, "intercept: ${res.peekBody(Long.MAX_VALUE).string()}")
 //        Log.d(Constants.TAG, "provideOkHttpClientBuilder: Session Token: $sessionToken")
         return res
     }

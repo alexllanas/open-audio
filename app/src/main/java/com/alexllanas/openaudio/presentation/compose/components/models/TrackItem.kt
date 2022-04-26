@@ -65,9 +65,9 @@ fun TrackItem(
             trailing = {
                 Row {
                     track?.toDomain()?.let {
-//                        if (track.userLikeIds.contains(mainState.loggedInUser?.id)) {
-//                            track.liked = true
-//                        }
+                        if (track.userLikeIds.contains(mainState.loggedInUser?.id)) {
+                            track.liked = true
+                        }
                         if (track.liked) {
                             Icon(
                                 Icons.Filled.Favorite,

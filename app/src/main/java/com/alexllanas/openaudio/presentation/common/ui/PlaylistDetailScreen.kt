@@ -39,12 +39,9 @@ fun PlaylistDetailScreen(
     navController: NavHostController
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
-    homeViewModel.dispatch(
-        HomeAction.GetPlaylistTracks(
-            playlistUrl = homeState.selectedPlaylist?.url ?: return
-        )
-    )
-
+    homeState.selectedPlaylist?.url?.let { url ->
+        homeViewModel.getPlaylistTracks(url)
+    }
     Scaffold(topBar = {
         TopAppBar {
             Row(modifier = modifier.fillMaxWidth()) {
@@ -64,11 +61,14 @@ fun PlaylistDetailScreen(
             homeState.selectedPlaylist?.let {
                 Header(modifier, it.toUI())
             }
-            TrackList(tracks = homeState.selectedPlaylistTracks.toUI(),
+            TrackList(
+                tracks = homeState.selectedPlaylistTracks.toUI(),
                 onHeartClick = { track ->
                     track.id?.let { id ->
                         mainState.sessionToken?.let { token ->
-                            homeViewModel.dispatch(HomeAction.ToggleLikeSearchTracks(trackId = id, token))
+                            homeState.selectedPlaylist?.url?.let { url ->
+                                homeViewModel.refreshPlaylistTracks(id, token, url)
+                            }
                         }
                     }
                 },
@@ -76,7 +76,8 @@ fun PlaylistDetailScreen(
                     homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
                     navController.navigate("track_options")
                 },
-            mainState = mainState)
+                mainState = mainState
+            )
         }
 
     }
@@ -102,7 +103,7 @@ fun Header(modifier: Modifier = Modifier, playlist: PlaylistUIModel) {
             modifier = Modifier.padding(8.dp).fillMaxWidth(),
         ) {
             GlideImage(
-                modifier = Modifier.size(24.dp).clip(CircleShape).padding(end = 5.dp),
+                modifier = Modifier.size(24.dp).clip(CircleShape),
                 imageModel = URLDecoder.decode(
                     playlist.author?.avatarUrl ?: "",
                     StandardCharsets.UTF_8.toString()
@@ -111,7 +112,11 @@ fun Header(modifier: Modifier = Modifier, playlist: PlaylistUIModel) {
                 placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
                 error = ImageBitmap.imageResource(R.drawable.blank_user)
             )
-            Text(text = playlist.author?.name.toString(), style = MaterialTheme.typography.body1)
+            Text(
+                modifier = Modifier.padding(start = 5.dp),
+                text = playlist.author?.name.toString(),
+                style = MaterialTheme.typography.body1
+            )
         }
     }
 }

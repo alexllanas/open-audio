@@ -70,7 +70,73 @@ sealed class HomeAction : Action() {
     data class QueryTextChanged(val query: String) : HomeAction()
     data class GetUser(val id: String, val sessionToken: String) : HomeAction()
     data class ToggleTrackOptionsLike(val trackId: String, val sessionToken: String) : HomeAction()
+    data class TogglePlaylistTrackLike(val trackId: String, val sessionToken: String) : HomeAction()
+    data class CreatePlaylist(val playlistName: String = "", val user: User, val sessionToken: String) :
+        HomeAction()
 
+}
+
+sealed class CreatePlaylistChange : PartialStateChange<MainState> {
+    override fun reduce(state: MainState): MainState {
+        return when (this) {
+            is Data -> {
+                state.loggedInUser?.let { user ->
+                    state.copy(
+                        loggedInUser = state.loggedInUser.copy(
+                            playlists = user.playlists.plus(
+                                playlist
+                            )
+                        ),
+                        isLoading = false,
+                        error = null,
+                    )
+                } ?: state
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val playlist: Playlist) : CreatePlaylistChange()
+    data class Error(val throwable: Throwable) : CreatePlaylistChange()
+    object Loading : CreatePlaylistChange()
+}
+
+
+sealed class TogglePlaylistTrackLikeChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    selectedPlaylistTracks = updateTrackList(
+                        post,
+                        state.selectedPlaylistTracks,
+                        trackId
+                    ),
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val post: Post, val trackId: String) : TogglePlaylistTrackLikeChange()
+    data class Error(val throwable: Throwable) : TogglePlaylistTrackLikeChange()
+    object Loading : TogglePlaylistTrackLikeChange()
 }
 
 sealed class ToggleTrackOptionsLikeChange : PartialStateChange<HomeState> {
