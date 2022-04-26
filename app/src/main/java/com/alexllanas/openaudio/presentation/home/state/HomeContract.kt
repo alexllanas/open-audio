@@ -64,14 +64,17 @@ sealed class HomeAction : Action() {
 
     data class SelectTab(val tabIndex: Int) : HomeAction()
     data class SelectTrack(val selectedTrack: Track) : HomeAction()
-    data class SelectPlaylist(val selectedPlaylist: Playlist) : HomeAction()
-    data class SelectUser(val selectedUser: User) : HomeAction()
+    data class SelectPlaylist(val selectedPlaylist: Playlist?) : HomeAction()
     data class GetPlaylistTracks(val playlistUrl: String) : HomeAction()
     data class QueryTextChanged(val query: String) : HomeAction()
     data class GetUser(val id: String, val sessionToken: String) : HomeAction()
     data class ToggleTrackOptionsLike(val trackId: String, val sessionToken: String) : HomeAction()
     data class TogglePlaylistTrackLike(val trackId: String, val sessionToken: String) : HomeAction()
-    data class CreatePlaylist(val playlistName: String = "", val user: User, val sessionToken: String) :
+    data class CreatePlaylist(
+        val playlistName: String = "",
+        val user: User,
+        val sessionToken: String
+    ) :
         HomeAction()
 
 }
@@ -96,7 +99,7 @@ sealed class CreatePlaylistChange : PartialStateChange<MainState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -127,7 +130,7 @@ sealed class TogglePlaylistTrackLikeChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -153,7 +156,7 @@ sealed class ToggleTrackOptionsLikeChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -191,7 +194,7 @@ sealed class ToggleLikeStreamTrackChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -217,7 +220,7 @@ sealed class ToggleLikeSearchTrackChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -243,7 +246,7 @@ sealed class GetUserChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -269,7 +272,7 @@ sealed class SelectTabChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -295,7 +298,7 @@ sealed class SelectPlaylistChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -321,7 +324,7 @@ sealed class GetPlaylistTracksChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -347,7 +350,7 @@ sealed class GetFollowersChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -385,7 +388,7 @@ sealed class GetFollowingChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -413,7 +416,7 @@ sealed class AddTrackToPlaylistChange : PartialStateChange<MainState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -433,7 +436,7 @@ sealed class FollowUserChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -454,7 +457,7 @@ sealed class UnfollowUserChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -474,7 +477,7 @@ sealed class LikeTrackChange : PartialStateChange<HomeState> {
                 isLoading = false,
                 error = throwable
             )
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -489,7 +492,7 @@ sealed class LikeTrackChange : PartialStateChange<HomeState> {
 sealed class UnlikeTrackChange : PartialStateChange<HomeState> {
     override fun reduce(state: HomeState): HomeState {
         return when (this) {
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -511,7 +514,7 @@ sealed class UnlikeTrackChange : PartialStateChange<HomeState> {
 sealed class StreamChange : PartialStateChange<HomeState> {
     override fun reduce(state: HomeState): HomeState {
         return when (this) {
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -537,7 +540,7 @@ sealed class StreamChange : PartialStateChange<HomeState> {
 sealed class UserTracksChange : PartialStateChange<HomeState> {
     override fun reduce(state: HomeState): HomeState {
         return when (this) {
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )
@@ -561,7 +564,7 @@ sealed class UserTracksChange : PartialStateChange<HomeState> {
 sealed class SearchChange : PartialStateChange<HomeState> {
     override fun reduce(state: HomeState): HomeState {
         return when (this) {
-            Loading -> state.copy(
+            is Loading -> state.copy(
                 isLoading = true,
                 error = null
             )

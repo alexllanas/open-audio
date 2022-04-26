@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.compose.components.LoadingIndicator
 import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
@@ -46,7 +47,10 @@ fun PlaylistDetailScreen(
         TopAppBar {
             Row(modifier = modifier.fillMaxWidth()) {
                 Icon(
-                    modifier = Modifier.padding(8.dp).clickable { navController.popBackStack() },
+                    modifier = Modifier.padding(8.dp).clickable {
+                        homeViewModel.clearSelectedPlaylist()
+                        navController.popBackStack()
+                    },
                     imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(
                         R.string.back_arrow
                     )
@@ -57,29 +61,30 @@ fun PlaylistDetailScreen(
     },
         bottomBar = { BottomNav(navController = navController) }
     ) {
-        Column(modifier = Modifier) {
-            homeState.selectedPlaylist?.let {
-                Header(modifier, it.toUI())
-            }
-            TrackList(
-                tracks = homeState.selectedPlaylistTracks.toUI(),
-                onHeartClick = { track ->
-                    track.id?.let { id ->
-                        mainState.sessionToken?.let { token ->
-                            homeState.selectedPlaylist?.url?.let { url ->
-                                homeViewModel.refreshPlaylistTracks(id, token, url)
+        homeState.selectedPlaylist?.let {
+            Column(modifier = Modifier) {
+                homeState.selectedPlaylist?.let {
+                    Header(modifier, it.toUI())
+                }
+                TrackList(
+                    tracks = homeState.selectedPlaylistTracks.toUI(),
+                    onHeartClick = { track ->
+                        track.id?.let { id ->
+                            mainState.sessionToken?.let { token ->
+                                homeState.selectedPlaylist?.url?.let { url ->
+                                    homeViewModel.refreshPlaylistTracks(id, token, url)
+                                }
                             }
                         }
-                    }
-                },
-                onMoreClick = {
-                    homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
-                    navController.navigate("track_options")
-                },
-                mainState = mainState
-            )
-        }
-
+                    },
+                    onMoreClick = {
+                        homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
+                        navController.navigate("track_options")
+                    },
+                    mainState = mainState
+                )
+            }
+        } ?: LoadingIndicator()
     }
 }
 

@@ -62,7 +62,9 @@ class HomeViewModel @Inject constructor(
                                 ToggleLikeSearchTrackChange.Data(it, trackId)
                             }
                         )
-                    }.onStart { ToggleLikeSearchTrackChange.Loading }
+                    }.onStart {
+                        ToggleLikeSearchTrackChange.Loading
+                    }
             }
         val executeToggleTrackOptionsLike: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
             { trackId, sessionToken ->
@@ -242,7 +244,7 @@ class HomeViewModel @Inject constructor(
             filterIsInstance<HomeAction.ToggleTrackOptionsLike>()
                 .flatMapConcat { executeToggleTrackOptionsLike(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.TogglePlaylistTrackLike>()
-                .flatMapConcat { executeToggleStreamTrackLike(it.trackId, it.sessionToken) },
+                .flatMapConcat { executeTogglePlaylistTrackLike(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.ToggleLikeStreamTrack>()
                 .flatMapConcat { executeToggleStreamTrackLike(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.ToggleLikeSearchTracks>()
@@ -256,7 +258,11 @@ class HomeViewModel @Inject constructor(
             filterIsInstance<HomeAction.QueryTextChanged>()
                 .flatMapConcat { flowOf(TextChange.QueryTextChange(it.query)) },
             filterIsInstance<HomeAction.SelectPlaylist>()
-                .flatMapConcat { executeSelectPlaylist(it.selectedPlaylist) },
+                .flatMapConcat {
+                    it.selectedPlaylist?.let { playlist ->
+                        executeSelectPlaylist(playlist)
+                    } ?: flowOf()
+                },
             filterIsInstance<HomeAction.GetPlaylistTracks>()
                 .flatMapConcat { executeGetPlaylistTracks(it.playlistUrl) },
             filterIsInstance<HomeAction.GetFollowing>()
@@ -352,5 +358,9 @@ class HomeViewModel @Inject constructor(
 
     fun refreshSelectedUser(userId: String, sessionToken: String) {
         dispatch(HomeAction.GetUser(userId, sessionToken))
+    }
+
+    fun clearSelectedPlaylist() {
+        dispatch(HomeAction.SelectPlaylist(null))
     }
 }

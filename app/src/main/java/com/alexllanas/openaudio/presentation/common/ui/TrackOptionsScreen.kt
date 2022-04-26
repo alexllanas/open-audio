@@ -1,5 +1,6 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -17,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -27,6 +29,7 @@ import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.util.sendTweet
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
@@ -36,6 +39,7 @@ fun TrackOptionsScreen(
     mainViewModel: MainViewModel
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
+    val context = LocalContext.current
 
     ConstraintLayout(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         val (closeIcon, image, title, optionsMenu) = createRefs()
@@ -77,7 +81,7 @@ fun TrackOptionsScreen(
         OptionsMenu(modifier = Modifier.padding(8.dp).constrainAs(optionsMenu) {
             top.linkTo(title.bottom)
             start.linkTo(parent.start)
-        }, navHostController, homeViewModel, mainViewModel)
+        }, navHostController, homeViewModel, mainViewModel, context)
     }
 }
 
@@ -86,7 +90,8 @@ fun OptionsMenu(
     modifier: Modifier = Modifier,
     navHostController: NavHostController,
     homeViewModel: HomeViewModel,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    context: Context
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
     val mainState by mainViewModel.mainState.collectAsState()
@@ -141,7 +146,11 @@ fun OptionsMenu(
                 style = MaterialTheme.typography.body1
             )
         }
-        Row(modifier = Modifier.fillMaxWidth().padding()) {
+        Row(modifier = Modifier.fillMaxWidth().padding().clickable {
+            homeState.selectedTrack?.let { track ->
+                sendTweet(track, context)
+            }
+        }) {
             Icon(
                 imageVector = Icons.Outlined.Share,
                 contentDescription = stringResource(R.string.share)

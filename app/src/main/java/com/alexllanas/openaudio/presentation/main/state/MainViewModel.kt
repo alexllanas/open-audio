@@ -66,7 +66,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun dispatch(action: Action) {
-        Log.d(Constants.TAG, "dispatch: $action")
+        Log.d(TAG, "dispatch: $action")
         viewModelScope.launch {
             _actions.emit(action)
         }
@@ -153,8 +153,12 @@ class MainViewModel @Inject constructor(
                 profileInteractors.changeLocation(location, sessionToken)
                     .map { result ->
                         result.fold(
-                            ifLeft = { ChangeInfo.Error(it) },
-                            ifRight = { ChangeInfo.Data(it) }
+                            ifLeft = {
+                                ChangeInfo.Error(it)
+                            },
+                            ifRight = {
+                                ChangeInfo.Data(it)
+                            }
                         )
                     }.onStart { ChangeInfo.Loading }
             }

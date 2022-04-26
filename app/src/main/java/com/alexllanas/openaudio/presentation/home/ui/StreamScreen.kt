@@ -5,6 +5,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
 import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.compose.components.LoadingIndicator
 import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
@@ -44,25 +45,30 @@ fun StreamScreen(
 
     ) {
 
-        Log.d(TAG, "StreamScreen: ${homeState.stream}")
+        Log.d(TAG, "StreamScreen: ${homeState.isLoading}")
 
-        TrackList(
-            homeState.stream.toUI(),
-            onHeartClick = { track ->
-                track.id?.let { id ->
-                    mainState.sessionToken?.let { token ->
-                        mainState.loggedInUser?.id?.let { userId ->
-                            homeViewModel.refreshStream(id, token, userId)
+        if (homeState.stream.isEmpty()) {
+            LoadingIndicator()
+        } else {
+            TrackList(
+                homeState.stream.toUI(),
+                onHeartClick = { track ->
+                    track.id?.let { id ->
+                        mainState.sessionToken?.let { token ->
+                            mainState.loggedInUser?.id?.let { userId ->
+                                homeViewModel.refreshStream(id, token, userId)
+                            }
                         }
                     }
-                }
-            },
-            onMoreClick = {
-                homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
-                navController.navigate("track_options")
-            },
-            mainState = mainState
-        )
+                },
+                onMoreClick = {
+                    homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
+                    navController.navigate("track_options")
+                },
+                mainState = mainState
+            )
+        }
+
     }
 }
 

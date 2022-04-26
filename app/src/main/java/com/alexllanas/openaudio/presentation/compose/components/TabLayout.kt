@@ -56,7 +56,7 @@ fun SearchResultTabLayout(
     when (tabIndex) {
         0 -> {
             if (homeState.searchTrackResults.isEmpty()) {
-//                SearchBackground()
+                SearchBackground()
             } else {
                 TrackList(homeState.searchTrackResults.toUI(),
                     onMoreClick = {

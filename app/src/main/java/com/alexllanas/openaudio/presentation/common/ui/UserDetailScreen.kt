@@ -50,7 +50,7 @@ fun UserDetailScreen(
     onEditClick: () -> Unit,
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
-
+    homeViewModel.clearSelectedPlaylist()
     Scaffold(topBar = {
         ConstraintLayout(
             Modifier.fillMaxWidth().height(height = 56.dp).background(MaterialTheme.colors.primary)

@@ -3,25 +3,34 @@ package com.alexllanas.openaudio.presentation.profile.ui
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.components.GallerySelector
+import com.alexllanas.openaudio.presentation.compose.components.LoadingIndicator
 import com.alexllanas.openaudio.presentation.compose.components.SaveTopBar
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
@@ -31,6 +40,7 @@ import org.schabi.newpipe.extractor.timeago.patterns.id
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EditScreen(
     mainViewModel: MainViewModel,
@@ -39,34 +49,23 @@ fun EditScreen(
     onSettingsClick: () -> Unit
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
+    val homeState by homeViewModel.homeState.collectAsState()
     var name by remember { mutableStateOf(mainState.loggedInUser?.name ?: "username") }
     var location by remember { mutableStateOf(mainState.loggedInUser?.location ?: "location") }
     var bio by remember { mutableStateOf(mainState.loggedInUser?.bio ?: "bio") }
+    val keyboardController = LocalSoftwareKeyboardController.current
+//    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     Scaffold(
         topBar = {
-            SaveTopBar("Edit Profile", {
-                mainState.sessionToken?.let { token ->
-                    if (name != mainState.loggedInUser?.name) {
-                        mainViewModel.dispatch(ProfileAction.ChangeName(name, sessionToken = token))
-                    }
-                    if (location != mainState.loggedInUser?.location) {
-                        mainViewModel.dispatch(
-                            ProfileAction.ChangeLocation(
-                                location,
-                                sessionToken = token
-                            )
-                        )
-                    }
-                    if (bio != mainState.loggedInUser?.bio) {
-                        mainViewModel.dispatch(ProfileAction.ChangeBio(bio, sessionToken = token))
-                    }
-                    mainState.loggedInUser?.id?.let { userId ->
-                        homeViewModel.refreshSelectedUser(userId, token)
-                    }
-
-                }
-                if (!mainState.isLoading) {
+            SaveTopBar("Edit Profile", onSaveAction = {
+//                mainState.sessionToken?.let { token ->
+//                    mainState.loggedInUser?.id?.let { userId ->
+//                        homeViewModel.refreshSelectedUser(userId, token)
+//                    }
+//                }
+                if (!homeState.isLoading) {
                     navHostController.popBackStack()
                 }
             }, true, onSettingsClick)
@@ -89,24 +88,84 @@ fun EditScreen(
             }
             Column {
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Text(text = "Information", modifier = Modifier, style = MaterialTheme.typography.h4)
                 TextField(
                     modifier = Modifier.padding(top = 16.dp),
                     onValueChange = { name = it },
+                    singleLine = true,
                     colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.background),
-                    value = name
+                    value = name,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            mainState.sessionToken?.let { token ->
+                                if (name != mainState.loggedInUser?.name) {
+                                    mainViewModel.dispatch(
+                                        ProfileAction.ChangeName(
+                                            name,
+                                            sessionToken = token
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    )
                 )
                 TextField(
                     modifier = Modifier.padding(top = 16.dp),
                     onValueChange = { location = it },
+                    singleLine = true,
                     colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.background),
-                    value = location
+                    value = location,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            if (location != mainState.loggedInUser?.location) {
+                                mainState.sessionToken?.let { token ->
+                                    mainViewModel.dispatch(
+                                        ProfileAction.ChangeLocation(
+                                            location,
+                                            sessionToken = token
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    )
                 )
                 TextField(
                     modifier = Modifier.padding(top = 16.dp),
                     onValueChange = { bio = it },
                     colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.background),
-                    value = bio
+                    value = bio,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            if (bio != mainState.loggedInUser?.bio) {
+                                mainState.sessionToken?.let { token ->
+                                    mainViewModel.dispatch(
+                                        ProfileAction.ChangeBio(
+                                            bio,
+                                            sessionToken = token
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    )
                 )
             }
         }
