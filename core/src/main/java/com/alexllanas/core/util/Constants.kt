@@ -1,6 +1,7 @@
 package com.alexllanas.core.util
 
 class Constants {
+
     companion object {
         const val FOLLOWERS: String = "Followers"
         const val FOLLOWING: String = "Following"
@@ -20,5 +21,9 @@ class Constants {
          * Database
          */
         const val DATABASE_NAME = "open_audio_db"
+
+        /**
+         * DataStore
+         */
     }
 }

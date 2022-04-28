@@ -2,6 +2,8 @@ package com.alexllanas.openaudio.di
 
 import android.app.Application
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.alexllanas.core.data.remote.home.HomeDataSource
 import com.alexllanas.core.data.remote.playlist.PlaylistDataSource
@@ -44,6 +46,7 @@ import okhttp3.OkHttpClient
 import org.schabi.newpipe.extractor.downloader.Downloader
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.prefs.Preferences
 import javax.inject.Singleton
 
 @Module
@@ -94,7 +97,7 @@ class AppModule {
     fun provideOkHttpClientBuilder(
         @ApplicationContext app: Context
     ): OkHttpClient.Builder {
-        return OkHttpClient.Builder().addInterceptor(ResponseInterceptor())
+        return OkHttpClient.Builder().addInterceptor(ResponseInterceptor(app))
     }
 
     @Singleton

@@ -1,5 +1,6 @@
 package com.alexllanas.openaudio.presentation.compose.components
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -8,6 +9,7 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -77,3 +79,35 @@ fun GallerySelector(mainViewModel: MainViewModel) {
         contentScale = ContentScale.Crop
     )
 }
+
+//@RequiresApi(33)
+//@Composable
+//fun PhotoPicker(mainViewModel: MainViewModel) {
+//    val context = LocalContext.current
+//    val mainState by mainViewModel.mainState.collectAsState()
+//    val intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+//    val launcher = rememberLauncherForActivityResult(
+//        contract =
+//        ActivityResultContracts.StartActivityForResult()
+//    ) {
+//        Log.d(TAG, "PhotoPicker: ${it.data}")
+//        mainState.sessionToken?.let { token ->
+//            it.data?.let { path ->
+//                mainViewModel.dispatch(ProfileAction.ChangeAvatar(path.data.toString(), token))
+//            }
+//        }
+//    }
+//    AsyncImage(
+//        modifier = Modifier.size(160.dp).clip(CircleShape)
+//            .border(BorderStroke(1.dp, Color.Black), shape = CircleShape)
+//            .clickable {
+//                launcher.launch(intent)
+//            },
+//        model =
+//        mainState.loggedInUser?.avatarUrl,
+//        contentDescription = null,
+//        placeholder = painterResource(R.drawable.blank_user),
+//        error = painterResource(R.drawable.blank_user),
+//        contentScale = ContentScale.Crop
+//    )
+//}

@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -25,17 +26,24 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.datastore.preferences.core.edit
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.SESSION_TOKEN
+import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.compose.components.SaveTopBar
+import com.alexllanas.openaudio.presentation.dataStore
 import com.alexllanas.openaudio.presentation.main.state.MainState
+import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
+import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.profile.state.ProfileAction
 import com.alexllanas.openaudio.presentation.profile.state.ProfileState
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 
 @Composable
 fun SettingsScreen(
+    mainViewModel: MainViewModel,
     profileViewModel: ProfileViewModel,
     mainState: MainState,
     navHostController: NavHostController
@@ -78,6 +86,8 @@ fun SettingsScreen(
             Button(onClick = {
                 mainState.sessionToken?.let { token ->
                     profileViewModel.dispatch(ProfileAction.Logout(token))
+                    mainViewModel.dispatch(AuthAction.SetSessionTokenAction(""))
+                    navHostController.navigate(NavItem.Landing.screenRoute)
                 }
             }, modifier = Modifier
                 .padding(top = 64.dp)

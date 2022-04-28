@@ -19,6 +19,7 @@ import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.framework.network.YoutubeApi
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.auth.state.LoginChange
+import com.alexllanas.openaudio.presentation.auth.state.SetSessionTokenChange
 import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.common.ui.MyDownloader
 import com.alexllanas.openaudio.presentation.home.state.AddTrackToPlaylistChange
@@ -128,6 +129,12 @@ class MainViewModel @Inject constructor(
                     emit(LogoutChange.Success)
                 }.onStart { LogoutChange.Loading }
             }
+        val executeSetSessionToken: suspend (String) -> Flow<PartialStateChange<MainState>> =
+            { sessionToken ->
+                flow {
+                    emit(SetSessionTokenChange.Data(sessionToken))
+                }
+            }
         val executeChangeBio: suspend (String, String) -> Flow<PartialStateChange<MainState>> =
             { bio, sessionToken ->
                 profileInteractors.changeBio(bio, sessionToken)
@@ -184,6 +191,8 @@ class MainViewModel @Inject constructor(
                     }.onStart { ChangeInfo.Loading }
             }
         return merge(
+            filterIsInstance<AuthAction.SetSessionTokenAction>()
+                .flatMapConcat { executeSetSessionToken(it.token) },
             filterIsInstance<HomeAction.CreatePlaylist>()
                 .flatMapConcat { executeCreatePlaylist(it.playlistName, it.user, it.sessionToken) },
             filterIsInstance<ProfileAction.ChangeAvatar>()
