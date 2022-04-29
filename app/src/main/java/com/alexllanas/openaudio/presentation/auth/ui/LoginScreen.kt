@@ -32,6 +32,7 @@ import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.compose.components.BasicEmailField
+import com.alexllanas.openaudio.presentation.compose.components.BasicPasswordField
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.util.isValidEmail
@@ -44,12 +45,16 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var isEmailError by rememberSaveable { mutableStateOf(false) }
     var password by remember { mutableStateOf("") }
-    var passwordVisible by rememberSaveable { mutableStateOf(false) }
-
     val mainState by mainViewModel.mainState.collectAsState()
-    Log.d(TAG, "LoginScreen: error = ${mainState.error?.printStackTrace()}")
 
-    Log.d(TAG, "LoginScreen: isLoading = ${mainState.isLoading}")
+    mainState.sessionToken?.let {
+        mainState.loggedInUser?.let {
+            LaunchedEffect(it) {
+                navController.navigate(NavItem.Stream.screenRoute)
+            }
+        }
+    }
+
     ConstraintLayout(
         Modifier
             .padding(16.dp)
@@ -86,33 +91,11 @@ fun LoginScreen(
             label = { Text("email") },
             isError = isEmailError
         )
-
-//        TextField(
-//            value = email,
-//            onValueChange = {
-//                email = it
-//            },
-//            singleLine = true,
-//            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.background),
-//            label = { Text("email") },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(top = 32.dp)
-//                .constrainAs(emailTextField) {
-//                    top.linkTo(heading.bottom)
-//                    start.linkTo(parent.start)
-//                    end.linkTo(parent.end)
-//                }
-//        )
-        // Edit Text, password
-        TextField(
+        BasicPasswordField(
             value = password,
             onValueChange = {
                 password = it
             },
-            singleLine = true,
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.background),
-            label = { Text("password") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp)
@@ -121,23 +104,9 @@ fun LoginScreen(
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            trailingIcon = {
-                val image = if (passwordVisible)
-                    Icons.Filled.VisibilityOff
-                else
-                    Icons.Filled.Visibility
-                val description =
-                    if (passwordVisible)
-                        stringResource(R.string.show_password)
-                    else
-                        stringResource(R.string.hide_password)
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(imageVector = image, contentDescription = description)
-                }
-            },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        )
+            label = { Text("password") },
+
+            )
         Text(text = "Forgot password",
             style = MaterialTheme.typography.body1,
             modifier = Modifier
@@ -160,7 +129,7 @@ fun LoginScreen(
                         password.trim()
                     )
                 )
-                navController.navigate(NavItem.Stream.screenRoute)
+//                navController.navigate(NavItem.Stream.screenRoute)
             }
         },
             modifier = Modifier

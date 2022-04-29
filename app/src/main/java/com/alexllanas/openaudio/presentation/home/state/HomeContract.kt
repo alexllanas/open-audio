@@ -11,6 +11,8 @@ import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 
 sealed class HomeAction : Action() {
+
+    object ClearHomeState : HomeAction()
     data class LoadStream(val userId: String, val sessionToken: String) : HomeAction()
     data class GetUserTracks(val userId: String) : HomeAction()
     data class SearchAction(val query: String) : HomeAction()
@@ -79,6 +81,11 @@ sealed class HomeAction : Action() {
 
 }
 
+class ClearHomeStateChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return HomeState()
+    }
+}
 sealed class CreatePlaylistChange : PartialStateChange<MainState> {
     override fun reduce(state: MainState): MainState {
         return when (this) {

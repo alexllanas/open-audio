@@ -5,6 +5,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
@@ -37,6 +38,7 @@ fun BasicPasswordField(
         onValueChange = onValueChange,
         modifier = modifier,
         label = label,
+        leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
         trailingIcon = {
             val image = if (passwordVisible)
                 Icons.Filled.VisibilityOff

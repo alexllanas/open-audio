@@ -1,27 +1,20 @@
 package com.alexllanas.openaudio.presentation.main.state
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.net.Uri
 import android.util.Log
-import android.util.SparseArray
-import androidx.compose.ui.text.substring
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import arrow.core.computations.result
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.interactors.auth.AuthInteractors
 import com.alexllanas.core.interactors.home.HomeInteractors
 import com.alexllanas.core.interactors.profile.ProfileInteractors
-import com.alexllanas.core.util.Constants
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.framework.network.YoutubeApi
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.auth.state.LoginChange
-import com.alexllanas.openaudio.presentation.auth.state.SetSessionTokenChange
+import com.alexllanas.openaudio.presentation.auth.state.ClearSessionTokenChange
+import com.alexllanas.openaudio.presentation.auth.state.ClearMainStateChange
 import com.alexllanas.openaudio.presentation.common.state.Action
-import com.alexllanas.openaudio.presentation.common.ui.MyDownloader
 import com.alexllanas.openaudio.presentation.home.state.AddTrackToPlaylistChange
 import com.alexllanas.openaudio.presentation.home.state.CreatePlaylistChange
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
@@ -32,11 +25,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.schabi.newpipe.extractor.timeago.patterns.it
-import java.net.URLDecoder
-import java.net.URLEncoder
-import java.nio.charset.CharsetEncoder
-import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 @HiltViewModel
@@ -129,10 +117,16 @@ class MainViewModel @Inject constructor(
                     emit(LogoutChange.Success)
                 }.onStart { LogoutChange.Loading }
             }
-        val executeSetSessionToken: suspend (String) -> Flow<PartialStateChange<MainState>> =
+        val executeClearSessionToken: suspend (String) -> Flow<PartialStateChange<MainState>> =
             { sessionToken ->
                 flow {
-                    emit(SetSessionTokenChange.Data(sessionToken))
+                    emit(ClearSessionTokenChange.Data(sessionToken))
+                }
+            }
+        val executeClearMainState: suspend () -> Flow<PartialStateChange<MainState>> =
+            {
+                flow {
+                    emit(ClearMainStateChange())
                 }
             }
         val executeChangeBio: suspend (String, String) -> Flow<PartialStateChange<MainState>> =
@@ -191,8 +185,10 @@ class MainViewModel @Inject constructor(
                     }.onStart { ChangeInfo.Loading }
             }
         return merge(
-            filterIsInstance<AuthAction.SetSessionTokenAction>()
-                .flatMapConcat { executeSetSessionToken(it.token) },
+            filterIsInstance<AuthAction.ClearMainState>()
+                .flatMapConcat { executeClearMainState() },
+            filterIsInstance<AuthAction.ClearSessionTokenAction>()
+                .flatMapConcat { executeClearSessionToken(it.token) },
             filterIsInstance<HomeAction.CreatePlaylist>()
                 .flatMapConcat { executeCreatePlaylist(it.playlistName, it.user, it.sessionToken) },
             filterIsInstance<ProfileAction.ChangeAvatar>()

@@ -8,6 +8,8 @@ import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.interactors.home.HomeInteractors
 import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.auth.state.AuthAction
+import com.alexllanas.openaudio.presentation.auth.state.ClearMainStateChange
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,7 +53,12 @@ class HomeViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun SharedFlow<HomeAction>.toChangeFlow(): Flow<PartialStateChange<HomeState>> {
-
+        val executeClearHomeState: suspend () -> Flow<PartialStateChange<HomeState>> =
+            {
+                flow {
+                    emit(ClearHomeStateChange())
+                }
+            }
         val executeToggleLike: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
             { trackId, sessionToken ->
                 homeInteractors.toggleLike(trackId, sessionToken)
@@ -241,6 +248,8 @@ class HomeViewModel @Inject constructor(
                 flowOf(SelectPlaylistChange.Data(playlist))
             }
         return merge(
+            filterIsInstance<HomeAction.ClearHomeState>()
+                .flatMapConcat { executeClearHomeState() },
             filterIsInstance<HomeAction.ToggleTrackOptionsLike>()
                 .flatMapConcat { executeToggleTrackOptionsLike(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.TogglePlaylistTrackLike>()

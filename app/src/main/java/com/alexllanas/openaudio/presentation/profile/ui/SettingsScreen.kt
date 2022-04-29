@@ -4,19 +4,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -25,6 +17,8 @@ import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.compose.components.BasicPasswordField
 import com.alexllanas.openaudio.presentation.compose.components.SaveTopBar
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
+import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
@@ -35,6 +29,7 @@ import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 @Composable
 fun SettingsScreen(
     mainViewModel: MainViewModel,
+    homeViewModel: HomeViewModel,
     profileViewModel: ProfileViewModel,
     mainState: MainState,
     navHostController: NavHostController
@@ -63,7 +58,9 @@ fun SettingsScreen(
             Button(onClick = {
                 mainState.sessionToken?.let { token ->
                     profileViewModel.dispatch(ProfileAction.Logout(token))
-                    mainViewModel.dispatch(AuthAction.SetSessionTokenAction(""))
+//                    mainViewModel.dispatch(AuthAction.ClearSessionTokenAction(""))
+                    mainViewModel.dispatch(AuthAction.ClearMainState)
+                    homeViewModel.dispatch(HomeAction.ClearHomeState)
                     navHostController.navigate(NavItem.Landing.screenRoute)
                 }
             }, modifier = Modifier

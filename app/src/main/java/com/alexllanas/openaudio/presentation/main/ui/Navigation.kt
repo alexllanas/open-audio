@@ -82,7 +82,7 @@ fun NavigationGraph(
     val homeState by homeViewModel.homeState.collectAsState()
     NavHost(
         navController = navHostController,
-        startDestination = NavItem.ForgotPassword.screenRoute
+        startDestination = NavItem.Landing.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
 //            AudioTestScreen(mainViewModel)
@@ -125,6 +125,7 @@ fun NavigationGraph(
             MediaScreen(mainViewModel) {
                 SettingsScreen(
                     mainViewModel = mainViewModel,
+                    homeViewModel = homeViewModel,
                     profileViewModel = profileViewModel,
                     mainState = mainState,
                     navHostController = navHostController
