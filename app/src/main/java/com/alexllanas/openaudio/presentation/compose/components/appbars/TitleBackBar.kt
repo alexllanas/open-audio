@@ -19,7 +19,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.alexllanas.openaudio.R
 
 @Composable
-fun TitleBackBar(barTitle: String, onBackPressed: () -> Unit) {
+fun TitleBackBar(barTitle: String? = null, onBackPressed: () -> Unit) {
     ConstraintLayout(
         Modifier.fillMaxWidth().height(height = 56.dp).background(MaterialTheme.colors.primary)
     ) {
@@ -39,7 +39,7 @@ fun TitleBackBar(barTitle: String, onBackPressed: () -> Unit) {
                 }
         )
         Text(
-            text = barTitle,
+            text = barTitle ?: "",
             color = MaterialTheme.colors.onPrimary,
             modifier = Modifier.constrainAs(title) {
                 centerHorizontallyTo(parent)

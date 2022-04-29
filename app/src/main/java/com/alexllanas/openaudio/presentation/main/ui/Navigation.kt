@@ -24,6 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.auth.ForgotPasswordScreen
 import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.auth.ui.LandingScreen
 import com.alexllanas.openaudio.presentation.auth.ui.LoginScreen
@@ -46,6 +47,7 @@ import com.google.gson.Gson
 
 sealed class NavItem(var title: String, var icon: ImageVector? = null, var screenRoute: String) {
     object Landing : NavItem("Landing", null, "landing")
+    object ForgotPassword : NavItem("ForgotPassword", null, "forgot_password")
     object Follow : NavItem("Follow", null, "follow/{title}")
     object NewTrack : NavItem("NewTrack", null, "new_track")
     object AddToPlaylist : NavItem("AddToPlaylist", null, "add_to_playlist")
@@ -80,7 +82,7 @@ fun NavigationGraph(
     val homeState by homeViewModel.homeState.collectAsState()
     NavHost(
         navController = navHostController,
-        startDestination = NavItem.Landing.screenRoute
+        startDestination = NavItem.ForgotPassword.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
 //            AudioTestScreen(mainViewModel)
@@ -106,6 +108,9 @@ fun NavigationGraph(
             MediaScreen(mainViewModel) {
                 NewTrackScreen(uploadViewModel, navHostController, homeViewModel)
             }
+        }
+        composable(NavItem.ForgotPassword.screenRoute) {
+            ForgotPasswordScreen(navHostController)
         }
         composable(NavItem.TrackOptions.screenRoute) {
             TrackOptionsScreen(homeViewModel, navHostController, mainViewModel)

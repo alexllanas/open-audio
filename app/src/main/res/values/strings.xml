@@ -29,4 +29,8 @@
     <string name="close">close</string>
     <string name="login">Log in</string>
     <string name="sign_up">Sign Up</string>
+    <string name="confirm_email_reset_pw">Confirm your email to reset your password.</string>
+    <string name="forgot_pw">Forgot password?</string>
+    <string name="email">email</string>
+    <string name="valid_email">Please enter a valid email</string>
 </resources>
