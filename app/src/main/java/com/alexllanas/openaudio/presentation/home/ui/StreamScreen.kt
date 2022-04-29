@@ -15,6 +15,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
+import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.mappers.toUI
 import kotlinx.coroutines.flow.collect
@@ -30,15 +31,11 @@ fun StreamScreen(
     val homeState by homeViewModel.homeState.collectAsState()
     val mainState by mainViewModel.mainState.collectAsState()
 
-    val context = LocalContext.current
-
-
     mainState.loggedInUser?.id?.let { userId ->
         mainState.sessionToken?.let { token ->
             homeViewModel.dispatch(
                 HomeAction.LoadStream(
                     userId,
-//                "whydSid=s%3AdyOSwMKzpQJzr20IiEnErLq-FsQyqJDq.CTk77QTUqe1b4NyupQQsbI0CBrn57lpxoYxvBlJDVs8",
                     token
                 )
             )

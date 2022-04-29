@@ -141,7 +141,7 @@ fun NavigationGraph(
             }
         }
         composable(NavItem.Register.screenRoute) {
-            RegisterScreen()
+            RegisterScreen(navHostController)
         }
         composable(NavItem.Landing.screenRoute) {
             LandingScreen(

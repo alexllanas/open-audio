@@ -36,7 +36,6 @@ fun EditScreen(
     var location by remember { mutableStateOf(mainState.loggedInUser?.location ?: "location") }
     var bio by remember { mutableStateOf(mainState.loggedInUser?.bio ?: "bio") }
     val keyboardController = LocalSoftwareKeyboardController.current
-//    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
     Scaffold(

@@ -66,21 +66,21 @@ fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 })
-        Button(onClick = {},
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = FacebookBlue
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)
-                .height(48.dp)
-                .constrainAs(signUpFacebookButton) {
-                    bottom.linkTo(signUpEmailButton.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }) {
-            Text("SIGN UP WITH FACEBOOK", color = Color.White)
-        }
+//        Button(onClick = {},
+//            colors = ButtonDefaults.buttonColors(
+//                backgroundColor = FacebookBlue
+//            ),
+//            modifier = Modifier
+//                .fillMaxWidth()w
+//                .padding(bottom = 8.dp)
+//                .height(48.dp)
+//                .constrainAs(signUpFacebookButton) {
+//                    bottom.linkTo(signUpEmailButton.top)
+//                    start.linkTo(parent.start)
+//                    end.linkTo(parent.end)
+//                }) {
+//            Text("SIGN UP WITH FACEBOOK", color = Color.White)
+//        }
         Button(onClick = { onEmailClick() },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.LightGray

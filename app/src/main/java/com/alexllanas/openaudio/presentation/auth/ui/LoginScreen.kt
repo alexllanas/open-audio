@@ -49,6 +49,7 @@ fun LoginScreen(
 
     val mainState by mainViewModel.mainState.collectAsState()
     Log.d(TAG, "LoginScreen: error = ${mainState.error?.printStackTrace()}")
+
     Log.d(TAG, "LoginScreen: isLoading = ${mainState.isLoading}")
     ConstraintLayout(
         Modifier
@@ -140,7 +141,7 @@ fun LoginScreen(
             }
         },
             modifier = Modifier
-                .fillMaxWidth(.7f)
+                .fillMaxWidth(.5f)
                 .padding(24.dp)
                 .constrainAs(loginButton) {
                     top.linkTo(forgotText.bottom)
