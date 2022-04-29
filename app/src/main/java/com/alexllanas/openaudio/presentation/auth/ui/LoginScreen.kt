@@ -42,9 +42,11 @@ fun LoginScreen(
     mainViewModel: MainViewModel,
     navController: NavController
 ) {
-    var email by remember { mutableStateOf("") }
     var isEmailError by rememberSaveable { mutableStateOf(false) }
-    var password by remember { mutableStateOf("") }
+//    var email by remember { mutableStateOf("") }
+//    var password by remember { mutableStateOf("") }
+    var email = "testopenaudio@gmail.com"
+    var password = "doghaus1!"
     val mainState by mainViewModel.mainState.collectAsState()
 
     mainState.sessionToken?.let {

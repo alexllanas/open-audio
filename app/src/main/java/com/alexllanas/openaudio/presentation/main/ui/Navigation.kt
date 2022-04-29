@@ -34,6 +34,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.home.ui.SearchScreen
 import com.alexllanas.openaudio.presentation.home.ui.StreamScreen
 import com.alexllanas.openaudio.presentation.common.ui.TrackOptionsScreen
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.models.PlaylistUIModel
 import com.alexllanas.openaudio.presentation.models.UserUIModel
@@ -85,7 +86,6 @@ fun NavigationGraph(
         startDestination = NavItem.Landing.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
-//            AudioTestScreen(mainViewModel)
             MediaScreen(mainViewModel) {
                 StreamScreen(homeViewModel, mainViewModel, navHostController)
             }
@@ -211,9 +211,9 @@ fun NavigationGraph(
                 PlaylistDetailScreen(
                     modifier = Modifier,
                     mainState = mainState,
-//                        playlist = playlist,
                     homeViewModel = homeViewModel,
-                    navController = navHostController
+                    navController = navHostController,
+                    mainViewModel = mainViewModel
                 )
             }
 //                }

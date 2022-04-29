@@ -9,7 +9,6 @@ import com.alexllanas.core.interactors.auth.AuthInteractors
 import com.alexllanas.core.interactors.home.HomeInteractors
 import com.alexllanas.core.interactors.profile.ProfileInteractors
 import com.alexllanas.core.util.Constants.Companion.TAG
-import com.alexllanas.openaudio.framework.network.YoutubeApi
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.auth.state.LoginChange
 import com.alexllanas.openaudio.presentation.auth.state.ClearSessionTokenChange
@@ -18,6 +17,7 @@ import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.home.state.AddTrackToPlaylistChange
 import com.alexllanas.openaudio.presentation.home.state.CreatePlaylistChange
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
+import com.alexllanas.openaudio.presentation.home.state.SetCurrentTrackChange
 import com.alexllanas.openaudio.presentation.profile.state.ChangeInfo
 import com.alexllanas.openaudio.presentation.profile.state.LogoutChange
 import com.alexllanas.openaudio.presentation.profile.state.ProfileAction
@@ -32,7 +32,6 @@ class MainViewModel @Inject constructor(
     private val authInteractors: AuthInteractors,
     private val homeInteractors: HomeInteractors,
     private val profileInteractors: ProfileInteractors,
-    private val youtubeApi: YoutubeApi
 ) : ViewModel() {
     private val initialMainState: MainState by lazy { MainState() }
     val mainState: StateFlow<MainState>
@@ -63,6 +62,12 @@ class MainViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class, kotlinx.coroutines.FlowPreview::class)
     private fun SharedFlow<Action>.toChangeFlow(): Flow<PartialStateChange<MainState>> {
+        val executeSetCurrentTrack: suspend (Track) -> Flow<PartialStateChange<MainState>> =
+            { track ->
+                flow {
+                    emit(SetCurrentTrackChange.Data(track))
+                }
+            }
         val executeLogin: suspend (String, String) -> Flow<PartialStateChange<MainState>> =
             { email, password ->
                 authInteractors.login(email, password)
@@ -185,6 +190,8 @@ class MainViewModel @Inject constructor(
                     }.onStart { ChangeInfo.Loading }
             }
         return merge(
+            filterIsInstance<HomeAction.SetCurrentTrack>()
+                .flatMapConcat { executeSetCurrentTrack(it.track) },
             filterIsInstance<AuthAction.ClearMainState>()
                 .flatMapConcat { executeClearMainState() },
             filterIsInstance<AuthAction.ClearSessionTokenAction>()
@@ -225,16 +232,4 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    fun getVideo(url: String) {
-
-//        val encodedUrl = URLEncoder.encode(
-//            url,
-//            StandardCharsets.UTF_8.toString()
-//        )
-        viewModelScope.launch {
-            val response =
-                youtubeApi.getVideo()
-            Log.d(TAG, "getVideo: ${response.indexOf("streamingData")}")
-        }
-    }
 }

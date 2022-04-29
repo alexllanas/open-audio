@@ -19,7 +19,9 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainState
+import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.models.TrackUIModel
 import com.skydoves.landscapist.glide.GlideImage
@@ -29,6 +31,7 @@ import com.skydoves.landscapist.glide.GlideImage
 fun TrackItem(
     modifier: Modifier = Modifier,
     mainState: MainState,
+    mainViewModel: MainViewModel,
     track: TrackUIModel?,
     onTrackClick: (TrackUIModel) -> Unit = {},
     onHeartClick: (TrackUIModel) -> Unit = { },
@@ -94,7 +97,10 @@ fun TrackItem(
             },
             modifier = Modifier
                 .clickable {
-                    track?.let { onTrackClick(it) }
+                    track?.let {
+                        mainViewModel.dispatch(HomeAction.SetCurrentTrack(it.toDomain()))
+//                        onTrackClick(it)
+                    }
                 }
         )
     }

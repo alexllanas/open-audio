@@ -60,6 +60,9 @@ fun StreamScreen(
             } else {
                 TrackList(
                     homeState.stream.toUI(),
+                    onTrackClick = {
+//                        mainViewModel.dispatch(HomeAction.SetCurrentTrack(it.toDomain()))
+                    },
                     onHeartClick = { track ->
                         track.id?.let { id ->
                             mainState.sessionToken?.let { token ->
@@ -73,7 +76,8 @@ fun StreamScreen(
                         homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
                         navController.navigate("track_options")
                     },
-                    mainState = mainState
+                    mainState = mainState,
+                    mainViewModel = mainViewModel
                 )
             }
 

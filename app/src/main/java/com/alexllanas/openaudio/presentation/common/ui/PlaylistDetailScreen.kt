@@ -24,6 +24,7 @@ import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
+import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.mappers.toUI
@@ -37,6 +38,7 @@ fun PlaylistDetailScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel,
     mainState: MainState,
+    mainViewModel: MainViewModel,
     navController: NavHostController
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
@@ -81,7 +83,8 @@ fun PlaylistDetailScreen(
                         homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
                         navController.navigate("track_options")
                     },
-                    mainState = mainState
+                    mainState = mainState,
+                    mainViewModel = mainViewModel
                 )
             }
         } ?: LoadingIndicator()

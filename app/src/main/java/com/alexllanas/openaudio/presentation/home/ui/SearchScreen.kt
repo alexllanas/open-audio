@@ -33,7 +33,6 @@ import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import kotlinx.coroutines.delay
-import org.schabi.newpipe.extractor.timeago.patterns.it
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -69,14 +68,14 @@ fun SearchBarUI(
             SearchBar(homeViewModel, mainViewModel, navHostController)
             when (homeState.searchDisplay) {
                 SearchDisplay.Initial -> {
-                    SearchResultTabLayout(navHostController, homeViewModel, mainState) {
+                    SearchResultTabLayout(navHostController, homeViewModel, mainViewModel,mainState) {
                         homeState.searchScreenState?.query?.let {
                             homeViewModel.dispatch(HomeAction.SearchAction(it))
                         }
                     }
                 }
                 SearchDisplay.Results -> {
-                    SearchResultTabLayout(navHostController, homeViewModel, mainState) {
+                    SearchResultTabLayout(navHostController, homeViewModel, mainViewModel,mainState) {
                         homeState.searchScreenState?.query?.let {
                             homeViewModel.dispatch(HomeAction.SearchAction(it))
                         }

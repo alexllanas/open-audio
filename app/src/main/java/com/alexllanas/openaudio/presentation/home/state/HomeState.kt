@@ -6,7 +6,6 @@ import com.alexllanas.core.domain.models.User
 import com.alexllanas.openaudio.presentation.main.state.BaseState
 
 data class HomeState(
-//    val loggedInUser: User? = null,
     val stream: List<Track> = emptyList(),
     val userTracks: List<Track> = emptyList(),
     val searchTrackResults: List<Track> = emptyList(),

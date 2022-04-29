@@ -19,7 +19,6 @@ import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import org.schabi.newpipe.extractor.timeago.patterns.it
 
 @Composable
 fun CreatePlaylistScreen(navHostController: NavHostController, mainViewModel: MainViewModel) {

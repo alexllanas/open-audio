@@ -20,6 +20,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.home.state.SearchState
 import com.alexllanas.openaudio.presentation.main.state.MainState
+import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.navigateToPlaylistDetail
 import com.alexllanas.openaudio.presentation.main.ui.navigateToUserDetail
 import com.alexllanas.openaudio.presentation.mappers.toDomain
@@ -29,6 +30,7 @@ import com.alexllanas.openaudio.presentation.mappers.toUI
 fun SearchResultTabLayout(
     navHostController: NavHostController,
     homeViewModel: HomeViewModel,
+    mainViewModel: MainViewModel,
     mainState: MainState,
     likeCallback: () -> Unit
 ) {
@@ -76,7 +78,8 @@ fun SearchResultTabLayout(
                                 likeCallback()
                             }
                         }
-                    })
+                    },
+                mainViewModel = mainViewModel)
             }
         }
         1 -> {
