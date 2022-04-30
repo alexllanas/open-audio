@@ -5,6 +5,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
+import com.alexllanas.openaudio.presentation.common.ui.MediaScreen
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
@@ -25,6 +26,7 @@ fun MainScreen(
 //        }
     ) {
         Box {
+            MediaScreen(mainViewModel) {
             NavigationGraph(
                 navHostController = navController,
                 mainViewModel = mainViewModel,
@@ -33,6 +35,6 @@ fun MainScreen(
                 uploadViewModel = uploadViewModel,
                 profileViewModel = profileViewModel
             )
-        }
+}        }
     }
 }

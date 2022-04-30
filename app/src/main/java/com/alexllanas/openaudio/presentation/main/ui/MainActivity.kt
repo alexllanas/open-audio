@@ -13,6 +13,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.map
 
@@ -36,6 +37,9 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.dispatch(AuthAction.ClearSessionTokenAction(token))
             }
         }
+
+        val youTubePlayerView = YouTubePlayerView(this)
+
         setContent {
             MainScreen(
                 homeViewModel = homeViewModel,

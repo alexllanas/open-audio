@@ -14,7 +14,7 @@ fun MediaScreen(mainViewModel: MainViewModel, content: @Composable (() -> Unit))
         content()
         MediaPlayerControls(
             mainViewModel = mainViewModel,
-            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 64.dp)
+            modifier = Modifier.align(Alignment.TopCenter).padding(bottom = 64.dp)
         )
     }
 }

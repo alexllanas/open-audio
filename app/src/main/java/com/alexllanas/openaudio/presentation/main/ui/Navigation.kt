@@ -86,28 +86,28 @@ fun NavigationGraph(
         startDestination = NavItem.Landing.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
-            MediaScreen(mainViewModel) {
-                StreamScreen(homeViewModel, mainViewModel, navHostController)
-            }
+//            MediaScreen(mainViewModel) {
+            StreamScreen(homeViewModel, mainViewModel, navHostController)
+//            }
         }
         composable(
             NavItem.Follow.screenRoute,
             arguments = listOf(navArgument("title") { type = NavType.StringType })
         ) { backStackEntry ->
             val title = backStackEntry.arguments?.getString("title")
-            MediaScreen(mainViewModel) {
-                FollowScreen(
-                    navHostController,
-                    homeViewModel,
-                    mainState = mainState,
-                    title ?: "No Title"
-                )
-            }
+//            MediaScreen(mainViewModel) {
+            FollowScreen(
+                navHostController,
+                homeViewModel,
+                mainState = mainState,
+                title ?: "No Title"
+            )
+//            }
         }
         composable(NavItem.NewTrack.screenRoute) {
-            MediaScreen(mainViewModel) {
-                NewTrackScreen(uploadViewModel, navHostController, homeViewModel)
-            }
+//            MediaScreen(mainViewModel) {
+            NewTrackScreen(uploadViewModel, navHostController, homeViewModel)
+//            }
         }
         composable(NavItem.ForgotPassword.screenRoute) {
             ForgotPasswordScreen(navHostController)
@@ -122,29 +122,29 @@ fun NavigationGraph(
             AddToPlaylistScreen(mainState, mainViewModel, homeViewModel, navHostController)
         }
         composable(NavItem.Settings.screenRoute) {
-            MediaScreen(mainViewModel) {
-                SettingsScreen(
-                    mainViewModel = mainViewModel,
-                    homeViewModel = homeViewModel,
-                    profileViewModel = profileViewModel,
-                    mainState = mainState,
-                    navHostController = navHostController
-                )
-            }
+//            MediaScreen(mainViewModel) {
+            SettingsScreen(
+                mainViewModel = mainViewModel,
+                homeViewModel = homeViewModel,
+                profileViewModel = profileViewModel,
+                mainState = mainState,
+                navHostController = navHostController
+            )
+//            }
         }
         composable(NavItem.Login.screenRoute) {
             LoginScreen(mainViewModel, navController = navHostController)
         }
         composable(NavItem.Edit.screenRoute) {
-            MediaScreen(mainViewModel) {
-                EditScreen(
-                    mainViewModel,
-                    navHostController = navHostController,
-                    homeViewModel = homeViewModel
-                ) {
-                    navHostController.navigate(NavItem.Settings.screenRoute)
-                }
+//            MediaScreen(mainViewModel) {
+            EditScreen(
+                mainViewModel,
+                navHostController = navHostController,
+                homeViewModel = homeViewModel
+            ) {
+                navHostController.navigate(NavItem.Settings.screenRoute)
             }
+//            }
         }
         composable(NavItem.Register.screenRoute) {
             RegisterScreen(navHostController)
@@ -160,42 +160,42 @@ fun NavigationGraph(
             )
         }
         composable(NavItem.Search.screenRoute) {
-            MediaScreen(mainViewModel) {
-                SearchScreen(homeViewModel, mainViewModel, navHostController)
-            }
+//            MediaScreen(mainViewModel) {
+            SearchScreen(homeViewModel, mainViewModel, navHostController)
+//            }
         }
         composable(NavItem.Upload.screenRoute) {
-            MediaScreen(mainViewModel) {
-                UploadScreen(navController = navHostController, uploadViewModel)
-            }
+//            MediaScreen(mainViewModel) {
+            UploadScreen(navController = navHostController, uploadViewModel)
+//            }
         }
         composable(NavItem.Profile.screenRoute) {
-            MediaScreen(mainViewModel) {
-                UserDetailScreen(
-                    Modifier,
-                    homeViewModel,
-                    mainViewModel,
-                    mainState,
-                    navHostController,
-                    true
-                ) {
-                    navHostController.navigate(NavItem.Edit.screenRoute)
-                }
+//            MediaScreen(mainViewModel) {
+            UserDetailScreen(
+                Modifier,
+                homeViewModel,
+                mainViewModel,
+                mainState,
+                navHostController,
+                true
+            ) {
+                navHostController.navigate(NavItem.Edit.screenRoute)
             }
+//            }
         }
         composable(NavItem.UserDetail.screenRoute) {
-            MediaScreen(mainViewModel) {
-                UserDetailScreen(
-                    Modifier,
-                    homeViewModel,
-                    mainViewModel,
-                    mainState,
-                    navHostController,
-                    false
-                ) {
-                    navHostController.navigate(NavItem.Edit.screenRoute)
-                }
+//            MediaScreen(mainViewModel) {
+            UserDetailScreen(
+                Modifier,
+                homeViewModel,
+                mainViewModel,
+                mainState,
+                navHostController,
+                false
+            ) {
+                navHostController.navigate(NavItem.Edit.screenRoute)
             }
+//            }
         }
         composable(
             NavItem.PlaylistDetail.screenRoute,
@@ -207,15 +207,15 @@ fun NavigationGraph(
         ) { backStackEntry ->
 //            backStackEntry.arguments?.getParcelable<PlaylistUIModel>("playlistUIModel")
 //                ?.let { playlist ->
-            MediaScreen(mainViewModel) {
-                PlaylistDetailScreen(
-                    modifier = Modifier,
-                    mainState = mainState,
-                    homeViewModel = homeViewModel,
-                    navController = navHostController,
-                    mainViewModel = mainViewModel
-                )
-            }
+//            MediaScreen(mainViewModel) {
+            PlaylistDetailScreen(
+                modifier = Modifier,
+                mainState = mainState,
+                homeViewModel = homeViewModel,
+                navController = navHostController,
+                mainViewModel = mainViewModel
+            )
+//            }
 //                }
         }
     }
