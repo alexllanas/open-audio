@@ -27,14 +27,15 @@ fun MainScreen(
     ) {
         Box {
             MediaScreen(mainViewModel) {
-            NavigationGraph(
-                navHostController = navController,
-                mainViewModel = mainViewModel,
-                homeViewModel = homeViewModel,
-                authViewModel = authViewModel,
-                uploadViewModel = uploadViewModel,
-                profileViewModel = profileViewModel
-            )
-}        }
+                NavigationGraph(
+                    navHostController = navController,
+                    mainViewModel = mainViewModel,
+                    homeViewModel = homeViewModel,
+                    authViewModel = authViewModel,
+                    uploadViewModel = uploadViewModel,
+                    profileViewModel = profileViewModel
+                )
+            }
+        }
     }
 }

@@ -11,7 +11,7 @@ import com.alexllanas.core.interactors.profile.ProfileInteractors
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.auth.state.LoginChange
-import com.alexllanas.openaudio.presentation.auth.state.ClearSessionTokenChange
+import com.alexllanas.openaudio.presentation.auth.state.SetSessionTokenChange
 import com.alexllanas.openaudio.presentation.auth.state.ClearMainStateChange
 import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.home.state.AddTrackToPlaylistChange
@@ -122,10 +122,10 @@ class MainViewModel @Inject constructor(
                     emit(LogoutChange.Success)
                 }.onStart { LogoutChange.Loading }
             }
-        val executeClearSessionToken: suspend (String) -> Flow<PartialStateChange<MainState>> =
+        val executeSetSessionToken: suspend (String) -> Flow<PartialStateChange<MainState>> =
             { sessionToken ->
                 flow {
-                    emit(ClearSessionTokenChange.Data(sessionToken))
+                    emit(SetSessionTokenChange.Data(sessionToken))
                 }
             }
         val executeClearMainState: suspend () -> Flow<PartialStateChange<MainState>> =
@@ -194,8 +194,8 @@ class MainViewModel @Inject constructor(
                 .flatMapConcat { executeSetCurrentTrack(it.track) },
             filterIsInstance<AuthAction.ClearMainState>()
                 .flatMapConcat { executeClearMainState() },
-            filterIsInstance<AuthAction.ClearSessionTokenAction>()
-                .flatMapConcat { executeClearSessionToken(it.token) },
+            filterIsInstance<AuthAction.SetSessionTokenAction>()
+                .flatMapConcat { executeSetSessionToken(it.token) },
             filterIsInstance<HomeAction.CreatePlaylist>()
                 .flatMapConcat { executeCreatePlaylist(it.playlistName, it.user, it.sessionToken) },
             filterIsInstance<ProfileAction.ChangeAvatar>()

@@ -16,28 +16,6 @@ import com.alexllanas.openaudio.presentation.compose.theme.FacebookBlue
 import com.alexllanas.openaudio.presentation.util.ColorUtil
 
 @Composable
-fun LandingScreen2() {
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.height(200.dp))
-            Text("OpenAudio", style = MaterialTheme.typography.h2)
-            Text("MUSIC BY MUSIC LOVERS", style = MaterialTheme.typography.subtitle1)
-        }
-        Column(verticalArrangement = Arrangement.Bottom) {
-            Button(onClick = {}) {
-                Text("SIGN UP WITH FACEBOOK")
-            }
-            Button(onClick = {}) {
-                Text("SIGN UP WITH EMAIL")
-            }
-            Button(onClick = {}) {
-                Text("LOGIN")
-            }
-        }
-    }
-}
-
-@Composable
 fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
     val modifier = Modifier
         .padding(16.dp)
@@ -66,21 +44,6 @@ fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 })
-//        Button(onClick = {},
-//            colors = ButtonDefaults.buttonColors(
-//                backgroundColor = FacebookBlue
-//            ),
-//            modifier = Modifier
-//                .fillMaxWidth()w
-//                .padding(bottom = 8.dp)
-//                .height(48.dp)
-//                .constrainAs(signUpFacebookButton) {
-//                    bottom.linkTo(signUpEmailButton.top)
-//                    start.linkTo(parent.start)
-//                    end.linkTo(parent.end)
-//                }) {
-//            Text("SIGN UP WITH FACEBOOK", color = Color.White)
-//        }
         Button(onClick = { onEmailClick() },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.LightGray
@@ -112,12 +75,5 @@ fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
         ) {
             Text("LOGIN")
         }
-
     }
-}
-
-@Preview
-@Composable
-fun previewLandingScreen() {
-    LandingScreen({}) {}
 }

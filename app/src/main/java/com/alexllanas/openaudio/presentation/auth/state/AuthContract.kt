@@ -7,7 +7,7 @@ import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 
 sealed class AuthAction : Action() {
 
-    data class ClearSessionTokenAction(val token: String) : AuthAction()
+    data class SetSessionTokenAction(val token: String) : AuthAction()
     object ClearMainState : AuthAction()
 
     sealed class Login {
@@ -35,7 +35,7 @@ class ClearMainStateChange : PartialStateChange<MainState> {
     }
 }
 
-sealed class ClearSessionTokenChange : PartialStateChange<MainState> {
+sealed class SetSessionTokenChange : PartialStateChange<MainState> {
     override fun reduce(state: MainState): MainState {
         return when (this) {
             is Data -> state.copy(
@@ -44,7 +44,7 @@ sealed class ClearSessionTokenChange : PartialStateChange<MainState> {
         }
     }
 
-    data class Data(val token: String) : ClearSessionTokenChange()
+    data class Data(val token: String) : SetSessionTokenChange()
 }
 
 sealed class RegisterWithEmailChange : PartialStateChange<MainState> {
