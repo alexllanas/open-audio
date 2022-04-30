@@ -11,10 +11,13 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -26,7 +29,7 @@ import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.models.TrackUIModel
 import com.skydoves.landscapist.glide.GlideImage
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun TrackItem(
     modifier: Modifier = Modifier,
@@ -38,6 +41,8 @@ fun TrackItem(
     onMoreClick: (TrackUIModel) -> Unit = {},
     isSelected: Boolean = false
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     val background = if (isSelected)
         Color.LightGray
     else
@@ -99,7 +104,8 @@ fun TrackItem(
                 .clickable {
                     track?.let {
                         mainViewModel.dispatch(HomeAction.SetCurrentTrack(it.toDomain()))
-//                        onTrackClick(it)
+                        keyboardController?.hide()
+                        focusManager.clearFocus(true)
                     }
                 }
         )

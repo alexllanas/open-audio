@@ -1,5 +1,7 @@
 package com.alexllanas.openaudio.presentation.auth.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.util.Log
 import com.alexllanas.openaudio.R.drawable
 
@@ -19,6 +21,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -34,6 +37,7 @@ import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.compose.components.BasicEmailField
 import com.alexllanas.openaudio.presentation.compose.components.BasicPasswordField
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.ui.MainActivity
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.util.isValidEmail
 
@@ -48,19 +52,23 @@ fun LoginScreen(
     var email = "testopenaudio@gmail.com"
     var password = "doghaus1!"
     val mainState by mainViewModel.mainState.collectAsState()
+    val context = LocalContext.current
+    val activity = (context as? Activity)
 
     mainState.sessionToken?.let {
         mainState.loggedInUser?.let {
             LaunchedEffect(it) {
-                navController.navigate(NavItem.Stream.screenRoute)
+                context.startActivity(Intent(context, MainActivity::class.java))
+                activity?.finish()
             }
         }
     }
 
     ConstraintLayout(
         Modifier
-            .padding(16.dp)
             .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+            .padding(16.dp)
     ) {
         val (heading, emailTextField, passwordTextField, forgotText, loginButton, facebookButton) = createRefs()
 

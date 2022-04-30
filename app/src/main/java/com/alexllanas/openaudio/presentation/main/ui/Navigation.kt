@@ -49,13 +49,13 @@ import com.google.gson.Gson
 sealed class NavItem(var title: String, var icon: ImageVector? = null, var screenRoute: String) {
     object Landing : NavItem("Landing", null, "landing")
     object ForgotPassword : NavItem("ForgotPassword", null, "forgot_password")
+    object Login : NavItem("Login", null, "login")
+    object Register : NavItem("Register", null, "register")
     object Follow : NavItem("Follow", null, "follow/{title}")
     object NewTrack : NavItem("NewTrack", null, "new_track")
     object AddToPlaylist : NavItem("AddToPlaylist", null, "add_to_playlist")
     object TrackOptions : NavItem("TrackOptions", null, "track_options")
     object CreatePlaylist : NavItem("CreatePlaylist", null, "create_playlist")
-    object Login : NavItem("Login", null, "login")
-    object Register : NavItem("Register", null, "register")
     object Edit : NavItem("Edit", null, "edit")
     object Stream : NavItem("Stream", Icons.Filled.Home, "stream")
     object Search : NavItem("Search", Icons.Outlined.Search, "search")
@@ -83,7 +83,7 @@ fun NavigationGraph(
     val homeState by homeViewModel.homeState.collectAsState()
     NavHost(
         navController = navHostController,
-        startDestination = NavItem.Landing.screenRoute
+        startDestination = NavItem.Stream.screenRoute
     ) {
         composable(NavItem.Stream.screenRoute) {
 //            MediaScreen(mainViewModel) {

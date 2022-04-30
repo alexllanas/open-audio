@@ -18,12 +18,13 @@ import com.alexllanas.openaudio.presentation.util.ColorUtil
 @Composable
 fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
     val modifier = Modifier
-        .padding(16.dp)
         .fillMaxSize()
+        .background(colors.background)
+        .padding(16.dp)
     ConstraintLayout(
         modifier = modifier
     ) {
-        val (heading, subHeading, signUpFacebookButton, signUpEmailButton, loginButton) = createRefs()
+        val (heading, subHeading, signUpEmailButton, loginButton) = createRefs()
         Text(
             text = "OpenAudio",
             style = MaterialTheme.typography.h2,

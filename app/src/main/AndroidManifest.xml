@@ -17,7 +17,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
-            android:name=".presentation.main.ui.MainActivity"
+            android:name=".presentation.auth.ui.AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,8 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.auth.ui.AuthActivity" />
-        <activity android:name=".presentation.common.ui.HomeActivity" />
+        <activity android:name=".presentation.main.ui.MainActivity" />
     </application>
 
 </manifest>

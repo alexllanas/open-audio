@@ -21,9 +21,9 @@ fun MainScreen(
 ) {
     val navController = rememberNavController()
     Scaffold(
-//        bottomBar = {
-//                BottomNav(navController = navController)
-//        }
+        bottomBar = {
+                BottomNav(navController = navController)
+        }
     ) {
         Box {
             MediaScreen(mainViewModel) {
