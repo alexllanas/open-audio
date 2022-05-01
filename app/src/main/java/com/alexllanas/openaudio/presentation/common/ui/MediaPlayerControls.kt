@@ -46,20 +46,24 @@ import com.skydoves.landscapist.glide.GlideImage
 fun MediaPlayerControls(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
     val mainState by mainViewModel.mainState.collectAsState()
     var isPlaying by rememberSaveable { mutableStateOf(false) }
+    var videoId by rememberSaveable { mutableStateOf("") }
 
     val youTubePlayerView = YouTubePlayerView(LocalContext.current)
     youTubePlayerView.enableBackgroundPlayback(true)
 
     mainState.currentPlayingTrack?.mediaUrl?.let {
-        youTubePlayerView.getYouTubePlayerWhenReady(object :
-            YouTubePlayerCallback {
-            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                if (it.startsWith("/yt/")) {
-                    youTubePlayer.loadVideo(it.removePrefix("/yt/"), 0f)
-                    isPlaying = true
+        if (videoId != it) {
+            youTubePlayerView.getYouTubePlayerWhenReady(object :
+                YouTubePlayerCallback {
+                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                    if (it.startsWith("/yt/")) {
+                        videoId = it
+                        youTubePlayer.loadVideo(videoId.removePrefix("/yt/"), 0f)
+                        isPlaying = true
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     Card(

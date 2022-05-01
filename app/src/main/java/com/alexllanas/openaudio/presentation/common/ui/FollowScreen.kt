@@ -1,11 +1,13 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
+import android.widget.Toast
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants
@@ -25,6 +27,11 @@ fun FollowScreen(
     title: String
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
+    val context = LocalContext.current
+    val followState = when (title) {
+        Constants.FOLLOWERS -> FollowState.FOLLOWERS
+        else -> FollowState.FOLLOWING
+    }
 
     Scaffold(
         topBar = {
@@ -40,10 +47,9 @@ fun FollowScreen(
 
     ) {
         UserList(
-            when (title) {
-                Constants.FOLLOWERS -> homeState.selectedUserFollowers
-                Constants.FOLLOWING -> homeState.selectedUserFollowing
-                else -> emptyList()
+            when (followState) {
+                FollowState.FOLLOWERS -> homeState.selectedUserFollowers
+                FollowState.FOLLOWING -> homeState.selectedUserFollowing
             }, onUserClick = { user ->
                 user.id?.let { id ->
                     mainState.sessionToken?.let { token ->
@@ -53,8 +59,36 @@ fun FollowScreen(
                 }
             },
             onFollowClick = { isSubscribing, user ->
-                homeViewModel.onFollowClick(isSubscribing, user, mainState)
+                homeViewModel.onFollowClick(isSubscribing, user, mainState, context)
+
+                homeState.selectedUser?.id?.let { id ->
+                    mainState.sessionToken?.let { token ->
+                        when (followState) {
+                            FollowState.FOLLOWERS -> {
+                                homeViewModel.dispatch(
+                                    HomeAction.GetFollowers(
+                                        id,
+                                        token
+                                    )
+                                )
+                            }
+                            FollowState.FOLLOWING -> {
+                                homeViewModel.dispatch(
+                                    HomeAction.GetFollowing(
+                                        id,
+                                        token
+                                    )
+                                )
+                            }
+                        }
+
+                    }
+                }
             }
         )
     }
+}
+
+enum class FollowState {
+    FOLLOWERS, FOLLOWING
 }

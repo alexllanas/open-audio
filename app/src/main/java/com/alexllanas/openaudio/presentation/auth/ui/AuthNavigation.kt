@@ -23,6 +23,7 @@ sealed class AuthNavItem(
 fun AuthNavigationGraph(
     navHostController: NavHostController,
     mainViewModel: MainViewModel,
+    navigateToMainFragment: () -> Unit
 ) {
     NavHost(
         navController = navHostController,
@@ -32,7 +33,7 @@ fun AuthNavigationGraph(
             ForgotPasswordScreen(navHostController)
         }
         composable(AuthNavItem.Login.screenRoute) {
-            LoginScreen(mainViewModel, navController = navHostController)
+            LoginScreen(mainViewModel, navController = navHostController, navigateToMainFragment)
         }
         composable(AuthNavItem.Register.screenRoute) {
             RegisterScreen(navHostController)

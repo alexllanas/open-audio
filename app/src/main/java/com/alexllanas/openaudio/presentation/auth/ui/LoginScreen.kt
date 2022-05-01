@@ -37,14 +37,14 @@ import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.compose.components.BasicEmailField
 import com.alexllanas.openaudio.presentation.compose.components.BasicPasswordField
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.ui.MainActivity
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.util.isValidEmail
 
 @Composable
 fun LoginScreen(
     mainViewModel: MainViewModel,
-    navController: NavController
+    navController: NavController,
+    navigateToMainFragment: () -> Unit
 ) {
     var isEmailError by rememberSaveable { mutableStateOf(false) }
 //    var email by remember { mutableStateOf("") }
@@ -52,15 +52,10 @@ fun LoginScreen(
     var email = "testopenaudio@gmail.com"
     var password = "doghaus1!"
     val mainState by mainViewModel.mainState.collectAsState()
-    val context = LocalContext.current
-    val activity = (context as? Activity)
 
     mainState.sessionToken?.let {
         mainState.loggedInUser?.let {
-            LaunchedEffect(it) {
-                context.startActivity(Intent(context, MainActivity::class.java))
-                activity?.finish()
-            }
+            navigateToMainFragment()
         }
     }
 

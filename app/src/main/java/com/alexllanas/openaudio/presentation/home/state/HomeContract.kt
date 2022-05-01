@@ -89,6 +89,7 @@ sealed class SetCurrentTrackChange : PartialStateChange<MainState> {
             is Data -> state.copy(currentPlayingTrack = track)
         }
     }
+
     data class Data(val track: Track) : SetCurrentTrackChange()
 }
 
@@ -102,17 +103,11 @@ sealed class CreatePlaylistChange : PartialStateChange<MainState> {
     override fun reduce(state: MainState): MainState {
         return when (this) {
             is Data -> {
-                state.loggedInUser?.let { user ->
-                    state.copy(
-                        loggedInUser = state.loggedInUser.copy(
-                            playlists = user.playlists.plus(
-                                playlist
-                            )
-                        ),
-                        isLoading = false,
-                        error = null,
-                    )
-                } ?: state
+                state.copy(
+                    loggedInUser = state.loggedInUser?.copy(playlists = (state.loggedInUser.playlists + playlist).sortedBy { it.name }),
+                    isLoading = false,
+                    error = null,
+                )
             }
             is Error -> state.copy(
                 isLoading = false,

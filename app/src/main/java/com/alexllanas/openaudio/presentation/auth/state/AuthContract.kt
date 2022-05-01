@@ -109,7 +109,7 @@ sealed class LoginChange : PartialStateChange<MainState> {
             is Data -> state.copy(
                 isLoading = false,
                 error = null,
-                loggedInUser = loggedInUser
+                loggedInUser = loggedInUser,
             )
             is Error -> state.copy(
                 isLoading = false,

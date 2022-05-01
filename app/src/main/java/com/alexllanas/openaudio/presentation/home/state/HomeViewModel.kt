@@ -1,6 +1,8 @@
 package com.alexllanas.openaudio.presentation.home.state
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexllanas.core.domain.models.Playlist
@@ -309,7 +311,11 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun onFollowClick(isSubscribing: Boolean, user: User, mainState: MainState) {
+    fun onFollowClick(
+        isSubscribing: Boolean,
+        user: User, mainState:
+        MainState, context: Context
+    ) {
         if (!isSubscribing) {
             dispatch(
                 HomeAction.FollowUser(
@@ -317,6 +323,11 @@ class HomeViewModel @Inject constructor(
                     mainState.sessionToken ?: throw IllegalArgumentException()
                 )
             )
+            Toast.makeText(
+                context,
+                "Following ${user.name}",
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
             dispatch(
                 HomeAction.UnfollowUser(
@@ -324,6 +335,11 @@ class HomeViewModel @Inject constructor(
                     mainState.sessionToken ?: throw IllegalArgumentException()
                 )
             )
+            Toast.makeText(
+                context,
+                "Unfollowed ${user.name}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

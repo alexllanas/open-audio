@@ -105,9 +105,9 @@ fun OptionsMenu(
                         mainState.sessionToken?.let { token ->
                             mainState.loggedInUser?.id?.let { userId ->
                                 homeViewModel.toggleTrackOptionsLike(trackId, token, userId)
-//                                homeState.selectedTrack?.let {
-//                                    homeViewModel.dispatch(HomeAction.SelectTrack(it))
-//                                }
+                                homeState.searchScreenState?.query?.let {
+                                    homeViewModel.dispatch(HomeAction.SearchAction(it))
+                                }
                             }
                         }
                     }

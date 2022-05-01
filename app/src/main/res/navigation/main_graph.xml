@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/authFragment">
+
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.alexllanas.openaudio.presentation.home.ui.HomeFragment"
-        android:label="fragment_home" />
+        android:id="@+id/authFragment"
+        android:name="com.alexllanas.openaudio.presentation.auth.ui.AuthFragment"
+        android:label="AuthFragment">
+        <action
+            android:id="@+id/action_authFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.alexllanas.openaudio.presentation.auth.ui.LoginFragment"
-        android:label="LoginFragment" />
-
-
+        android:id="@+id/mainFragment"
+        android:name="com.alexllanas.openaudio.presentation.main.ui.MainFragment"
+        android:label="MainFragment" />
 </navigation>

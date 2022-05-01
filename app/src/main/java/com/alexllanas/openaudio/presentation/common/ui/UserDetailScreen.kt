@@ -1,5 +1,6 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,6 +19,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -50,6 +52,7 @@ fun UserDetailScreen(
     onEditClick: () -> Unit,
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
+    val context = LocalContext.current
     homeViewModel.clearSelectedPlaylist()
     Scaffold(topBar = {
         ConstraintLayout(
@@ -83,7 +86,6 @@ fun UserDetailScreen(
                     homeViewModel.refreshSelectedUser(id, token)
                 }
             }
-//            currentUser = mainState.loggedInUser
         }
         var selectedUser = homeState.selectedUser
 
@@ -107,7 +109,13 @@ fun UserDetailScreen(
                                 user,
                                 mainState.sessionToken ?: throw IllegalArgumentException()
                             )
+
                         )
+                        Toast.makeText(
+                            context,
+                            "Following ${user.name}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
                         homeViewModel.dispatch(
                             HomeAction.UnfollowUser(
@@ -115,6 +123,11 @@ fun UserDetailScreen(
                                 mainState.sessionToken ?: throw IllegalArgumentException()
                             )
                         )
+                        Toast.makeText(
+                            context,
+                            "Unfollowed ${user.name}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     user.id?.let { id ->
                         homeViewModel.refreshSelectedUser(id, mainState.sessionToken)
@@ -125,7 +138,10 @@ fun UserDetailScreen(
                     style = MaterialTheme.typography.h5,
                     modifier = Modifier.padding(8.dp)
                 )
-                PlaylistList(user.playlists, true) { selectedPlaylist ->
+                PlaylistList(
+                    user.playlists.sortedBy { it.name },
+                    true
+                ) { selectedPlaylist ->
                     val newPlaylist = selectedPlaylist.copy()
                     newPlaylist.author = user
                     homeViewModel.dispatch(HomeAction.SelectPlaylist(newPlaylist))

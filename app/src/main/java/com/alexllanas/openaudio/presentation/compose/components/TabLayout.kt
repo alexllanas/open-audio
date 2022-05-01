@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.presentation.compose.components.lists.PlaylistList
@@ -35,6 +36,7 @@ fun SearchResultTabLayout(
     likeCallback: () -> Unit
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
+    val context = LocalContext.current
     var tabIndex = homeState.searchScreenState?.currentTab ?: 0
     val titles = listOf(
         "TRACKS",
@@ -60,7 +62,8 @@ fun SearchResultTabLayout(
             if (homeState.searchTrackResults.isEmpty()) {
                 SearchBackground()
             } else {
-                TrackList(homeState.searchTrackResults.toUI(),
+                TrackList(
+                    homeState.searchTrackResults.toUI(),
                     onMoreClick = {
                         homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
                         navHostController.navigate("track_options")
@@ -79,7 +82,8 @@ fun SearchResultTabLayout(
                             }
                         }
                     },
-                mainViewModel = mainViewModel)
+                    mainViewModel = mainViewModel
+                )
             }
         }
         1 -> {
@@ -107,7 +111,7 @@ fun SearchResultTabLayout(
                     }
                     navigateToUserDetail(navHostController)
                 }, onFollowClick = { isSubscribing, user ->
-                    homeViewModel.onFollowClick(isSubscribing, user, mainState)
+                    homeViewModel.onFollowClick(isSubscribing, user, mainState, context)
                 })
             }
         }

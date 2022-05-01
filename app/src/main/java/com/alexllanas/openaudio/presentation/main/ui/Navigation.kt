@@ -133,7 +133,7 @@ fun NavigationGraph(
 //            }
         }
         composable(NavItem.Login.screenRoute) {
-            LoginScreen(mainViewModel, navController = navHostController)
+//            LoginScreen(mainViewModel, navController = navHostController)
         }
         composable(NavItem.Edit.screenRoute) {
 //            MediaScreen(mainViewModel) {
