@@ -16,31 +16,21 @@ import okhttp3.Response
 
 
 class ResponseInterceptor(private val context: Context) : Interceptor {
-//    var sessionToken: String? = null
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val req = chain.request()
         val res = chain.proceed(req)
 
-        val url = req.url.toUrl().path
-        Log.d(TAG, "intercept: $url")
         val sessionToken = res.getSessionToken()
         sessionToken?.let { token ->
             runBlocking {
                 storeSessionToken("whydSid=$token")
             }
         }
-
-
-//        val body = res.body()?.string()
-//        Log.d(TAG, "intercept: ${req.url}")
-//        Log.d(TAG, "intercept: ${res.peekBody(Long.MAX_VALUE).string()}")
-//        Log.d(Constants.TAG, "provideOkHttpClientBuilder: Session Token: $sessionToken")
         return res
     }
 
     suspend fun storeSessionToken(token: String) {
-        val x = token
         context.dataStore.edit { settings ->
             settings[SESSION_TOKEN] = token
         }
@@ -60,7 +50,6 @@ class ResponseInterceptor(private val context: Context) : Interceptor {
                 }
             }
         }
-        Log.d(TAG, "getSessionToken: ${cookieMap["whydSid"]}")
         return cookieMap["whydSid"]
     }
 }

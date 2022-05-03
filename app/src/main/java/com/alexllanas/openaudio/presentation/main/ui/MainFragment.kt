@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -32,9 +34,11 @@ class MainFragment : Fragment() {
     ): View {
         onBackPressed()
 
+
         return ComposeView(requireContext()).apply {
             setContent {
                 MainScreen(
+
                     homeViewModel = homeViewModel,
                     mainViewModel = mainViewModel,
                     authViewModel = authViewModel,
