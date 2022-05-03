@@ -60,12 +60,7 @@ class MainViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class, kotlinx.coroutines.FlowPreview::class)
     private fun SharedFlow<Action>.toChangeFlow(): Flow<PartialStateChange<MainState>> {
-        val executeSetYoutubePlayer: suspend (YouTubePlayer) -> Flow<PartialStateChange<MainState>> =
-            { youtubePlayer ->
-                flow {
-                    emit(SetYouTubePlayerChange.Data(youtubePlayer))
-                }
-            }
+
         val executeSetCurrentTrack: suspend (Track) -> Flow<PartialStateChange<MainState>> =
             { track ->
                 flow {
@@ -194,8 +189,6 @@ class MainViewModel @Inject constructor(
                     }.onStart { ChangeInfo.Loading }
             }
         return merge(
-            filterIsInstance<HomeAction.SetYoutubePlayer>()
-                .flatMapConcat { executeSetYoutubePlayer(it.youTubePlayer) },
             filterIsInstance<HomeAction.SetCurrentTrack>()
                 .flatMapConcat { executeSetCurrentTrack(it.track) },
             filterIsInstance<AuthAction.ClearMainState>()

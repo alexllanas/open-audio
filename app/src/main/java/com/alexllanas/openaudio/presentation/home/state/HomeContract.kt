@@ -115,8 +115,8 @@ sealed class SetVideoIdChange : PartialStateChange<MediaPlayerState> {
     data class Data(val videoId: String) : SetVideoIdChange()
 }
 
-sealed class SetYouTubePlayerChange : PartialStateChange<MainState> {
-    override fun reduce(state: MainState): MainState {
+sealed class SetYouTubePlayerChange : PartialStateChange<MediaPlayerState> {
+    override fun reduce(state: MediaPlayerState): MediaPlayerState {
         return when (this) {
             is Data -> state.copy(youTubePlayer = youTubePlayer)
         }

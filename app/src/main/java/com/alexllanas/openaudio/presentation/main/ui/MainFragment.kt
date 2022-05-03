@@ -40,8 +40,6 @@ class MainFragment : Fragment() {
     ): View {
         onBackPressed()
 
-
-
         return ComposeView(requireContext()).apply {
             setContent {
                 MainScreen(

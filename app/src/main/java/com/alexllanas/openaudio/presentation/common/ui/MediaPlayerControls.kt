@@ -48,21 +48,29 @@ fun MediaPlayerControls(
     val mainState by mainViewModel.mainState.collectAsState()
     val mediaPlayerState by mediaPlayerViewModel.mediaPlayerState.collectAsState()
     var isPlaying by rememberSaveable { mutableStateOf(false) }
+    var videoId by rememberSaveable { mutableStateOf("") }
+    mediaPlayerState.isPlaying.let {
+        isPlaying = it
+    }
 
     val youTubePlayerView = YouTubePlayerView(LocalContext.current)
     youTubePlayerView.enableBackgroundPlayback(true)
 
     mediaPlayerState.videoId.let {
-        youTubePlayerView.getYouTubePlayerWhenReady(object :
-            YouTubePlayerCallback {
-            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                if (it.startsWith("/yt/")) {
-                    mainViewModel.dispatch(HomeAction.SetYoutubePlayer(youTubePlayer))
-                    youTubePlayer.loadVideo(it.removePrefix("/yt/"), 0f)
-                    isPlaying = true
+        if (videoId != it) {
+            youTubePlayerView.getYouTubePlayerWhenReady(object :
+                YouTubePlayerCallback {
+                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                    if (it.startsWith("/yt/")) {
+                        mediaPlayerViewModel.dispatch(HomeAction.SetYoutubePlayer(youTubePlayer))
+                        youTubePlayer.loadVideo(it.removePrefix("/yt/"), 0f)
+                        isPlaying = true
+                        mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(isPlaying))
+                    }
                 }
-            }
-        })
+            })
+            videoId = it
+        }
     }
 
     Card(
@@ -95,11 +103,15 @@ fun MediaPlayerControls(
                     .size(40.dp)
                     .clickable {
                         if (isPlaying) {
-                            mainState.youTubePlayer?.pause()
+                            mediaPlayerState.youTubePlayer?.pause()
+                            isPlaying = false
+                            mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(false))
                         } else {
-                            mainState.youTubePlayer?.play()
+                            mediaPlayerState.youTubePlayer?.play()
+                            isPlaying = true
+                            mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(true))
                         }
-                        isPlaying = !isPlaying
+
                     },
                 imageVector = if (isPlaying)
                     Icons.Default.Pause

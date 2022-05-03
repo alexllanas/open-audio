@@ -3,6 +3,12 @@ package com.alexllanas.core.util
 class Constants {
 
     companion object {
+        /**
+         * Notifications
+         */
+        const val CHANNEL_ID = "open_audio_media_control_channel"
+
+
         const val FOLLOWERS: String = "Followers"
         const val FOLLOWING: String = "Following"
 
