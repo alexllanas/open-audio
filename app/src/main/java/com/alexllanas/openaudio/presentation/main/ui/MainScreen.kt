@@ -6,11 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.common.ui.MediaScreen
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 
 @Composable
 fun MainScreen(
@@ -27,6 +29,7 @@ fun MainScreen(
                 BottomNav(navController = navController)
         }
     ) {
+
         Box {
             MediaScreen(mainViewModel, mediaPlayerViewModel) {
                 NavigationGraph(

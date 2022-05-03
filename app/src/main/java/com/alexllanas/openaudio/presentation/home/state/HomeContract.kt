@@ -11,13 +11,16 @@ import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 
 sealed class HomeAction : Action() {
 
     object ClearHomeState : HomeAction()
     data class SetCurrentTrack(val track: Track) : Action()
     data class SetYoutubePlayer(val youTubePlayer: YouTubePlayer) : Action()
+    data class SetMediaTracker(val tracker: YouTubePlayerTracker) : Action()
     data class SetVideoId(val videoId: String) : Action()
+    data class SetIsPlaying(val isPlaying: Boolean) : Action()
     data class LoadStream(val userId: String, val sessionToken: String) : HomeAction()
     data class GetUserTracks(val userId: String) : HomeAction()
     data class SearchAction(val query: String) : HomeAction()
@@ -85,7 +88,23 @@ sealed class HomeAction : Action() {
         HomeAction()
 
 }
+sealed class SetTrackerChange : PartialStateChange<MediaPlayerState> {
+    override fun reduce(state: MediaPlayerState): MediaPlayerState {
+        return when (this) {
+            is Data -> state.copy(tracker = tracker)
+        }
+    }
+    data class Data(val tracker: YouTubePlayerTracker) : SetTrackerChange()
+}
+sealed class SetIsPlayingChange : PartialStateChange<MediaPlayerState> {
+    override fun reduce(state: MediaPlayerState): MediaPlayerState {
+        return when (this) {
+            is Data -> state.copy(isPlaying = isPlaying)
+        }
+    }
 
+    data class Data(val isPlaying: Boolean) : SetIsPlayingChange()
+}
 sealed class SetVideoIdChange : PartialStateChange<MediaPlayerState> {
     override fun reduce(state: MediaPlayerState): MediaPlayerState {
         return when (this) {

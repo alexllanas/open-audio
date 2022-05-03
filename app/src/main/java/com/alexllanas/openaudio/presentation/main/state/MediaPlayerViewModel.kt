@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.home.state.*
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -44,6 +45,18 @@ class MediaPlayerViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class, kotlinx.coroutines.FlowPreview::class)
     private fun SharedFlow<Action>.toChangeFlow(): Flow<PartialStateChange<MediaPlayerState>> {
+        val executeSetTracker: suspend (YouTubePlayerTracker) -> Flow<PartialStateChange<MediaPlayerState>> =
+            { tracker ->
+                flow {
+                    emit(SetTrackerChange.Data(tracker))
+                }
+            }
+        val executeSetIsPlaying: suspend (Boolean) -> Flow<PartialStateChange<MediaPlayerState>> =
+            { isPlaying ->
+                flow {
+                    emit(SetIsPlayingChange.Data(isPlaying))
+                }
+            }
         val executeSetVideoId: suspend (String) -> Flow<PartialStateChange<MediaPlayerState>> =
             { videoId ->
                 flow {
@@ -51,6 +64,10 @@ class MediaPlayerViewModel @Inject constructor(
                 }
             }
         return merge(
+            filterIsInstance<HomeAction.SetMediaTracker>()
+                .flatMapConcat { executeSetTracker(it.tracker) },
+            filterIsInstance<HomeAction.SetIsPlaying>()
+                .flatMapConcat { executeSetIsPlaying(it.isPlaying) },
             filterIsInstance<HomeAction.SetVideoId>()
                 .flatMapConcat { executeSetVideoId(it.videoId) },
         )
