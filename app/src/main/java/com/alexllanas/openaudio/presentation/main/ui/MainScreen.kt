@@ -8,6 +8,7 @@ import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.common.ui.MediaScreen
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
 
@@ -17,7 +18,8 @@ fun MainScreen(
     homeViewModel: HomeViewModel,
     authViewModel: AuthViewModel,
     uploadViewModel: UploadViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    mediaPlayerViewModel: MediaPlayerViewModel
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -26,10 +28,11 @@ fun MainScreen(
         }
     ) {
         Box {
-            MediaScreen(mainViewModel) {
+            MediaScreen(mainViewModel, mediaPlayerViewModel) {
                 NavigationGraph(
                     navHostController = navController,
                     mainViewModel = mainViewModel,
+                    playerViewModel = mediaPlayerViewModel,
                     homeViewModel = homeViewModel,
                     authViewModel = authViewModel,
                     uploadViewModel = uploadViewModel,

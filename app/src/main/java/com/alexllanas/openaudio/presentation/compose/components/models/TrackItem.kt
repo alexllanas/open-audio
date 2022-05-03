@@ -25,6 +25,7 @@ import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.models.TrackUIModel
 import com.skydoves.landscapist.glide.GlideImage
@@ -35,6 +36,7 @@ fun TrackItem(
     modifier: Modifier = Modifier,
     mainState: MainState,
     mainViewModel: MainViewModel,
+    playerViewModel: MediaPlayerViewModel,
     track: TrackUIModel?,
     onTrackClick: (TrackUIModel) -> Unit = {},
     onHeartClick: (TrackUIModel) -> Unit = { },
@@ -104,6 +106,9 @@ fun TrackItem(
                 .clickable {
                     track?.let {
                         mainViewModel.dispatch(HomeAction.SetCurrentTrack(it.toDomain()))
+                        it.mediaUrl?.let { videoId ->
+                            playerViewModel.dispatch(HomeAction.SetVideoId(videoId))
+                        }
                         keyboardController?.hide()
                         focusManager.clearFocus(true)
                     }

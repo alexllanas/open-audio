@@ -31,6 +31,7 @@ import com.alexllanas.openaudio.presentation.compose.components.SearchResultTabL
 import com.alexllanas.openaudio.presentation.home.state.*
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import kotlinx.coroutines.delay
 
@@ -40,6 +41,7 @@ import kotlinx.coroutines.delay
 fun SearchScreen(
     homeViewModel: HomeViewModel,
     mainViewModel: MainViewModel,
+    playerViewModel: MediaPlayerViewModel,
     navHostController: NavHostController
 ) {
     Log.d(TAG, "SearchScreen: ${navHostController.currentBackStackEntry?.destination}")
@@ -50,7 +52,7 @@ fun SearchScreen(
         bottomBar = { BottomNav(navController = navHostController) }
 
     ) {
-        SearchBarUI(homeViewModel, mainViewModel, navHostController)
+        SearchBarUI(homeViewModel, mainViewModel, playerViewModel, navHostController)
     }
 }
 
@@ -58,6 +60,7 @@ fun SearchScreen(
 fun SearchBarUI(
     homeViewModel: HomeViewModel,
     mainViewModel: MainViewModel,
+    playerViewModel: MediaPlayerViewModel,
     navHostController: NavHostController
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
@@ -68,14 +71,26 @@ fun SearchBarUI(
             SearchBar(homeViewModel, mainViewModel, navHostController)
             when (homeState.searchDisplay) {
                 SearchDisplay.Initial -> {
-                    SearchResultTabLayout(navHostController, homeViewModel, mainViewModel,mainState) {
+                    SearchResultTabLayout(
+                        navHostController,
+                        homeViewModel,
+                        mainViewModel,
+                        playerViewModel,
+                        mainState
+                    ) {
                         homeState.searchScreenState?.query?.let {
                             homeViewModel.dispatch(HomeAction.SearchAction(it))
                         }
                     }
                 }
                 SearchDisplay.Results -> {
-                    SearchResultTabLayout(navHostController, homeViewModel, mainViewModel,mainState) {
+                    SearchResultTabLayout(
+                        navHostController,
+                        homeViewModel,
+                        mainViewModel,
+                        playerViewModel,
+                        mainState
+                    ) {
                         homeState.searchScreenState?.query?.let {
                             homeViewModel.dispatch(HomeAction.SearchAction(it))
                         }

@@ -29,35 +29,42 @@ import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun MediaPlayerControls(modifier: Modifier = Modifier, mainViewModel: MainViewModel) {
+fun MediaPlayerControls(
+    modifier: Modifier = Modifier,
+    mainViewModel: MainViewModel,
+    mediaPlayerViewModel: MediaPlayerViewModel
+) {
     val mainState by mainViewModel.mainState.collectAsState()
+    val mediaPlayerState by mediaPlayerViewModel.mediaPlayerState.collectAsState()
     var isPlaying by rememberSaveable { mutableStateOf(false) }
-    var videoId by rememberSaveable { mutableStateOf("") }
+//    var videoId by rememberSaveable { mutableStateOf("") }
 
     val youTubePlayerView = YouTubePlayerView(LocalContext.current)
     youTubePlayerView.enableBackgroundPlayback(true)
 
-    mainState.currentPlayingTrack?.mediaUrl?.let {
-        if (videoId != it) {
-            youTubePlayerView.getYouTubePlayerWhenReady(object :
-                YouTubePlayerCallback {
-                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                    Log.d(TAG, "onYouTubePlayer: $youTubePlayer")
-                    if (it.startsWith("/yt/")) {
-                        mainViewModel.dispatch(HomeAction.SetYoutubePlayer(youTubePlayer))
-                        videoId = it
-                        youTubePlayer.loadVideo(videoId.removePrefix("/yt/"), 0f)
-                        isPlaying = true
-                    }
+//    mainState.currentPlayingTrack?.mediaUrl?.let {
+    mediaPlayerState.videoId.let {
+//        if (videoId != it) {
+        youTubePlayerView.getYouTubePlayerWhenReady(object :
+            YouTubePlayerCallback {
+            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                Log.d(TAG, "onYouTubePlayer: $youTubePlayer")
+                if (it.startsWith("/yt/")) {
+                    mainViewModel.dispatch(HomeAction.SetYoutubePlayer(youTubePlayer))
+//                    videoId = it
+                    youTubePlayer.loadVideo(it.removePrefix("/yt/"), 0f)
+                    isPlaying = true
                 }
-            })
-        }
+            }
+        })
+//        }
     }
 
     Card(

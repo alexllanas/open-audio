@@ -14,6 +14,7 @@ import com.alexllanas.openaudio.presentation.dataStore
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.mappers.toDomain
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.map
 fun StreamScreen(
     homeViewModel: HomeViewModel,
     mainViewModel: MainViewModel,
+    playerViewModel: MediaPlayerViewModel,
     navController: NavHostController
 ) {
 
@@ -60,9 +62,6 @@ fun StreamScreen(
             } else {
                 TrackList(
                     homeState.stream.toUI(),
-                    onTrackClick = {
-//                        mainViewModel.dispatch(HomeAction.SetCurrentTrack(it.toDomain()))
-                    },
                     onHeartClick = { track ->
                         track.id?.let { id ->
                             mainState.sessionToken?.let { token ->
@@ -77,11 +76,13 @@ fun StreamScreen(
                         navController.navigate("track_options")
                     },
                     mainState = mainState,
-                    mainViewModel = mainViewModel
+                    mainViewModel = mainViewModel,
+                    playerViewModel = playerViewModel
                 )
             }
 
         }
+
     }
 }
 

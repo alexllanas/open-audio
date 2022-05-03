@@ -36,6 +36,7 @@ import com.alexllanas.openaudio.presentation.home.ui.StreamScreen
 import com.alexllanas.openaudio.presentation.common.ui.TrackOptionsScreen
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.models.PlaylistUIModel
 import com.alexllanas.openaudio.presentation.models.UserUIModel
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
@@ -75,6 +76,7 @@ fun NavigationGraph(
     navHostController: NavHostController,
     homeViewModel: HomeViewModel,
     mainViewModel: MainViewModel,
+    playerViewModel: MediaPlayerViewModel,
     authViewModel: AuthViewModel,
     uploadViewModel: UploadViewModel,
     profileViewModel: ProfileViewModel
@@ -87,7 +89,7 @@ fun NavigationGraph(
     ) {
         composable(NavItem.Stream.screenRoute) {
 //            MediaScreen(mainViewModel) {
-            StreamScreen(homeViewModel, mainViewModel, navHostController)
+            StreamScreen(homeViewModel, mainViewModel, playerViewModel, navHostController)
 //            }
         }
         composable(
@@ -161,7 +163,7 @@ fun NavigationGraph(
         }
         composable(NavItem.Search.screenRoute) {
 //            MediaScreen(mainViewModel) {
-            SearchScreen(homeViewModel, mainViewModel, navHostController)
+            SearchScreen(homeViewModel, mainViewModel, playerViewModel, navHostController)
 //            }
         }
         composable(NavItem.Upload.screenRoute) {
@@ -212,6 +214,7 @@ fun NavigationGraph(
                 modifier = Modifier,
                 mainState = mainState,
                 homeViewModel = homeViewModel,
+                playerViewModel = playerViewModel,
                 navController = navHostController,
                 mainViewModel = mainViewModel
             )

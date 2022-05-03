@@ -17,6 +17,7 @@ import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.auth.ui.AuthNavigationGraph
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
 
@@ -26,6 +27,7 @@ class MainFragment : Fragment() {
     private val authViewModel: AuthViewModel by activityViewModels()
     private val uploadViewModel: UploadViewModel by activityViewModels()
     private val profileViewModel: ProfileViewModel by activityViewModels()
+    private val mediaPlayerViewModel: MediaPlayerViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,12 +40,12 @@ class MainFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 MainScreen(
-
                     homeViewModel = homeViewModel,
                     mainViewModel = mainViewModel,
                     authViewModel = authViewModel,
                     uploadViewModel = uploadViewModel,
-                    profileViewModel = profileViewModel
+                    profileViewModel = profileViewModel,
+                    mediaPlayerViewModel = mediaPlayerViewModel
                 )
             }
         }
