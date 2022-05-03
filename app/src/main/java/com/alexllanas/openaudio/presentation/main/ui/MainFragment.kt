@@ -48,7 +48,8 @@ class MainFragment : Fragment() {
                     authViewModel = authViewModel,
                     uploadViewModel = uploadViewModel,
                     profileViewModel = profileViewModel,
-                    mediaPlayerViewModel = mediaPlayerViewModel
+                    mediaPlayerViewModel = mediaPlayerViewModel,
+                    fragmentManager = activity?.supportFragmentManager
                 )
             }
         }

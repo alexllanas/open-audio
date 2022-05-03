@@ -19,6 +19,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -116,6 +117,7 @@ fun SearchBar(
     var showClearButton by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
     TopAppBar(
         title = { Text("Search") },
         navigationIcon = {
@@ -159,6 +161,8 @@ fun SearchBar(
                         IconButton(onClick = {
                             query = ""
                             homeViewModel.dispatch(HomeAction.SearchAction(""))
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
                         }) {
                             Icon(
                                 imageVector = Icons.Filled.Close,

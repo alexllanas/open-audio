@@ -3,6 +3,7 @@ package com.alexllanas.openaudio.presentation.main.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.compose.rememberNavController
 import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.common.ui.MediaScreen
@@ -21,12 +22,13 @@ fun MainScreen(
     authViewModel: AuthViewModel,
     uploadViewModel: UploadViewModel,
     profileViewModel: ProfileViewModel,
-    mediaPlayerViewModel: MediaPlayerViewModel
+    mediaPlayerViewModel: MediaPlayerViewModel,
+    fragmentManager: FragmentManager?
 ) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
-                BottomNav(navController = navController)
+            BottomNav(navController = navController)
         }
     ) {
 
@@ -39,7 +41,8 @@ fun MainScreen(
                     homeViewModel = homeViewModel,
                     authViewModel = authViewModel,
                     uploadViewModel = uploadViewModel,
-                    profileViewModel = profileViewModel
+                    profileViewModel = profileViewModel,
+                    fragmentManager = fragmentManager
                 )
             }
         }

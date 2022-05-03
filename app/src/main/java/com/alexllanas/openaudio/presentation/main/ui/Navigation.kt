@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -79,7 +80,8 @@ fun NavigationGraph(
     playerViewModel: MediaPlayerViewModel,
     authViewModel: AuthViewModel,
     uploadViewModel: UploadViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    fragmentManager: FragmentManager?
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
     val homeState by homeViewModel.homeState.collectAsState()
@@ -130,7 +132,8 @@ fun NavigationGraph(
                 homeViewModel = homeViewModel,
                 profileViewModel = profileViewModel,
                 mainState = mainState,
-                navHostController = navHostController
+                navHostController = navHostController,
+                fragmentManager = fragmentManager
             )
 //            }
         }

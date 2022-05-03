@@ -2,6 +2,8 @@ package com.alexllanas.openaudio.presentation.common.ui
 
 import android.content.Context
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -15,6 +17,7 @@ import androidx.compose.material.icons.outlined.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -95,12 +98,13 @@ fun OptionsMenu(
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
     val mainState by mainViewModel.mainState.collectAsState()
+    val interactionSource = remember { MutableInteractionSource() }
     Column(modifier.padding(top = 24.dp)) {
         Row(
             modifier = Modifier
                 .padding(bottom = 24.dp)
                 .fillMaxWidth()
-                .clickable {
+                .clickable(interactionSource = interactionSource, indication = null) {
                     homeState.selectedTrack?.id?.let { trackId ->
                         mainState.sessionToken?.let { token ->
                             mainState.loggedInUser?.id?.let { userId ->
@@ -132,7 +136,7 @@ fun OptionsMenu(
         }
         Row(modifier = Modifier
             .fillMaxWidth()
-            .clickable {
+            .clickable(interactionSource = interactionSource, indication = null) {
                 navHostController.navigate("add_to_playlist")
             }
             .padding(bottom = 24.dp)) {
@@ -146,11 +150,12 @@ fun OptionsMenu(
                 style = MaterialTheme.typography.body1
             )
         }
-        Row(modifier = Modifier.fillMaxWidth().padding().clickable {
-            homeState.selectedTrack?.let { track ->
-                sendTweet(track, context)
-            }
-        }) {
+        Row(modifier = Modifier.fillMaxWidth().padding()
+            .clickable(interactionSource = interactionSource, indication = null) {
+                homeState.selectedTrack?.let { track ->
+                    sendTweet(track, context)
+                }
+            }) {
             Icon(
                 imageVector = Icons.Outlined.Share,
                 contentDescription = stringResource(R.string.share)
