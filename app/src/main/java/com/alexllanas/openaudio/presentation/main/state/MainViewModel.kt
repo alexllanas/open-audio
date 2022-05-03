@@ -14,13 +14,11 @@ import com.alexllanas.openaudio.presentation.auth.state.LoginChange
 import com.alexllanas.openaudio.presentation.auth.state.SetSessionTokenChange
 import com.alexllanas.openaudio.presentation.auth.state.ClearMainStateChange
 import com.alexllanas.openaudio.presentation.common.state.Action
-import com.alexllanas.openaudio.presentation.home.state.AddTrackToPlaylistChange
-import com.alexllanas.openaudio.presentation.home.state.CreatePlaylistChange
-import com.alexllanas.openaudio.presentation.home.state.HomeAction
-import com.alexllanas.openaudio.presentation.home.state.SetCurrentTrackChange
+import com.alexllanas.openaudio.presentation.home.state.*
 import com.alexllanas.openaudio.presentation.profile.state.ChangeInfo
 import com.alexllanas.openaudio.presentation.profile.state.LogoutChange
 import com.alexllanas.openaudio.presentation.profile.state.ProfileAction
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -34,7 +32,7 @@ class MainViewModel @Inject constructor(
     private val profileInteractors: ProfileInteractors,
 ) : ViewModel() {
     private val initialMainState: MainState by lazy { MainState() }
-    val mainState: StateFlow<MainState>
+    var mainState: StateFlow<MainState>
 
 
     private val _actions = MutableSharedFlow<Action>()
@@ -62,6 +60,12 @@ class MainViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class, kotlinx.coroutines.FlowPreview::class)
     private fun SharedFlow<Action>.toChangeFlow(): Flow<PartialStateChange<MainState>> {
+        val executeSetYoutubePlayer: suspend (YouTubePlayer) -> Flow<PartialStateChange<MainState>> =
+            { youtubePlayer ->
+                flow {
+                    emit(SetYouTubePlayerChange.Data(youtubePlayer))
+                }
+            }
         val executeSetCurrentTrack: suspend (Track) -> Flow<PartialStateChange<MainState>> =
             { track ->
                 flow {
@@ -190,6 +194,8 @@ class MainViewModel @Inject constructor(
                     }.onStart { ChangeInfo.Loading }
             }
         return merge(
+            filterIsInstance<HomeAction.SetYoutubePlayer>()
+                .flatMapConcat { executeSetYoutubePlayer(it.youTubePlayer) },
             filterIsInstance<HomeAction.SetCurrentTrack>()
                 .flatMapConcat { executeSetCurrentTrack(it.track) },
             filterIsInstance<AuthAction.ClearMainState>()
@@ -231,5 +237,4 @@ class MainViewModel @Inject constructor(
                 }
         )
     }
-
 }

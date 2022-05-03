@@ -1,5 +1,6 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -24,7 +25,9 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
@@ -45,7 +48,9 @@ fun MediaPlayerControls(modifier: Modifier = Modifier, mainViewModel: MainViewMo
             youTubePlayerView.getYouTubePlayerWhenReady(object :
                 YouTubePlayerCallback {
                 override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                    Log.d(TAG, "onYouTubePlayer: $youTubePlayer")
                     if (it.startsWith("/yt/")) {
+                        mainViewModel.dispatch(HomeAction.SetYoutubePlayer(youTubePlayer))
                         videoId = it
                         youTubePlayer.loadVideo(videoId.removePrefix("/yt/"), 0f)
                         isPlaying = true
@@ -84,17 +89,12 @@ fun MediaPlayerControls(modifier: Modifier = Modifier, mainViewModel: MainViewMo
                     .align(Alignment.CenterVertically)
                     .size(40.dp)
                     .clickable {
-                        youTubePlayerView.getYouTubePlayerWhenReady(object :
-                            YouTubePlayerCallback {
-                            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                                if (isPlaying) {
-                                    youTubePlayer.pause()
-                                } else {
-                                    youTubePlayer.play()
-                                }
-                                isPlaying = !isPlaying
-                            }
-                        })
+                        if (isPlaying) {
+                            mainState.youTubePlayer?.pause()
+                        } else {
+                            mainState.youTubePlayer?.play()
+                        }
+                        isPlaying = !isPlaying
                     },
                 imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                 contentDescription = stringResource(R.string.play_pause_button)

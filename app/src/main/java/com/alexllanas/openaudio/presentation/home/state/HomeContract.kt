@@ -9,11 +9,14 @@ import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 
 sealed class HomeAction : Action() {
 
     object ClearHomeState : HomeAction()
     data class SetCurrentTrack(val track: Track) : Action()
+    data class SetYoutubePlayer(val youTubePlayer: YouTubePlayer) : Action()
+
 
     data class LoadStream(val userId: String, val sessionToken: String) : HomeAction()
     data class GetUserTracks(val userId: String) : HomeAction()
@@ -81,6 +84,16 @@ sealed class HomeAction : Action() {
     ) :
         HomeAction()
 
+}
+
+sealed class SetYouTubePlayerChange : PartialStateChange<MainState> {
+    override fun reduce(state: MainState): MainState {
+        return when (this) {
+            is Data -> state.copy(youTubePlayer = youTubePlayer)
+        }
+    }
+
+    data class Data(val youTubePlayer: YouTubePlayer) : SetYouTubePlayerChange()
 }
 
 sealed class SetCurrentTrackChange : PartialStateChange<MainState> {
