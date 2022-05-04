@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.lifecycle.asLiveData
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.SESSION_TOKEN
@@ -37,8 +38,7 @@ class AuthFragment : Fragment() {
                 mainViewModel.dispatch(AuthAction.SetSessionTokenAction(token))
             }
         }
-
-//        findNavController().navigate(MainFra)
+        val fragmentNavController = activity?.findNavController(R.id.nav_host_fragment)
 
         return ComposeView(requireContext()).apply {
             setContent {
@@ -47,16 +47,10 @@ class AuthFragment : Fragment() {
                     navController,
                     mainViewModel
                 ) {
-                    navigateToMainFragment()
+                    fragmentNavController?.navigate(AuthFragmentDirections.actionAuthFragmentToMainFragment())
                 }
             }
         }
     }
 
-    private fun navigateToMainFragment() {
-        activity?.supportFragmentManager?.commit {
-            setReorderingAllowed(true)
-            replace(R.id.nav_host_fragment, MainFragment())
-        }
-    }
 }

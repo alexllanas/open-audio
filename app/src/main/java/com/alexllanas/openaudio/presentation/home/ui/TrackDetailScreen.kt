@@ -1,11 +1,13 @@
 package com.alexllanas.openaudio.presentation.home.ui
 
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
@@ -20,9 +22,11 @@ fun TrackDetailScreen(
     val mediaPlayerState by mediaPlayerViewModel.mediaPlayerState.collectAsState()
 
     Scaffold {
-
         mediaPlayerState.currentPlayingTrack?.let { track ->
             Text("${track.title}")
         }
     }
+
+
+
 }

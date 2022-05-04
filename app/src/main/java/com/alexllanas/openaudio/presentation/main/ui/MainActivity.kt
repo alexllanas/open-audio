@@ -14,10 +14,12 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import com.alexllanas.core.util.Constants.Companion.CHANNEL_ID
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.NotificationBroadcastReceiver
 import com.alexllanas.openaudio.presentation.auth.ui.AuthFragment
+import com.alexllanas.openaudio.presentation.auth.ui.AuthFragmentDirections
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
@@ -34,24 +36,24 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
         val notificationManager = NotificationManagerCompat.from(this)
 
-        supportFragmentManager.commit {
-            setReorderingAllowed(true)
-            add(R.id.nav_host_fragment, AuthFragment())
-        }
-//        val navHostFragment =
-//            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-//        val navController = navHostFragment.navController
-//
-//        navController.navigate(AuFra)
+//        supportFragmentManager.commit {
+//            setReorderingAllowed(true)
+//            add(R.id.nav_host_fragment, AuthFragment())
+//        }
+
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
 
         val intentFilter = IntentFilter("com.alexllanas.openaudio.TOGGLE_PLAYBACK")
         this.registerReceiver(
             NotificationBroadcastReceiver(mediaPlayerViewModel, mainViewModel),
             intentFilter
         )
-        setContentView(R.layout.activity_main)
         lifecycleScope.launch(Dispatchers.IO) {
             mediaPlayerViewModel.mediaPlayerState.collect { state ->
                 state.currentPlayingTrack?.let { _ ->
@@ -92,24 +94,45 @@ class MainActivity : AppCompatActivity() {
         val launchPendingIntent =
             PendingIntent.getActivity(this, 0, launchIntent, PendingIntent.FLAG_IMMUTABLE)
 
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_background)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .addAction(
-                com.google.android.exoplayer2.ui.R.drawable.exo_controls_pause,
-                "Pause",
-                playbackPendingIntent
-            )
-            .setContentIntent(launchPendingIntent)
-            .setContentText(
-                mediaPlayerState.currentPlayingTrack?.title ?: "My Awesome Band"
-            )
-            .setSilent(true)
-            .setStyle(
-                androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0)
-            )
-            .setLargeIcon(bitmap)
-            .build()
+        val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+//                .addAction(
+//                    com.google.android.exoplayer2.ui.R.drawable.exo_controls_previous,
+//                    "Previous",
+//                    playbackPendingIntent
+//                )
+                .addAction(
+                    com.google.android.exoplayer2.ui.R.drawable.exo_controls_pause,
+                    "Pause",
+                    playbackPendingIntent
+                )
+//                .addAction(
+//                    com.google.android.exoplayer2.ui.R.drawable.exo_controls_next,
+//                    "Next",
+//                    playbackPendingIntent
+//                )
+                .setContentIntent(launchPendingIntent)
+                .setContentText(
+                    mediaPlayerState.currentPlayingTrack?.title ?: "no title"
+                )
+                .setSilent(true)
+                .setStyle(
+                    androidx.media.app.NotificationCompat.MediaStyle()
+                        .setShowActionsInCompactView(0)
+                )
+//                .setStyle(
+//                    NotificationCompat
+//                        .BigPictureStyle()
+//                        .bigLargeIcon(bitmap)
+//                        .showBigPictureWhenCollapsed(true)
+//                )
+//                .setLargeIcon(bitmap)
+                .build()
+        } else {
+            TODO("VERSION.SDK_INT < S")
+        }
 
         if (mediaPlayerState.isPlaying) {
             notification.actions[0] = Notification.Action(

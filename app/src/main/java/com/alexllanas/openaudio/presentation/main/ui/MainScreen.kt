@@ -4,16 +4,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.common.ui.MediaScreen
-import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 
 @Composable
 fun MainScreen(
@@ -23,7 +22,8 @@ fun MainScreen(
     uploadViewModel: UploadViewModel,
     profileViewModel: ProfileViewModel,
     mediaPlayerViewModel: MediaPlayerViewModel,
-    fragmentManager: FragmentManager?
+    fragmentManager: FragmentManager?,
+    fragmentNavController: NavController
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -33,7 +33,12 @@ fun MainScreen(
     ) {
 
         Box {
-            MediaScreen(mainViewModel, mediaPlayerViewModel, fragmentManager) {
+            MediaScreen(
+                mainViewModel,
+                mediaPlayerViewModel,
+                fragmentManager,
+                fragmentNavController
+            ) {
                 NavigationGraph(
                     navHostController = navController,
                     mainViewModel = mainViewModel,
@@ -42,7 +47,8 @@ fun MainScreen(
                     authViewModel = authViewModel,
                     uploadViewModel = uploadViewModel,
                     profileViewModel = profileViewModel,
-                    fragmentManager = fragmentManager
+                    fragmentManager = fragmentManager,
+                    fragmentNavController = fragmentNavController
                 )
             }
         }

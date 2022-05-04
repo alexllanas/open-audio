@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
+import androidx.navigation.NavController
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
@@ -32,6 +33,7 @@ import com.alexllanas.openaudio.presentation.home.ui.TrackDetailScreen
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.main.ui.MainFragment
+import com.alexllanas.openaudio.presentation.main.ui.MainFragmentDirections
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
@@ -47,7 +49,8 @@ fun MediaPlayerControls(
     modifier: Modifier = Modifier,
     mainViewModel: MainViewModel,
     mediaPlayerViewModel: MediaPlayerViewModel,
-    fragmentManager: FragmentManager?
+    fragmentManager: FragmentManager?,
+    fragmentNavController: NavController
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
     val mediaPlayerState by mediaPlayerViewModel.mediaPlayerState.collectAsState()
@@ -80,10 +83,12 @@ fun MediaPlayerControls(
     Card(
         modifier = modifier.padding(8.dp).height(64.dp)
             .clickable {
-                fragmentManager?.commit {
-                    setReorderingAllowed(true)
-                    add(R.id.nav_host_fragment, TrackDetailFragment())
-                }
+//                fragmentManager?.commit {
+//                    setReorderingAllowed(true)
+//                    add(R.id.nav_host_fragment, TrackDetailFragment())
+//                }
+                fragmentNavController.navigate(MainFragmentDirections.actionMainFragmentToTrackDetailFragment())
+                //        navController.navigate(AuthFragmentDirections.actionAuthFragmentToMainFragment())
             },
         shape = RoundedCornerShape(8.dp),
         backgroundColor = MaterialTheme.colors.primary,

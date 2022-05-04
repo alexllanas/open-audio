@@ -81,7 +81,8 @@ fun NavigationGraph(
     authViewModel: AuthViewModel,
     uploadViewModel: UploadViewModel,
     profileViewModel: ProfileViewModel,
-    fragmentManager: FragmentManager?
+    fragmentManager: FragmentManager?,
+    fragmentNavController: NavController
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
     val homeState by homeViewModel.homeState.collectAsState()

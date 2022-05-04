@@ -149,7 +149,7 @@ class ClearHomeStateChange : PartialStateChange<HomeState> {
 
 class ClearMediaPlayerStateChange : PartialStateChange<MediaPlayerState> {
     override fun reduce(state: MediaPlayerState): MediaPlayerState {
-        return MediaPlayerState()
+        return MediaPlayerState(null, ", false, null, null")
     }
 }
 
