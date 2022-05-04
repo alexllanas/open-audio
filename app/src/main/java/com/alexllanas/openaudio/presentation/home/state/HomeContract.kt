@@ -16,6 +16,8 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTube
 sealed class HomeAction : Action() {
 
     object ClearHomeState : HomeAction()
+    object ClearMediaPlayerState : Action()
+
     data class SetCurrentTrack(val track: Track) : Action()
     data class SetYoutubePlayer(val youTubePlayer: YouTubePlayer) : Action()
     data class SetMediaTracker(val tracker: YouTubePlayerTracker) : Action()
@@ -88,14 +90,17 @@ sealed class HomeAction : Action() {
         HomeAction()
 
 }
+
 sealed class SetTrackerChange : PartialStateChange<MediaPlayerState> {
     override fun reduce(state: MediaPlayerState): MediaPlayerState {
         return when (this) {
             is Data -> state.copy(tracker = tracker)
         }
     }
+
     data class Data(val tracker: YouTubePlayerTracker) : SetTrackerChange()
 }
+
 sealed class SetIsPlayingChange : PartialStateChange<MediaPlayerState> {
     override fun reduce(state: MediaPlayerState): MediaPlayerState {
         return when (this) {
@@ -105,6 +110,7 @@ sealed class SetIsPlayingChange : PartialStateChange<MediaPlayerState> {
 
     data class Data(val isPlaying: Boolean) : SetIsPlayingChange()
 }
+
 sealed class SetVideoIdChange : PartialStateChange<MediaPlayerState> {
     override fun reduce(state: MediaPlayerState): MediaPlayerState {
         return when (this) {
@@ -125,8 +131,8 @@ sealed class SetYouTubePlayerChange : PartialStateChange<MediaPlayerState> {
     data class Data(val youTubePlayer: YouTubePlayer) : SetYouTubePlayerChange()
 }
 
-sealed class SetCurrentTrackChange : PartialStateChange<MainState> {
-    override fun reduce(state: MainState): MainState {
+sealed class SetCurrentTrackChange : PartialStateChange<MediaPlayerState> {
+    override fun reduce(state: MediaPlayerState): MediaPlayerState {
         return when (this) {
             is Data -> state.copy(currentPlayingTrack = track)
         }
@@ -138,6 +144,12 @@ sealed class SetCurrentTrackChange : PartialStateChange<MainState> {
 class ClearHomeStateChange : PartialStateChange<HomeState> {
     override fun reduce(state: HomeState): HomeState {
         return HomeState()
+    }
+}
+
+class ClearMediaPlayerStateChange : PartialStateChange<MediaPlayerState> {
+    override fun reduce(state: MediaPlayerState): MediaPlayerState {
+        return MediaPlayerState()
     }
 }
 

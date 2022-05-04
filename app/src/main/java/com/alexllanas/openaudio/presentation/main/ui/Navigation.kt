@@ -130,6 +130,7 @@ fun NavigationGraph(
             SettingsScreen(
                 mainViewModel = mainViewModel,
                 homeViewModel = homeViewModel,
+                mediaPlayerViewModel = playerViewModel,
                 profileViewModel = profileViewModel,
                 mainState = mainState,
                 navHostController = navHostController,

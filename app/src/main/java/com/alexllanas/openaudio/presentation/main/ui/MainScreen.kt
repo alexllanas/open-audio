@@ -33,7 +33,7 @@ fun MainScreen(
     ) {
 
         Box {
-            MediaScreen(mainViewModel, mediaPlayerViewModel) {
+            MediaScreen(mainViewModel, mediaPlayerViewModel, fragmentManager) {
                 NavigationGraph(
                     navHostController = navController,
                     mainViewModel = mainViewModel,

@@ -61,12 +61,12 @@ class MainViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class, kotlinx.coroutines.FlowPreview::class)
     private fun SharedFlow<Action>.toChangeFlow(): Flow<PartialStateChange<MainState>> {
 
-        val executeSetCurrentTrack: suspend (Track) -> Flow<PartialStateChange<MainState>> =
-            { track ->
-                flow {
-                    emit(SetCurrentTrackChange.Data(track))
-                }
-            }
+//        val executeSetCurrentTrack: suspend (Track) -> Flow<PartialStateChange<MainState>> =
+//            { track ->
+//                flow {
+//                    emit(SetCurrentTrackChange.Data(track))
+//                }
+//            }
         val executeLogin: suspend (String, String) -> Flow<PartialStateChange<MainState>> =
             { email, password ->
                 authInteractors.login(email, password)
@@ -189,8 +189,8 @@ class MainViewModel @Inject constructor(
                     }.onStart { ChangeInfo.Loading }
             }
         return merge(
-            filterIsInstance<HomeAction.SetCurrentTrack>()
-                .flatMapConcat { executeSetCurrentTrack(it.track) },
+//            filterIsInstance<HomeAction.SetCurrentTrack>()
+//                .flatMapConcat { executeSetCurrentTrack(it.track) },
             filterIsInstance<AuthAction.ClearMainState>()
                 .flatMapConcat { executeClearMainState() },
             filterIsInstance<AuthAction.SetSessionTokenAction>()

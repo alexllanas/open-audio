@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentManager
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 
@@ -13,6 +14,7 @@ import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 fun MediaScreen(
     mainViewModel: MainViewModel,
     mediaPlayerViewModel: MediaPlayerViewModel,
+    fragmentManager: FragmentManager?,
     content: @Composable (() -> Unit)
 ) {
     Box {
@@ -20,7 +22,8 @@ fun MediaScreen(
         MediaPlayerControls(
             mainViewModel = mainViewModel,
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 64.dp),
-            mediaPlayerViewModel = mediaPlayerViewModel
+            mediaPlayerViewModel = mediaPlayerViewModel,
+            fragmentManager = fragmentManager
         )
     }
 }

@@ -105,7 +105,7 @@ fun TrackItem(
             modifier = Modifier
                 .clickable {
                     track?.let {
-                        mainViewModel.dispatch(HomeAction.SetCurrentTrack(it.toDomain()))
+                        playerViewModel.dispatch(HomeAction.SetCurrentTrack(it.toDomain()))
                         it.mediaUrl?.let { videoId ->
                             playerViewModel.dispatch(HomeAction.SetVideoId(videoId))
                         }

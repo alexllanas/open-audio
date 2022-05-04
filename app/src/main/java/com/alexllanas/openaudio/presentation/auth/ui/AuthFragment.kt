@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.lifecycle.asLiveData
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.fragment.findNavController
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.SESSION_TOKEN
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
@@ -36,6 +37,9 @@ class AuthFragment : Fragment() {
                 mainViewModel.dispatch(AuthAction.SetSessionTokenAction(token))
             }
         }
+
+//        findNavController().navigate(MainFra)
+
         return ComposeView(requireContext()).apply {
             setContent {
                 val navController = rememberNavController()

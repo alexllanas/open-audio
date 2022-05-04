@@ -4,6 +4,7 @@ package com.alexllanas.openaudio.presentation.main.state
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.home.state.*
@@ -46,6 +47,18 @@ class MediaPlayerViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class, kotlinx.coroutines.FlowPreview::class)
     private fun SharedFlow<Action>.toChangeFlow(): Flow<PartialStateChange<MediaPlayerState>> {
+        val executeClearMediaPlayerState: suspend () -> Flow<PartialStateChange<MediaPlayerState>> =
+            {
+                flow {
+                    emit(ClearMediaPlayerStateChange())
+                }
+            }
+        val executeSetCurrentTrack: suspend (Track) -> Flow<PartialStateChange<MediaPlayerState>> =
+            { track ->
+                flow {
+                    emit(SetCurrentTrackChange.Data(track))
+                }
+            }
         val executeSetTracker: suspend (YouTubePlayerTracker) -> Flow<PartialStateChange<MediaPlayerState>> =
             { tracker ->
                 flow {
@@ -71,6 +84,10 @@ class MediaPlayerViewModel @Inject constructor(
                 }
             }
         return merge(
+            filterIsInstance<HomeAction.SetCurrentTrack>()
+                .flatMapConcat { executeSetCurrentTrack(it.track) },
+            filterIsInstance<HomeAction.ClearMediaPlayerState>()
+                .flatMapConcat { executeClearMediaPlayerState() },
             filterIsInstance<HomeAction.SetYoutubePlayer>()
                 .flatMapConcat { executeSetYoutubePlayer(it.youTubePlayer) },
             filterIsInstance<HomeAction.SetMediaTracker>()

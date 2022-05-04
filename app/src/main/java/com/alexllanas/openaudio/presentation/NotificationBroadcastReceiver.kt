@@ -11,23 +11,26 @@ import androidx.core.app.NotificationManagerCompat
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
+import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import kotlinx.coroutines.*
 
 class NotificationBroadcastReceiver(
     private val mediaPlayerViewModel: MediaPlayerViewModel,
-
-    ) :
+    private val mainViewModel: MainViewModel
+) :
     BroadcastReceiver() {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onReceive(p0: Context?, p1: Intent?) {
         Log.d(TAG, "onReceive: received broadcast")
-        if (mediaPlayerViewModel.mediaPlayerState.value.isPlaying) {
-            mediaPlayerViewModel.mediaPlayerState.value.youTubePlayer?.pause()
-            mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(false))
-        } else {
-            mediaPlayerViewModel.mediaPlayerState.value.youTubePlayer?.play()
-            mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(true))
+        mediaPlayerViewModel.mediaPlayerState.value.currentPlayingTrack?.let {
+            if (mediaPlayerViewModel.mediaPlayerState.value.isPlaying) {
+                mediaPlayerViewModel.mediaPlayerState.value.youTubePlayer?.pause()
+                mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(false))
+            } else {
+                mediaPlayerViewModel.mediaPlayerState.value.youTubePlayer?.play()
+                mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(true))
+            }
         }
     }
 }

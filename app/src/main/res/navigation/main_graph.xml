@@ -16,5 +16,13 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.alexllanas.openaudio.presentation.main.ui.MainFragment"
-        android:label="MainFragment" />
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_trackDetailFragment"
+            app:destination="@id/trackDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/trackDetailFragment"
+        android:name="com.alexllanas.openaudio.presentation.home.ui.TrackDetailFragment"
+        android:label="TrackDetailFragment" />
 </navigation>

@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -25,11 +22,16 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
+import com.alexllanas.openaudio.presentation.home.ui.TrackDetailFragment
+import com.alexllanas.openaudio.presentation.home.ui.TrackDetailScreen
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.main.ui.MainFragment
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
@@ -39,11 +41,13 @@ import com.skydoves.landscapist.glide.GlideImage
 
 private val youTubePlayerTracker = YouTubePlayerTracker()
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MediaPlayerControls(
     modifier: Modifier = Modifier,
     mainViewModel: MainViewModel,
-    mediaPlayerViewModel: MediaPlayerViewModel
+    mediaPlayerViewModel: MediaPlayerViewModel,
+    fragmentManager: FragmentManager?
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
     val mediaPlayerState by mediaPlayerViewModel.mediaPlayerState.collectAsState()
@@ -74,14 +78,20 @@ fun MediaPlayerControls(
     }
 
     Card(
-        modifier = modifier.padding(8.dp).height(64.dp),
+        modifier = modifier.padding(8.dp).height(64.dp)
+            .clickable {
+                fragmentManager?.commit {
+                    setReorderingAllowed(true)
+                    add(R.id.nav_host_fragment, TrackDetailFragment())
+                }
+            },
         shape = RoundedCornerShape(8.dp),
         backgroundColor = MaterialTheme.colors.primary,
     ) {
         Row(modifier = Modifier.padding(8.dp)) {
             GlideImage(
                 modifier = Modifier.size(50.dp),
-                imageModel = mainState.currentPlayingTrack?.image,
+                imageModel = mediaPlayerState.currentPlayingTrack?.image,
                 contentScale = ContentScale.Crop,
                 placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
                 error = ImageBitmap.imageResource(R.drawable.blank_user)
@@ -93,7 +103,7 @@ fun MediaPlayerControls(
                 modifier = Modifier.size(0.dp)
             )
             Text(
-                text = mainState.currentPlayingTrack?.title ?: "Track Title",
+                text = mediaPlayerState.currentPlayingTrack?.title ?: "Track Title",
                 modifier = Modifier.weight(1f).padding(start = 8.dp)
                     .align(Alignment.CenterVertically)
             )

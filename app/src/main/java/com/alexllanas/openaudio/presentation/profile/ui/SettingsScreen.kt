@@ -26,6 +26,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import com.alexllanas.openaudio.presentation.main.ui.MainFragment
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
@@ -36,6 +37,7 @@ import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 fun SettingsScreen(
     mainViewModel: MainViewModel,
     homeViewModel: HomeViewModel,
+    mediaPlayerViewModel: MediaPlayerViewModel,
     profileViewModel: ProfileViewModel,
     mainState: MainState,
     navHostController: NavHostController,
@@ -69,10 +71,9 @@ fun SettingsScreen(
                         replace(R.id.nav_host_fragment, AuthFragment())
                     }
                     profileViewModel.dispatch(ProfileAction.Logout(token))
-//                    mainViewModel.dispatch(AuthAction.ClearSessionTokenAction(""))
                     mainViewModel.dispatch(AuthAction.ClearMainState)
                     homeViewModel.dispatch(HomeAction.ClearHomeState)
-
+                    mediaPlayerViewModel.dispatch(HomeAction.ClearMediaPlayerState)
                 }
             }, modifier = Modifier
                 .padding(top = 64.dp)
