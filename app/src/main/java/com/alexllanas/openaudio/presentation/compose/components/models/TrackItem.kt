@@ -52,19 +52,13 @@ fun TrackItem(
     val keyboardController = LocalSoftwareKeyboardController.current
     val interactionSource = remember { MutableInteractionSource() }
     val focusManager = LocalFocusManager.current
-    val background = if (isSelected)
-        Color.LightGray
-    else
-        MaterialTheme.colors.surface
 
     Card(
         shape = RoundedCornerShape(4.dp),
         elevation = 0.dp,
         modifier = Modifier
-//            .padding(8.dp)
             .fillMaxWidth()
             .then(modifier),
-//        backgroundColor = background
     ) {
         val likesQualifier =
             if (track?.userLikeIds?.size == 1) " person likes this track" else " people like this track"
@@ -116,7 +110,7 @@ fun TrackItem(
                 }
             },
             modifier = Modifier
-                .background(color = MaterialTheme.colors.background)
+//                .background(color = MaterialTheme.colors.background)
                 .clickable(interactionSource = interactionSource, indication = null) {
                 track?.let {
                         playerViewModel.dispatch(HomeAction.SetCurrentTrack(it.toDomain()))

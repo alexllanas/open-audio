@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -112,7 +113,6 @@ fun SearchBar(
     mainViewModel: MainViewModel,
     navHostController: NavHostController
 ) {
-    val homeState by homeViewModel.homeState.collectAsState()
     var query by remember { mutableStateOf("") }
     var showClearButton by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -120,14 +120,16 @@ fun SearchBar(
     val focusManager = LocalFocusManager.current
     TopAppBar(
         title = { Text("Search") },
-        navigationIcon = {
-            IconButton(onClick = { navHostController.popBackStack() }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.back_arrow)
-                )
-            }
-        },
+        backgroundColor = MaterialTheme.colors.background,
+        elevation = 0.dp,
+//        navigationIcon = {
+//            IconButton(onClick = { navHostController.popBackStack() }) {
+//                Icon(
+//                    imageVector = Icons.Filled.ArrowBack,
+//                    contentDescription = stringResource(R.string.back_arrow)
+//                )
+//            }
+//        },
         actions = {
             OutlinedTextField(
                 modifier = Modifier
@@ -152,15 +154,29 @@ fun SearchBar(
                     backgroundColor = Color.Transparent,
                     cursorColor = LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
                 ),
+                leadingIcon = if (!showClearButton) {
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null
+                        )
+                    }
+                } else null,
                 trailingIcon = {
+//                    if (!showClearButton) {
+//                        Icon(
+//                            imageVector = Icons.Filled.Search,
+//                            contentDescription = null
+//                        )
+//                    } else {
                     AnimatedVisibility(
                         visible = showClearButton,
                         enter = fadeIn(),
                         exit = fadeOut()
                     ) {
                         IconButton(onClick = {
-                            query = ""
-                            homeViewModel.dispatch(HomeAction.SearchAction(""))
+//                            query = ""
+//                            homeViewModel.dispatch(HomeAction.SearchAction(""))
                             keyboardController?.hide()
                             focusManager.clearFocus()
                         }) {
@@ -169,14 +185,15 @@ fun SearchBar(
                                 contentDescription = stringResource(R.string.close)
                             )
                         }
-
                     }
+//                    }
                 },
                 maxLines = 1,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
                     keyboardController?.hide()
+                    focusManager.clearFocus()
                 }),
             )
         }

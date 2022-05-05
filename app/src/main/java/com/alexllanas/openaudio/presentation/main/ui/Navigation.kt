@@ -2,6 +2,8 @@ package com.alexllanas.openaudio.presentation.main.ui
 
 import android.os.Bundle
 import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -13,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
@@ -118,13 +121,23 @@ fun NavigationGraph(
             ForgotPasswordScreen(navHostController)
         }
         composable(NavItem.TrackOptions.screenRoute) {
-            TrackOptionsScreen(homeViewModel, navHostController, mainViewModel, NavItem.AddToPlaylist.screenRoute)
+            TrackOptionsScreen(
+                homeViewModel,
+                navHostController,
+                mainViewModel,
+                NavItem.AddToPlaylist.screenRoute
+            )
         }
         composable(NavItem.CreatePlaylist.screenRoute) {
             CreatePlaylistScreen(navHostController, mainViewModel)
         }
         composable(NavItem.AddToPlaylist.screenRoute) {
-            AddToPlaylistScreen(mainViewModel, homeViewModel, navHostController, NavItem.CreatePlaylist.screenRoute)
+            AddToPlaylistScreen(
+                mainViewModel,
+                homeViewModel,
+                navHostController,
+                NavItem.CreatePlaylist.screenRoute
+            )
         }
         composable(NavItem.Settings.screenRoute) {
 //            MediaScreen(mainViewModel) {
@@ -237,43 +250,55 @@ fun BottomNav(navController: NavController) {
         NavItem.Upload,
         NavItem.Profile
     )
-    BottomNavigation(
-        modifier = Modifier.alpha(0.97f),
-        backgroundColor = MaterialTheme.colors.background,
-        contentColor = Color.Black
-    ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-        items.forEach { item ->
-            BottomNavigationItem(
-                icon = {
-                    item.icon?.let {
-                        Icon(
-                            imageVector = it,
-                            contentDescription = item.title
-                        )
-                    }
-                },
-                label = { Text(text = item.title, fontSize = 9.sp) },
-                selectedContentColor = Color.Black,
-                unselectedContentColor = Color.Black.copy(0.4f),
-                alwaysShowLabel = true,
-                selected = currentRoute == item.screenRoute,
-                onClick = {
-                    Log.d(TAG, "BottomNav: ${navController.currentDestination}")
-                    navController.navigate(item.screenRoute) {
-                        navController.graph.startDestinationRoute?.let { screenRoute ->
-                            popUpTo(screenRoute) {
-                                saveState = true
-                            }
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
+    Box(
+        modifier = Modifier
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Transparent,
+                        Color.Black
+                    )
+                )
             )
+    ) {
+        BottomNavigation(
+            modifier = Modifier,
+            backgroundColor = Color.Transparent,
+        ) {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+            items.forEach { item ->
+                BottomNavigationItem(
+                    icon = {
+                        item.icon?.let {
+                            Icon(
+                                imageVector = it,
+                                contentDescription = item.title
+                            )
+                        }
+                    },
+                    label = { Text(text = item.title, fontSize = 9.sp) },
+                    selectedContentColor = MaterialTheme.colors.onSurface,
+                    unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.5f),
+                    alwaysShowLabel = true,
+                    selected = currentRoute == item.screenRoute,
+                    onClick = {
+                        Log.d(TAG, "BottomNav: ${navController.currentDestination}")
+                        navController.navigate(item.screenRoute) {
+                            navController.graph.startDestinationRoute?.let { screenRoute ->
+                                popUpTo(screenRoute) {
+                                    saveState = true
+                                }
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                )
+            }
         }
     }
+
 }
 
 class PlaylistUIModelType : NavType<PlaylistUIModel>(isNullableAllowed = false) {

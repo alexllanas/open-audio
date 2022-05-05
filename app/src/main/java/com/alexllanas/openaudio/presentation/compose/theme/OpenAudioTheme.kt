@@ -32,8 +32,7 @@ val darkColors = darkColors(
     onSurface = Color.White,
     onError = Color.Black,
 )
-//val heartIconTint = Color.Green
-val heartIconTint = Color(0xFF1DB954)
+
 
 @Composable
 fun OpenAudioTheme(content: @Composable () -> Unit) {
