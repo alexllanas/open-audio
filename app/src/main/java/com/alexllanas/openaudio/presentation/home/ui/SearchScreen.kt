@@ -122,14 +122,6 @@ fun SearchBar(
         title = { Text("Search") },
         backgroundColor = MaterialTheme.colors.background,
         elevation = 0.dp,
-//        navigationIcon = {
-//            IconButton(onClick = { navHostController.popBackStack() }) {
-//                Icon(
-//                    imageVector = Icons.Filled.ArrowBack,
-//                    contentDescription = stringResource(R.string.back_arrow)
-//                )
-//            }
-//        },
         actions = {
             OutlinedTextField(
                 modifier = Modifier
@@ -163,20 +155,12 @@ fun SearchBar(
                     }
                 } else null,
                 trailingIcon = {
-//                    if (!showClearButton) {
-//                        Icon(
-//                            imageVector = Icons.Filled.Search,
-//                            contentDescription = null
-//                        )
-//                    } else {
                     AnimatedVisibility(
                         visible = showClearButton,
                         enter = fadeIn(),
                         exit = fadeOut()
                     ) {
                         IconButton(onClick = {
-//                            query = ""
-//                            homeViewModel.dispatch(HomeAction.SearchAction(""))
                             keyboardController?.hide()
                             focusManager.clearFocus()
                         }) {
@@ -186,7 +170,6 @@ fun SearchBar(
                             )
                         }
                     }
-//                    }
                 },
                 maxLines = 1,
                 singleLine = true,
@@ -198,17 +181,14 @@ fun SearchBar(
             )
         }
     )
-
-
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
+//    LaunchedEffect(Unit) {
+//        focusRequester.requestFocus()
+//    }
 }
 
 
 @Composable
 fun NoSearchResults() {
-
     Column(
         modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
         horizontalAlignment = CenterHorizontally
