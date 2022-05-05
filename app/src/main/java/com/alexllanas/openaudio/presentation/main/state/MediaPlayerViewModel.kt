@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexllanas.core.domain.models.Track
+import com.alexllanas.core.interactors.home.HomeInteractors
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.home.state.*
@@ -18,6 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MediaPlayerViewModel @Inject constructor(
+    private val homeInteractors: HomeInteractors
 ) : ViewModel() {
     private val initialMainState: MediaPlayerState by lazy { MediaPlayerState() }
     var mediaPlayerState: StateFlow<MediaPlayerState>
@@ -83,7 +85,21 @@ class MediaPlayerViewModel @Inject constructor(
                     emit(SetVideoIdChange.Data(videoId))
                 }
             }
+        val executeToggleCurrentTrackLike: suspend (String, String) -> Flow<PartialStateChange<MediaPlayerState>> =
+            { trackId, sessionToken ->
+                homeInteractors.toggleLike(trackId, sessionToken)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { ToggleCurrentTrackLikeChange.Error(it) },
+                            ifRight = {
+                                ToggleCurrentTrackLikeChange.Data(it, trackId)
+                            }
+                        )
+                    }.onStart { ToggleLikeStreamTrackChange.Loading }
+            }
         return merge(
+            filterIsInstance<HomeAction.ToggleCurrentTrackLike>()
+                .flatMapConcat { executeToggleCurrentTrackLike(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.SetCurrentTrack>()
                 .flatMapConcat { executeSetCurrentTrack(it.track) },
             filterIsInstance<HomeAction.ClearMediaPlayerState>()

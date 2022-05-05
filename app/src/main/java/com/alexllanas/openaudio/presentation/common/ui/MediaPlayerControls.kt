@@ -15,11 +15,13 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentManager
@@ -83,15 +85,13 @@ fun MediaPlayerControls(
     Card(
         modifier = modifier.padding(8.dp).height(64.dp)
             .clickable {
-//                fragmentManager?.commit {
-//                    setReorderingAllowed(true)
-//                    add(R.id.nav_host_fragment, TrackDetailFragment())
-//                }
-                fragmentNavController.navigate(MainFragmentDirections.actionMainFragmentToTrackDetailFragment())
-                //        navController.navigate(AuthFragmentDirections.actionAuthFragmentToMainFragment())
+                mediaPlayerState.currentPlayingTrack?.let {
+                    fragmentNavController.navigate(MainFragmentDirections.actionMainFragmentToTrackDetailFragment())
+                }
             },
         shape = RoundedCornerShape(8.dp),
-        backgroundColor = MaterialTheme.colors.primary,
+//        backgroundColor = MaterialTheme.colors.primary,
+        backgroundColor = Color(0xFF2b0a38),
     ) {
         Row(modifier = Modifier.padding(8.dp)) {
             GlideImage(
@@ -109,6 +109,8 @@ fun MediaPlayerControls(
             )
             Text(
                 text = mediaPlayerState.currentPlayingTrack?.title ?: "Track Title",
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f).padding(start = 8.dp)
                     .align(Alignment.CenterVertically)
             )

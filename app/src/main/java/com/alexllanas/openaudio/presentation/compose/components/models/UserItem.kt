@@ -2,6 +2,7 @@ import android.graphics.drawable.Icon
 import android.util.Log
 import androidx.compose.animation.core.animate
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -44,18 +45,18 @@ fun UserItem(
     onFollowClick: (Boolean, User) -> Unit = { _: Boolean, _: User -> },
     isSelected: Boolean = false
 ) {
-    val background = if (isSelected)
-        Color.LightGray
-    else
-        MaterialTheme.colors.surface
+//    val background = if (isSelected)
+//        Color.LightGray
+//    else
+//        MaterialTheme.colors.surface
 
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
-            .padding(8.dp)
+//            .padding(8.dp)
             .fillMaxWidth()
             .then(modifier),
-        backgroundColor = background
+//        backgroundColor = Color.Red
     ) {
         ListItem(
             text = { Text(text = user?.name.toString(), maxLines = 1) },
@@ -105,6 +106,7 @@ fun UserItem(
                 }
             },
             modifier = Modifier
+                .background(color = MaterialTheme.colors.background)
                 .clickable { user?.let { onUserClick(it) } }
         )
     }

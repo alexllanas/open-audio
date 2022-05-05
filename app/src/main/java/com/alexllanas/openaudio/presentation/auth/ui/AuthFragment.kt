@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.SESSION_TOKEN
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
+import com.alexllanas.openaudio.presentation.compose.theme.OpenAudioTheme
 import com.alexllanas.openaudio.presentation.dataStore
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.MainFragment
@@ -43,11 +44,14 @@ class AuthFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 val navController = rememberNavController()
-                AuthNavigationGraph(
-                    navController,
-                    mainViewModel
-                ) {
-                    fragmentNavController?.navigate(AuthFragmentDirections.actionAuthFragmentToMainFragment())
+                OpenAudioTheme {
+                    AuthNavigationGraph(
+                        navController,
+                        mainViewModel
+                    ) {
+                        fragmentNavController?.navigate(R.id.mainFragment)
+//                        fragmentNavController?.navigate(AuthFragmentDirections.actionAuthFragmentToMainFragment())
+                    }
                 }
             }
         }

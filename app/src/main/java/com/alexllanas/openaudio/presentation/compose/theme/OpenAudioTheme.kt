@@ -1,22 +1,49 @@
-package com.alexllanas.openaudio.presentation.compose
+package com.alexllanas.openaudio.presentation.compose.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.lightColors
+import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
-val lightColors = lightColors(
-    primary = Color(0xFFE30425),
-    secondary = Color(0xFFE30425),
-    surface = Color(0xFF4E0D3A),
+val darkColors = darkColors(
+//    primary = Color.Gray,
+//    onPrimary = Color.White,
+//    secondary = Color.Red,
+//    surface = Color.DarkGray,
+//    onSurface = Color.White,
+//    primaryVariant = Color.Gray,
+//    onBackground = Color.Gray,
+//    background = Color.Black
+//    primary = Color(0xFFBB86FC),
+    primary = Color(0xFF121212),
+//    primaryVariant = Color(0xFF3700B3),
+    primaryVariant = Color(0xFF121212),
+    secondary = Color(0xFF03DAC6),
+    secondaryVariant = Color(0xFF03DAC6),
+    background = Color(0xFF121212),
+    surface = Color(0xFF121212),
+    error = Color(0xFFCF6679),
+    onPrimary = Color.White,
+    onSecondary = Color.Black,
+    onBackground = Color.White,
     onSurface = Color.White,
-    primaryVariant = Color(0xFF720D5D)
+    onError = Color.Black,
 )
+//val heartIconTint = Color.Green
+val heartIconTint = Color(0xFF1DB954)
 
 @Composable
 fun OpenAudioTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colors = lightColors) {
+    val systemUiController = rememberSystemUiController()
+//    if (isSystemInDarkTheme()) {
+    systemUiController.setStatusBarColor(color = Color.Transparent)
+    MaterialTheme(colors = darkColors) {
         content()
     }
+//    } else {
+//
+//    }
 }

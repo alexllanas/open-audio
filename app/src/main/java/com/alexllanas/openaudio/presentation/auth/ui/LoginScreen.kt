@@ -1,10 +1,5 @@
 package com.alexllanas.openaudio.presentation.auth.ui
 
-import android.app.Activity
-import android.content.Intent
-import android.util.Log
-import com.alexllanas.openaudio.R.drawable
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,30 +7,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.R.drawable
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.compose.components.BasicEmailField
 import com.alexllanas.openaudio.presentation.compose.components.BasicPasswordField
+import com.alexllanas.openaudio.presentation.compose.components.DefaultButton
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.util.isValidEmail
@@ -69,6 +58,7 @@ fun LoginScreen(
 
         Text(
             "Welcome Back!", style = MaterialTheme.typography.h4,
+            color = MaterialTheme.colors.onBackground,
             modifier = Modifier
                 .padding(top = 48.dp)
                 .fillMaxWidth()
@@ -93,7 +83,11 @@ fun LoginScreen(
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
-            label = { Text("email") },
+            label = {
+                Text(
+                    "email",
+                )
+            },
             isError = isEmailError
         )
         BasicPasswordField(
@@ -113,6 +107,7 @@ fun LoginScreen(
 
             )
         Text(text = "Forgot password",
+            color = MaterialTheme.colors.onBackground,
             style = MaterialTheme.typography.body1,
             modifier = Modifier
                 .padding(top = 32.dp)
@@ -124,7 +119,39 @@ fun LoginScreen(
                     start.linkTo(parent.start)
                 }
         )
-        Button(onClick = {
+//        Button(onClick = {
+//            isEmailError = !email.isValidEmail()
+//
+//            if (!isEmailError) {
+//                mainViewModel.dispatch(
+//                    AuthAction.Login.LoginAction(
+//                        email.trim(),
+//                        password.trim()
+//                    )
+//                )
+//            }
+//        },
+//            modifier = Modifier
+//                .fillMaxWidth(.75f)
+//                .padding(top = 32.dp)
+//                .constrainAs(loginButton) {
+//                    top.linkTo(forgotText.bottom)
+//                    start.linkTo(parent.start)
+//                    end.linkTo(parent.end)
+//                }) {
+//            Text(stringResource(R.string.login))
+//        }
+        DefaultButton(
+            stringResource = R.string.login,
+            modifier = Modifier
+                .fillMaxWidth(.75f)
+                .padding(top = 32.dp)
+                .constrainAs(loginButton) {
+                    top.linkTo(forgotText.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+        ) {
             isEmailError = !email.isValidEmail()
 
             if (!isEmailError) {
@@ -134,20 +161,8 @@ fun LoginScreen(
                         password.trim()
                     )
                 )
-//                navController.navigate(NavItem.Stream.screenRoute)
             }
-        },
-            modifier = Modifier
-                .fillMaxWidth(.75f)
-                .padding(top = 32.dp)
-                .constrainAs(loginButton) {
-                    top.linkTo(forgotText.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }) {
-            Text(stringResource(R.string.login))
         }
-
         Image(
             painter = painterResource(drawable.facebook_icon),
             contentDescription = stringResource(R.string.facebook_login_button),

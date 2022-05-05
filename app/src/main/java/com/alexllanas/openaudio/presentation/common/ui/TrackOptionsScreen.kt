@@ -1,6 +1,7 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.compose.theme.heartIconTint
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
@@ -39,16 +41,22 @@ import com.skydoves.landscapist.glide.GlideImage
 fun TrackOptionsScreen(
     homeViewModel: HomeViewModel,
     navHostController: NavHostController,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    addToPlaylistRoute: String,
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
     val context = LocalContext.current
 
-    ConstraintLayout(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    ConstraintLayout(
+        modifier = Modifier
+            .background(MaterialTheme.colors.background)
+            .fillMaxSize().padding(16.dp)
+    ) {
         val (closeIcon, image, title, optionsMenu) = createRefs()
 
         Icon(
-            imageVector = Icons.Default.Close, contentDescription = stringResource(R.string.close),
+            imageVector = Icons.Default.Close,
+            contentDescription = stringResource(R.string.close),
             Modifier
                 .clickable { navHostController.popBackStack() }
                 .constrainAs(closeIcon) {
@@ -84,7 +92,7 @@ fun TrackOptionsScreen(
         OptionsMenu(modifier = Modifier.padding(8.dp).constrainAs(optionsMenu) {
             top.linkTo(title.bottom)
             start.linkTo(parent.start)
-        }, navHostController, homeViewModel, mainViewModel, context)
+        }, navHostController, homeViewModel, mainViewModel, addToPlaylistRoute, context)
     }
 }
 
@@ -94,6 +102,7 @@ fun OptionsMenu(
     navHostController: NavHostController,
     homeViewModel: HomeViewModel,
     mainViewModel: MainViewModel,
+    addToPlaylistRoute: String,
     context: Context
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
@@ -120,11 +129,13 @@ fun OptionsMenu(
             if (homeState.selectedTrack?.liked == true) {
                 Icon(
                     imageVector = Icons.Default.Favorite,
+                    tint = heartIconTint,
                     contentDescription = stringResource(R.string.unfavorite)
                 )
             } else {
                 Icon(
                     imageVector = Icons.Default.FavoriteBorder,
+                    tint = heartIconTint,
                     contentDescription = stringResource(R.string.favorite)
                 )
             }
@@ -137,7 +148,7 @@ fun OptionsMenu(
         Row(modifier = Modifier
             .fillMaxWidth()
             .clickable(interactionSource = interactionSource, indication = null) {
-                navHostController.navigate("add_to_playlist")
+                navHostController.navigate(addToPlaylistRoute)
             }
             .padding(bottom = 24.dp)) {
             Icon(

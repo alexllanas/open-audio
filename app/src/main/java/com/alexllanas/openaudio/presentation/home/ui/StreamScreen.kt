@@ -77,7 +77,8 @@ fun StreamScreen(
                     },
                     mainState = mainState,
                     mainViewModel = mainViewModel,
-                    playerViewModel = playerViewModel
+                    playerViewModel = playerViewModel,
+                    homeViewModel = homeViewModel
                 )
             }
 

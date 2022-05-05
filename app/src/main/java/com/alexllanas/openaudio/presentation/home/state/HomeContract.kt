@@ -47,6 +47,11 @@ sealed class HomeAction : Action() {
         val sessionToken: String,
     ) : HomeAction()
 
+    data class ToggleCurrentTrackLike(
+        val trackId: String,
+        val sessionToken: String,
+    ) : HomeAction()
+
     data class FollowUser(
         val user: User,
         val sessionToken: String
@@ -208,6 +213,32 @@ sealed class TogglePlaylistTrackLikeChange : PartialStateChange<HomeState> {
     data class Data(val post: Post, val trackId: String) : TogglePlaylistTrackLikeChange()
     data class Error(val throwable: Throwable) : TogglePlaylistTrackLikeChange()
     object Loading : TogglePlaylistTrackLikeChange()
+}
+
+sealed class ToggleCurrentTrackLikeChange : PartialStateChange<MediaPlayerState> {
+    override fun reduce(state: MediaPlayerState): MediaPlayerState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    currentPlayingTrack = state.currentPlayingTrack?.copy(liked = post.loved),
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            is Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val post: Post, val trackId: String) : ToggleCurrentTrackLikeChange()
+    data class Error(val throwable: Throwable) : ToggleCurrentTrackLikeChange()
+    object Loading : ToggleCurrentTrackLikeChange()
 }
 
 sealed class ToggleTrackOptionsLikeChange : PartialStateChange<HomeState> {

@@ -46,6 +46,9 @@ fun BasicInputField(
             }
         ),
         singleLine = true,
-        colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.background),
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = MaterialTheme.colors.onSurface,
+            backgroundColor = MaterialTheme.colors.surface
+        ),
     )
 }

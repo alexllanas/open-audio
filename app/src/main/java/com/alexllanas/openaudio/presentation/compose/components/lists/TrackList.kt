@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.alexllanas.core.domain.models.Track
+import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
@@ -21,6 +22,7 @@ fun TrackList(
     tracks: TrackUIList,
     mainState: MainState,
     mainViewModel: MainViewModel,
+    homeViewModel: HomeViewModel,
     playerViewModel: MediaPlayerViewModel,
     onTrackClick: (TrackUIModel) -> Unit = {},
     onHeartClick: (TrackUIModel) -> Unit = { },
@@ -46,7 +48,8 @@ fun TrackList(
                         onMoreClick = onMoreClick,
                         mainState = mainState,
                         mainViewModel = mainViewModel,
-                        playerViewModel = playerViewModel
+                        playerViewModel = playerViewModel,
+                        homeViewModel = homeViewModel
                     )
                     if (tracks.tracks.last() == track)
                         Spacer(Modifier.height(144.dp))

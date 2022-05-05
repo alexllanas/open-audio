@@ -1,7 +1,10 @@
 package com.alexllanas.openaudio.presentation.auth.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.SnackbarDefaults.backgroundColor
@@ -12,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.compose.components.DefaultButton
 import com.alexllanas.openaudio.presentation.compose.theme.FacebookBlue
 import com.alexllanas.openaudio.presentation.util.ColorUtil
 
@@ -27,6 +32,7 @@ fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
         val (heading, subHeading, signUpEmailButton, loginButton) = createRefs()
         Text(
             text = "OpenAudio",
+            color = colors.onBackground,
             style = MaterialTheme.typography.h2,
             modifier = Modifier
                 .padding(top = 200.dp)
@@ -39,16 +45,15 @@ fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
         )
         Text(text = "MUSIC BY MUSIC LOVERS",
             style = MaterialTheme.typography.subtitle1,
+            color = colors.onBackground,
             modifier = Modifier
                 .constrainAs(subHeading) {
                     top.linkTo(heading.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 })
-        Button(onClick = { onEmailClick() },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.LightGray
-            ),
+        DefaultButton(
+            stringResource = R.string.sign_up_with_email,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
@@ -56,14 +61,12 @@ fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
                     bottom.linkTo(loginButton.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                }) {
-            Text("SIGN UP WITH EMAIL")
+                }
+        ) {
+            onEmailClick()
         }
-        Button(
-            onClick = { onLoginClick() },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.LightGray
-            ),
+        DefaultButton(
+            stringResource = R.string.login_caps,
             modifier = Modifier
                 .padding(top = 16.dp, bottom = 64.dp)
                 .height(48.dp)
@@ -74,7 +77,8 @@ fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
                     end.linkTo(parent.end)
                 }
         ) {
-            Text("LOGIN")
+            onLoginClick()
         }
     }
 }
+

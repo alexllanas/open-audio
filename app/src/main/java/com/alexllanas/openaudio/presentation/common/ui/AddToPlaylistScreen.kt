@@ -22,12 +22,13 @@ import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 
 @Composable
 fun AddToPlaylistScreen(
-    mainState: MainState,
     mainViewModel: MainViewModel,
     homeViewModel: HomeViewModel,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    createPlaylistRoute: String
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
+    val mainState by mainViewModel.mainState.collectAsState()
     val context = LocalContext.current
     Scaffold(
         topBar = { TitleBackBar("Add to playlist") { navHostController.popBackStack() } }
@@ -39,7 +40,7 @@ fun AddToPlaylistScreen(
                     .padding(vertical = 16.dp)
             ) {
                 Button(onClick = {
-                    navHostController.navigate("create_playlist")
+                    navHostController.navigate(createPlaylistRoute)
                 }) {
                     Text(text = "New Playlist")
                 }
@@ -48,7 +49,6 @@ fun AddToPlaylistScreen(
                 playlists = mainState.loggedInUser?.playlists ?: emptyList(),
                 false
             ) { playlist ->
-//            PlaylistList(playlists = mainState.userPlaylists, false) { playlist ->
                 playlist.id?.let { id ->
                     playlist.name?.let { name ->
                         homeState.selectedTrack?.let { track ->

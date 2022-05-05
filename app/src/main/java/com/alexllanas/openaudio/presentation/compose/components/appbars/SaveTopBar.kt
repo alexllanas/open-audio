@@ -28,7 +28,8 @@ fun SaveTopBar(
     onActionClick: () -> Unit = {},
 ) {
     ConstraintLayout(
-        Modifier.fillMaxWidth().height(height = 56.dp).background(MaterialTheme.colors.primary)
+        Modifier.fillMaxWidth().height(height = 56.dp)
+//            .background(MaterialTheme.colors.primary)
     ) {
         val (saveText, title, gearIcon) = createRefs()
         val interactionSource = remember { MutableInteractionSource() }

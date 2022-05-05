@@ -9,5 +9,7 @@ data class MediaPlayerState(
     val videoId: String = "",
     val isPlaying: Boolean = false,
     val tracker: YouTubePlayerTracker? = null,
-    val youTubePlayer: YouTubePlayer? = null
+    val youTubePlayer: YouTubePlayer? = null,
+    val isLoading: Boolean = false,
+    val error: Throwable? = null
 )

@@ -1,9 +1,8 @@
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -11,6 +10,9 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,9 +22,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.compose.theme.heartIconTint
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
+import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
@@ -36,6 +41,7 @@ fun TrackItem(
     modifier: Modifier = Modifier,
     mainState: MainState,
     mainViewModel: MainViewModel,
+    homeViewModel: HomeViewModel,
     playerViewModel: MediaPlayerViewModel,
     track: TrackUIModel?,
     onTrackClick: (TrackUIModel) -> Unit = {},
@@ -44,6 +50,7 @@ fun TrackItem(
     isSelected: Boolean = false
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val interactionSource = remember { MutableInteractionSource() }
     val focusManager = LocalFocusManager.current
     val background = if (isSelected)
         Color.LightGray
@@ -52,26 +59,31 @@ fun TrackItem(
 
     Card(
         shape = RoundedCornerShape(4.dp),
+        elevation = 0.dp,
         modifier = Modifier
-            .padding(8.dp)
+//            .padding(8.dp)
             .fillMaxWidth()
             .then(modifier),
-        backgroundColor = background
+//        backgroundColor = background
     ) {
         val likesQualifier =
             if (track?.userLikeIds?.size == 1) " person likes this track" else " people like this track"
         ListItem(
-            text = { Text(text = track?.title.toString(), maxLines = 1) },
-            secondaryText = { Text(text = track?.userLikeIds?.size.toString() + likesQualifier) },
-            icon = {
-                GlideImage(
-                    modifier = modifier.size(50.dp),
-                    imageModel = track?.image,
-                    contentScale = ContentScale.Crop,
-                    placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
-                    error = ImageBitmap.imageResource(R.drawable.blank_user)
+            text = {
+                Text(
+                    text = track?.title.toString(), maxLines = 1, overflow = TextOverflow.Ellipsis,
                 )
             },
+            secondaryText = { Text(text = track?.userLikeIds?.size.toString() + likesQualifier) },
+//            icon = {
+//                GlideImage(
+//                    modifier = modifier.size(50.dp),
+//                    imageModel = track?.image,
+//                    contentScale = ContentScale.Crop,
+//                    placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
+//                    error = ImageBitmap.imageResource(R.drawable.blank_user)
+//                )
+//            },
             trailing = {
                 Row {
                     track?.toDomain()?.let {
@@ -80,17 +92,18 @@ fun TrackItem(
                         }
                         if (track.liked) {
                             Icon(
-                                Icons.Filled.Favorite,
+                                imageVector = Icons.Filled.Favorite,
+                                tint = heartIconTint,
                                 contentDescription = stringResource(R.string.favorite),
-                                Modifier.clickable { onHeartClick(track) }
+                                modifier = Modifier.clickable { onHeartClick(track) }
                             )
                         } else {
                             Icon(
-                                Icons.Outlined.FavoriteBorder,
+                                imageVector = Icons.Outlined.FavoriteBorder,
+                                tint = heartIconTint,
                                 contentDescription = stringResource(R.string.unfavorite),
-                                Modifier.clickable { onHeartClick(track) }
+                                modifier = Modifier.clickable { onHeartClick(track) }
                             )
-
                         }
                     }
                     Icon(
@@ -103,9 +116,11 @@ fun TrackItem(
                 }
             },
             modifier = Modifier
-                .clickable {
-                    track?.let {
+                .background(color = MaterialTheme.colors.background)
+                .clickable(interactionSource = interactionSource, indication = null) {
+                track?.let {
                         playerViewModel.dispatch(HomeAction.SetCurrentTrack(it.toDomain()))
+                        homeViewModel.dispatch(HomeAction.SelectTrack(it.toDomain()))
                         it.mediaUrl?.let { videoId ->
                             playerViewModel.dispatch(HomeAction.SetVideoId(videoId))
                         }
@@ -117,3 +132,46 @@ fun TrackItem(
     }
 }
 
+@Composable
+fun TrackListItem(
+    track: TrackUIModel?,
+    mainState: MainState,
+    onHeartClick: (TrackUIModel) -> Unit,
+    onMoreClick: (TrackUIModel) -> Unit
+) {
+    val likesQualifier =
+        if (track?.userLikeIds?.size == 1) " person likes this track" else " people like this track"
+    Row(horizontalArrangement = Arrangement.SpaceBetween) {
+        Column {
+            Text(text = track?.title.toString(), maxLines = 1)
+            Text(text = track?.userLikeIds?.size.toString() + likesQualifier)
+        }
+        Row {
+            track?.toDomain()?.let {
+                if (track.userLikeIds.contains(mainState.loggedInUser?.id)) {
+                    track.liked = true
+                }
+                if (track.liked) {
+                    Icon(
+                        Icons.Filled.Favorite,
+                        contentDescription = stringResource(R.string.favorite),
+                        Modifier.clickable { onHeartClick(track) }
+                    )
+                } else {
+                    Icon(
+                        Icons.Outlined.FavoriteBorder,
+                        contentDescription = stringResource(R.string.unfavorite),
+                        Modifier.clickable { onHeartClick(track) }
+                    )
+                }
+            }
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = null,
+                modifier = Modifier
+                    .clickable { track?.let { onMoreClick(it) } }
+                    .padding(start = 4.dp)
+            )
+        }
+    }
+}

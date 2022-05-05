@@ -87,7 +87,8 @@ fun PlaylistDetailScreen(
                     },
                     mainState = mainState,
                     mainViewModel = mainViewModel,
-                    playerViewModel = playerViewModel
+                    playerViewModel = playerViewModel,
+                    homeViewModel = homeViewModel
                 )
             }
         } ?: LoadingIndicator()

@@ -118,13 +118,13 @@ fun NavigationGraph(
             ForgotPasswordScreen(navHostController)
         }
         composable(NavItem.TrackOptions.screenRoute) {
-            TrackOptionsScreen(homeViewModel, navHostController, mainViewModel)
+            TrackOptionsScreen(homeViewModel, navHostController, mainViewModel, NavItem.AddToPlaylist.screenRoute)
         }
         composable(NavItem.CreatePlaylist.screenRoute) {
             CreatePlaylistScreen(navHostController, mainViewModel)
         }
         composable(NavItem.AddToPlaylist.screenRoute) {
-            AddToPlaylistScreen(mainState, mainViewModel, homeViewModel, navHostController)
+            AddToPlaylistScreen(mainViewModel, homeViewModel, navHostController, NavItem.CreatePlaylist.screenRoute)
         }
         composable(NavItem.Settings.screenRoute) {
 //            MediaScreen(mainViewModel) {

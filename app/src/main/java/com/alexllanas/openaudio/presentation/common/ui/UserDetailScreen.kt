@@ -56,7 +56,8 @@ fun UserDetailScreen(
     homeViewModel.clearSelectedPlaylist()
     Scaffold(topBar = {
         ConstraintLayout(
-            Modifier.fillMaxWidth().height(height = 56.dp).background(MaterialTheme.colors.primary)
+            Modifier.fillMaxWidth().height(height = 56.dp)
+//                .background(MaterialTheme.colors.primary)
         ) {
             val (addIcon) = createRefs()
             if (isCurrentUser) {
@@ -176,7 +177,6 @@ fun UserHeader(
                     userUIModel.avatarUrl,
                     StandardCharsets.UTF_8.toString()
                 ),
-//                    )
                 contentDescription = null,
                 placeholder = painterResource(R.drawable.blank_user),
                 error = painterResource(R.drawable.blank_user),

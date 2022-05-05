@@ -1,6 +1,7 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
@@ -25,7 +26,7 @@ fun CreatePlaylistScreen(navHostController: NavHostController, mainViewModel: Ma
     var playlistName by remember { mutableStateOf("") }
     val mainState by mainViewModel.mainState.collectAsState()
 
-    ConstraintLayout(Modifier.fillMaxSize().padding(16.dp)) {
+    ConstraintLayout(Modifier.background(MaterialTheme.colors.background).fillMaxSize().padding(16.dp)) {
         val (promptText, playlistNameInputField, cancelOption, skipOption) = createRefs()
         Text(
             text = stringResource(R.string.give_playlist_name),

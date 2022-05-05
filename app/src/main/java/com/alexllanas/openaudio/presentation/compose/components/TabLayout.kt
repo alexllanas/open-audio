@@ -85,7 +85,8 @@ fun SearchResultTabLayout(
                         }
                     },
                     mainViewModel = mainViewModel,
-                    playerViewModel = playerViewModel
+                    playerViewModel = playerViewModel,
+                    homeViewModel = homeViewModel
                 )
             }
         }

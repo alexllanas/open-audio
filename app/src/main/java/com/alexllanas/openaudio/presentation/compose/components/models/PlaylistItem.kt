@@ -1,4 +1,5 @@
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,18 +32,18 @@ fun PlaylistItem(
     isSelected: Boolean = false,
     countVisible: Boolean
 ) {
-    val background = if (isSelected)
-        Color.LightGray
-    else
-        MaterialTheme.colors.surface
+//    val background = if (isSelected)
+//        Color.LightGray
+//    else
+//        MaterialTheme.colors.surface
 
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
-            .padding(8.dp)
+//            .padding(8.dp)
             .fillMaxWidth()
             .then(modifier),
-        backgroundColor = background
+//        backgroundColor = background
     ) {
         ListItem(
             text = { Text(text = playlist?.name.toString(), maxLines = 1) },
@@ -53,16 +54,17 @@ fun PlaylistItem(
                     }
                 }
             },
-            icon = {
-                GlideImage(
-                    modifier = modifier.size(50.dp),
-                    imageModel = playlist?.coverImage,
-                    contentScale = ContentScale.Crop,
-                    placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
-                    error = ImageBitmap.imageResource(R.drawable.blank_user)
-                )
-            },
+//            icon = {
+//                GlideImage(
+//                    modifier = modifier.size(50.dp),
+//                    imageModel = playlist?.coverImage,
+//                    contentScale = ContentScale.Crop,
+//                    placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
+//                    error = ImageBitmap.imageResource(R.drawable.blank_user)
+//                )
+//            },
             modifier = Modifier
+                .background(color = MaterialTheme.colors.background)
                 .clickable {
                     playlist?.let {
                         Log.d(TAG, "PlaylistItem: ${it.coverImage}")

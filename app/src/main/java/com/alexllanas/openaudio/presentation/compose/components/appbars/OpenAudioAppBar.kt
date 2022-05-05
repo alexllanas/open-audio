@@ -27,7 +27,8 @@ fun OpenAudioAppBar(
     onActionClick: () -> Unit = {},
 ) {
     ConstraintLayout(
-        Modifier.fillMaxWidth().height(height = 56.dp).background(MaterialTheme.colors.primary)
+        Modifier.fillMaxWidth().height(height = 56.dp)
+//            .background(MaterialTheme.colors.primary)
     ) {
         val (navIcon, title, actionIcn) = createRefs()
         Icon(

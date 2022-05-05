@@ -19,7 +19,6 @@ import com.alexllanas.core.util.Constants.Companion.CHANNEL_ID
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.NotificationBroadcastReceiver
 import com.alexllanas.openaudio.presentation.auth.ui.AuthFragment
-import com.alexllanas.openaudio.presentation.auth.ui.AuthFragmentDirections
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
@@ -61,7 +60,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
+    override fun onBackPressed() {
+        moveTaskToBack(false)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
