@@ -41,13 +41,10 @@ import com.alexllanas.openaudio.presentation.main.ui.MainFragment
 import com.alexllanas.openaudio.presentation.main.ui.MainFragmentDirections
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import com.skydoves.landscapist.glide.GlideImage
-import kotlinx.coroutines.runBlocking
 
 private val youTubePlayerTracker = YouTubePlayerTracker()
 
@@ -69,26 +66,25 @@ fun MediaPlayerControls(
         isPlaying = it
     }
 
-    val youTubePlayerView = YouTubePlayerView(LocalContext.current)
-
-    youTubePlayerView.enableBackgroundPlayback(true)
-
-    mediaPlayerState.videoId.let {
-        if (videoId != it) {
-            youTubePlayerView.getYouTubePlayerWhenReady(object :
-                YouTubePlayerCallback {
-                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                    if (it.startsWith("/yt/")) {
-                        mediaPlayerViewModel.dispatch(HomeAction.SetYoutubePlayer(youTubePlayer))
-                        youTubePlayer.loadVideo(it.removePrefix("/yt/"), 0f)
-                        isPlaying = true
-                        mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(isPlaying))
-                    }
-                }
-            })
-            videoId = it
-        }
-    }
+//    val youTubePlayerView = YouTubePlayerView(LocalContext.current)
+//    youTubePlayerView.enableBackgroundPlayback(true)
+//
+//    mediaPlayerState.videoId.let {
+//        if (videoId != it) {
+//            youTubePlayerView.getYouTubePlayerWhenReady(object :
+//                YouTubePlayerCallback {
+//                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+//                    if (it.startsWith("/yt/")) {
+//                        mediaPlayerViewModel.dispatch(HomeAction.SetYoutubePlayer(youTubePlayer))
+//                        youTubePlayer.loadVideo(it.removePrefix("/yt/"), 0f)
+//                        isPlaying = true
+//                        mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(isPlaying))
+//                    }
+//                }
+//            })
+//            videoId = it
+//        }
+//    }
 
     mediaPlayerState.currentPlayingTrack?.let {
         Card(
@@ -109,12 +105,12 @@ fun MediaPlayerControls(
                     placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
                     error = ImageBitmap.imageResource(R.drawable.blank_user)
                 )
-                AndroidView(
-                    factory = {
-                        youTubePlayerView
-                    },
-                    modifier = Modifier.size(0.dp)
-                )
+//                AndroidView(
+//                    factory = {
+//                        youTubePlayerView
+//                    },
+//                    modifier = Modifier.size(0.dp)
+//                )
                 Text(
                     text = mediaPlayerState.currentPlayingTrack?.title ?: "Track Title",
                     maxLines = 1,

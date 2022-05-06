@@ -10,6 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.commit
@@ -19,10 +24,14 @@ import com.alexllanas.core.util.Constants.Companion.CHANNEL_ID
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.NotificationBroadcastReceiver
 import com.alexllanas.openaudio.presentation.auth.ui.AuthFragment
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.bumptech.glide.Glide
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,14 +40,18 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     val mainViewModel: MainViewModel by viewModels()
     val mediaPlayerViewModel: MediaPlayerViewModel by viewModels()
+    var isPlaying = false
+    private var videoId = ""
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val ytView = findViewById<YouTubePlayerView>(R.id.youtube_view)
 
         val notificationManager = NotificationManagerCompat.from(this)
 
+        ytView.enableBackgroundPlayback(true)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -53,6 +66,30 @@ class MainActivity : AppCompatActivity() {
             mediaPlayerViewModel.mediaPlayerState.collect { state ->
                 state.currentPlayingTrack?.let { _ ->
                     showNotification(state, notificationManager)
+                    state.videoId.let {
+                        if (videoId != it) {
+                            ytView.getYouTubePlayerWhenReady(object :
+                                YouTubePlayerCallback {
+                                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                                    if (it.startsWith("/yt/")) {
+                                        mediaPlayerViewModel.dispatch(
+                                            HomeAction.SetYoutubePlayer(
+                                                youTubePlayer
+                                            )
+                                        )
+                                        youTubePlayer.loadVideo(it.removePrefix("/yt/"), 0f)
+                                        isPlaying = true
+                                        mediaPlayerViewModel.dispatch(
+                                            HomeAction.SetIsPlaying(
+                                                isPlaying
+                                            )
+                                        )
+                                    }
+                                }
+                            })
+                            videoId = it
+                        }
+                    }
                 }
             }
         }

@@ -151,7 +151,6 @@ fun TrackDetailScreen(
                     SeekBar(modifier = Modifier.padding(top = 64.dp))
                     MediaControlPanel(
                         modifier = Modifier
-                            .padding(top = 0.dp)
                             .fillMaxWidth(),
                         mediaPlayerViewModel = mediaPlayerViewModel
                     )
