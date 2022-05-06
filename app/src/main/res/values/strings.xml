@@ -36,4 +36,6 @@
     <string name="email">email</string>
     <string name="valid_email">Please enter a valid email</string>
     <string name="track_image">track image</string>
+    <string name="previous">previous</string>
+    <string name="next">next</string>
 </resources>

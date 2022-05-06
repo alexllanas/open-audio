@@ -39,10 +39,6 @@ class MainActivity : AppCompatActivity() {
 
         val notificationManager = NotificationManagerCompat.from(this)
 
-//        supportFragmentManager.commit {
-//            setReorderingAllowed(true)
-//            add(R.id.nav_host_fragment, AuthFragment())
-//        }
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment

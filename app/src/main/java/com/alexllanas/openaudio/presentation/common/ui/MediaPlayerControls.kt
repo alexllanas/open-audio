@@ -2,10 +2,12 @@ package com.alexllanas.openaudio.presentation.common.ui
 
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -39,10 +41,13 @@ import com.alexllanas.openaudio.presentation.main.ui.MainFragment
 import com.alexllanas.openaudio.presentation.main.ui.MainFragmentDirections
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import com.skydoves.landscapist.glide.GlideImage
+import kotlinx.coroutines.runBlocking
 
 private val youTubePlayerTracker = YouTubePlayerTracker()
 
@@ -56,6 +61,7 @@ fun MediaPlayerControls(
     fragmentNavController: NavController
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
+//    val textScroll = rememberScrollState(0)
     val mediaPlayerState by mediaPlayerViewModel.mediaPlayerState.collectAsState()
     var isPlaying by rememberSaveable { mutableStateOf(false) }
     var videoId by rememberSaveable { mutableStateOf("") }
@@ -64,6 +70,7 @@ fun MediaPlayerControls(
     }
 
     val youTubePlayerView = YouTubePlayerView(LocalContext.current)
+
     youTubePlayerView.enableBackgroundPlayback(true)
 
     mediaPlayerState.videoId.let {
@@ -110,10 +117,13 @@ fun MediaPlayerControls(
                 )
                 Text(
                     text = mediaPlayerState.currentPlayingTrack?.title ?: "Track Title",
-                    maxLines = 2,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f).padding(start = 8.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp)
                         .align(Alignment.CenterVertically)
+//                        .horizontalScroll(textScroll)
                 )
                 Icon(
                     modifier = Modifier

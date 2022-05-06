@@ -2,14 +2,9 @@ package com.alexllanas.openaudio.presentation.home.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -19,11 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.compose.PlayBackButton
+import com.alexllanas.openaudio.presentation.compose.components.MediaControlPanel
+import com.alexllanas.openaudio.presentation.compose.components.SeekBar
 import com.alexllanas.openaudio.presentation.compose.theme.GreenTint
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
@@ -71,12 +72,14 @@ fun TrackDetailScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             mediaPlayerState.currentPlayingTrack?.let { track ->
                 AsyncImage(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(top = 64.dp)
+                        .weight(1f, true),
                     model =
                     URLDecoder.decode(
                         track.image,
@@ -85,60 +88,73 @@ fun TrackDetailScreen(
                     contentDescription = stringResource(R.string.track_image),
                     placeholder = painterResource(R.drawable.blank_user),
                     error = painterResource(R.drawable.blank_user),
-                    contentScale = ContentScale.FillWidth
+                    contentScale = ContentScale.FillHeight
                 )
-                Row(
-                    modifier = Modifier.padding(top = 48.dp).fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                Column(
+                    modifier = Modifier
+                        .padding(top = 48.dp)
+                        .weight(2f, true),
                 ) {
-                    Text(
-                        modifier = Modifier,
-                        text = "${track.title}",
-                        style = MaterialTheme.typography.subtitle1
-                    )
-                    mainState.loggedInUser?.let { user ->
-                        if (track.userLikeIds.contains(user.id)) {
-                            track.liked = true
-                        }
-                        if (track.liked) {
-                            Icon(
-                                imageVector = Icons.Filled.Favorite,
-                                tint = GreenTint,
-                                contentDescription = stringResource(R.string.favorite),
-                                modifier = Modifier.clickable {
-                                    track.id?.let { trackId ->
-                                        mainState.sessionToken?.let { token ->
-                                            mediaPlayerViewModel.dispatch(
-                                                HomeAction.ToggleCurrentTrackLike(
-                                                    trackId = trackId,
-                                                    sessionToken = token
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = "${track.title}",
+                            style = MaterialTheme.typography.h5,
+                            fontWeight = Bold
+                        )
+                        mainState.loggedInUser?.let { user ->
+                            if (track.userLikeIds.contains(user.id)) {
+                                track.liked = true
+                            }
+                            if (track.liked) {
+                                Icon(
+                                    imageVector = Icons.Filled.Favorite,
+                                    tint = GreenTint,
+                                    contentDescription = stringResource(R.string.favorite),
+                                    modifier = Modifier.clickable {
+                                        track.id?.let { trackId ->
+                                            mainState.sessionToken?.let { token ->
+                                                mediaPlayerViewModel.dispatch(
+                                                    HomeAction.ToggleCurrentTrackLike(
+                                                        trackId = trackId,
+                                                        sessionToken = token
+                                                    )
                                                 )
-                                            )
+                                            }
                                         }
                                     }
-                                }
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Outlined.FavoriteBorder,
-                                tint = MaterialTheme.colors.onBackground,
-                                contentDescription = stringResource(R.string.unfavorite),
-                                modifier = Modifier.clickable {
-                                    track.id?.let { trackId ->
-                                        mainState.sessionToken?.let { token ->
-                                            mediaPlayerViewModel.dispatch(
-                                                HomeAction.ToggleCurrentTrackLike(
-                                                    trackId = trackId,
-                                                    sessionToken = token
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.FavoriteBorder,
+                                    tint = MaterialTheme.colors.onBackground,
+                                    contentDescription = stringResource(R.string.unfavorite),
+                                    modifier = Modifier.clickable {
+                                        track.id?.let { trackId ->
+                                            mainState.sessionToken?.let { token ->
+                                                mediaPlayerViewModel.dispatch(
+                                                    HomeAction.ToggleCurrentTrackLike(
+                                                        trackId = trackId,
+                                                        sessionToken = token
+                                                    )
                                                 )
-                                            )
+                                            }
                                         }
                                     }
-                                }
-                            )
+                                )
+                            }
                         }
                     }
+                    SeekBar(modifier = Modifier.padding(top = 64.dp))
+                    MediaControlPanel(
+                        modifier = Modifier
+                            .padding(top = 0.dp)
+                            .fillMaxWidth(),
+                        mediaPlayerViewModel = mediaPlayerViewModel
+                    )
                 }
             }
         }

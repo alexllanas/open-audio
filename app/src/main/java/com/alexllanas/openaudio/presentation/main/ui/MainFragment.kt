@@ -32,6 +32,7 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        onBackPressed()
 
         val fragmentNavController = activity?.findNavController(R.id.nav_host_fragment)
 
@@ -54,4 +55,11 @@ class MainFragment : Fragment() {
         }
     }
 
+    private fun onBackPressed() {
+        activity?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                activity?.moveTaskToBack(false)
+            }
+        })
+    }
 }
