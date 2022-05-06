@@ -45,18 +45,11 @@ fun UserItem(
     onFollowClick: (Boolean, User) -> Unit = { _: Boolean, _: User -> },
     isSelected: Boolean = false
 ) {
-//    val background = if (isSelected)
-//        Color.LightGray
-//    else
-//        MaterialTheme.colors.surface
-
     Card(
-        shape = RoundedCornerShape(4.dp),
         modifier = Modifier
-//            .padding(8.dp)
             .fillMaxWidth()
             .then(modifier),
-//        backgroundColor = Color.Red
+        elevation = 0.dp
     ) {
         ListItem(
             text = { Text(text = user?.name.toString(), maxLines = 1) },

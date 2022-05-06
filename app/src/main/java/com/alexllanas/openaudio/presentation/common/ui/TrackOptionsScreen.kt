@@ -3,7 +3,6 @@ package com.alexllanas.openaudio.presentation.common.ui
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -30,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
-import com.alexllanas.openaudio.presentation.compose.theme.heartIconTint
+import com.alexllanas.openaudio.presentation.compose.theme.GreenTint
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
@@ -129,13 +128,13 @@ fun OptionsMenu(
             if (homeState.selectedTrack?.liked == true) {
                 Icon(
                     imageVector = Icons.Default.Favorite,
-                    tint = heartIconTint,
+                    tint = GreenTint,
                     contentDescription = stringResource(R.string.unfavorite)
                 )
             } else {
                 Icon(
                     imageVector = Icons.Default.FavoriteBorder,
-                    tint = heartIconTint,
+                    tint = MaterialTheme.colors.onBackground,
                     contentDescription = stringResource(R.string.favorite)
                 )
             }

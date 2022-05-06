@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,13 +20,13 @@ fun UserList(
     onFollowClick: (Boolean, User) -> Unit = { _: Boolean, _: User -> },
 ) {
     LazyColumn {
-        items(users) { user ->
+        itemsIndexed(users) { index, user ->
             UserItem(
                 user = user,
                 onUserClick = onUserClick,
                 onFollowClick = onFollowClick,
             )
-            if (users.last() == user)
+            if (index == users.size - 1)
                 Spacer(Modifier.height(144.dp))
         }
     }

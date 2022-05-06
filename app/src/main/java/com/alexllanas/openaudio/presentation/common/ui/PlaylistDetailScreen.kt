@@ -1,5 +1,7 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -44,6 +46,9 @@ fun PlaylistDetailScreen(
     navController: NavHostController
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
+
+
+
     homeState.selectedPlaylist?.url?.let { url ->
         homeViewModel.getPlaylistTracks(url)
     }

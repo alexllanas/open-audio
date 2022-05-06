@@ -61,10 +61,10 @@ fun SearchResultTabLayout(
         }) {
         titles.forEachIndexed { index, title ->
             Tab(
-                selected = tabIndex == index,
+                selected = pagerState.currentPage == index,
                 onClick = {
-                    homeViewModel.dispatch(HomeAction.SelectTab(index))
-                    tabIndex = homeState.searchScreenState?.currentTab ?: 0
+//                    homeViewModel.dispatch(HomeAction.SelectTab(index))
+//                    tabIndex = homeState.searchScreenState?.currentTab ?: 0
                 },
                 text = {
                     Text(text = title)
@@ -76,12 +76,6 @@ fun SearchResultTabLayout(
         count = titles.size,
         state = pagerState,
     ) { index ->
-//        Text(
-//            tabIdx.toString(),
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .background(Color.White)
-//        )
         when (index) {
             0 -> {
                 if (homeState.searchTrackResults.isEmpty()) {

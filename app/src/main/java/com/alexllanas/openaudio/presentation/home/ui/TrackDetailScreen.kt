@@ -1,19 +1,12 @@
 package com.alexllanas.openaudio.presentation.home.ui
 
-import android.graphics.Paint
-import androidx.activity.OnBackPressedCallback
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
@@ -21,27 +14,21 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.alexllanas.openaudio.R
-import com.alexllanas.openaudio.presentation.compose.theme.heartIconTint
+import com.alexllanas.openaudio.presentation.compose.theme.GreenTint
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
-import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
@@ -117,19 +104,13 @@ fun TrackDetailScreen(
                         if (track.liked) {
                             Icon(
                                 imageVector = Icons.Filled.Favorite,
-                                tint = heartIconTint,
+                                tint = GreenTint,
                                 contentDescription = stringResource(R.string.favorite),
                                 modifier = Modifier.clickable {
                                     track.id?.let { trackId ->
                                         mainState.sessionToken?.let { token ->
                                             mediaPlayerViewModel.dispatch(
                                                 HomeAction.ToggleCurrentTrackLike(
-                                                    trackId = trackId,
-                                                    sessionToken = token
-                                                )
-                                            )
-                                            homeViewModel.dispatch(
-                                                HomeAction.ToggleTrackOptionsLike(
                                                     trackId = trackId,
                                                     sessionToken = token
                                                 )
@@ -141,19 +122,13 @@ fun TrackDetailScreen(
                         } else {
                             Icon(
                                 imageVector = Icons.Outlined.FavoriteBorder,
-                                tint = heartIconTint,
+                                tint = MaterialTheme.colors.onBackground,
                                 contentDescription = stringResource(R.string.unfavorite),
                                 modifier = Modifier.clickable {
                                     track.id?.let { trackId ->
                                         mainState.sessionToken?.let { token ->
                                             mediaPlayerViewModel.dispatch(
                                                 HomeAction.ToggleCurrentTrackLike(
-                                                    trackId = trackId,
-                                                    sessionToken = token
-                                                )
-                                            )
-                                            homeViewModel.dispatch(
-                                                HomeAction.ToggleTrackOptionsLike(
                                                     trackId = trackId,
                                                     sessionToken = token
                                                 )

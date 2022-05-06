@@ -2,6 +2,7 @@ package com.alexllanas.openaudio.presentation.main.ui
 
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.*
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -88,7 +90,6 @@ fun NavigationGraph(
     fragmentNavController: NavController
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
-    val homeState by homeViewModel.homeState.collectAsState()
     NavHost(
         navController = navHostController,
         startDestination = NavItem.Stream.screenRoute

@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -40,10 +41,8 @@ fun TrackList(
             Text("No tracks")
         }
     } else {
-        LazyColumn(
-//            modifier = Modifier.background(MaterialTheme.colors.background)
-        ) {
-            items(tracks.tracks) { track ->
+        LazyColumn {
+            itemsIndexed(tracks.tracks) { index, track ->
                 track?.let {
                     TrackItem(
                         track = track,
@@ -55,8 +54,9 @@ fun TrackList(
                         playerViewModel = playerViewModel,
                         homeViewModel = homeViewModel
                     )
-                    if (tracks.tracks.last() == track)
+                    if (index == tracks.tracks.size - 1) {
                         Spacer(Modifier.height(144.dp))
+                    }
                 }
             }
         }

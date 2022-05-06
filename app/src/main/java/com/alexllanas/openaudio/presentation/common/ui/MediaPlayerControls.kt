@@ -29,6 +29,7 @@ import androidx.fragment.app.commit
 import androidx.navigation.NavController
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.compose.theme.DarkPurple
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.ui.TrackDetailFragment
 import com.alexllanas.openaudio.presentation.home.ui.TrackDetailScreen
@@ -82,60 +83,61 @@ fun MediaPlayerControls(
         }
     }
 
-    Card(
-        modifier = modifier.padding(8.dp).height(64.dp)
-            .clickable {
-                mediaPlayerState.currentPlayingTrack?.let {
-                    fragmentNavController.navigate(MainFragmentDirections.actionMainFragmentToTrackDetailFragment())
-                }
-            },
-        shape = RoundedCornerShape(8.dp),
-//        backgroundColor = MaterialTheme.colors.primary,
-        backgroundColor = Color(0xFF2b0a38),
-    ) {
-        Row(modifier = Modifier.padding(8.dp)) {
-            GlideImage(
-                modifier = Modifier.size(50.dp),
-                imageModel = mediaPlayerState.currentPlayingTrack?.image,
-                contentScale = ContentScale.Crop,
-                placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
-                error = ImageBitmap.imageResource(R.drawable.blank_user)
-            )
-            AndroidView(
-                factory = {
-                    youTubePlayerView
+    mediaPlayerState.currentPlayingTrack?.let {
+        Card(
+            modifier = modifier.padding(8.dp).height(64.dp)
+                .clickable {
+                    mediaPlayerState.currentPlayingTrack?.let {
+                        fragmentNavController.navigate(MainFragmentDirections.actionMainFragmentToTrackDetailFragment())
+                    }
                 },
-                modifier = Modifier.size(0.dp)
-            )
-            Text(
-                text = mediaPlayerState.currentPlayingTrack?.title ?: "Track Title",
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f).padding(start = 8.dp)
-                    .align(Alignment.CenterVertically)
-            )
-            Icon(
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .size(40.dp)
-                    .clickable {
-                        if (isPlaying) {
-                            mediaPlayerState.youTubePlayer?.pause()
-                            isPlaying = false
-                            mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(false))
-                        } else {
-                            mediaPlayerState.youTubePlayer?.play()
-                            isPlaying = true
-                            mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(true))
-                        }
-
+            shape = RoundedCornerShape(8.dp),
+            backgroundColor = DarkPurple,
+        ) {
+            Row(modifier = Modifier.padding(8.dp)) {
+                GlideImage(
+                    modifier = Modifier.size(50.dp),
+                    imageModel = mediaPlayerState.currentPlayingTrack?.image,
+                    contentScale = ContentScale.Crop,
+                    placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
+                    error = ImageBitmap.imageResource(R.drawable.blank_user)
+                )
+                AndroidView(
+                    factory = {
+                        youTubePlayerView
                     },
-                imageVector = if (isPlaying)
-                    Icons.Default.Pause
-                else
-                    Icons.Default.PlayArrow,
-                contentDescription = stringResource(R.string.play_pause_button)
-            )
+                    modifier = Modifier.size(0.dp)
+                )
+                Text(
+                    text = mediaPlayerState.currentPlayingTrack?.title ?: "Track Title",
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f).padding(start = 8.dp)
+                        .align(Alignment.CenterVertically)
+                )
+                Icon(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .size(40.dp)
+                        .clickable {
+                            if (isPlaying) {
+                                mediaPlayerState.youTubePlayer?.pause()
+                                isPlaying = false
+                                mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(false))
+                            } else {
+                                mediaPlayerState.youTubePlayer?.play()
+                                isPlaying = true
+                                mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(true))
+                            }
+
+                        },
+                    imageVector = if (isPlaying)
+                        Icons.Default.Pause
+                    else
+                        Icons.Default.PlayArrow,
+                    contentDescription = stringResource(R.string.play_pause_button)
+                )
+            }
         }
     }
 

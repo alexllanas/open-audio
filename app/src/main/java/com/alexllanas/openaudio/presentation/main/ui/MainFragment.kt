@@ -32,6 +32,7 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         val fragmentNavController = activity?.findNavController(R.id.nav_host_fragment)
 
         return ComposeView(requireContext()).apply {
@@ -52,4 +53,5 @@ class MainFragment : Fragment() {
             }
         }
     }
+
 }

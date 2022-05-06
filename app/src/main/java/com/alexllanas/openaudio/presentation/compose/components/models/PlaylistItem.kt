@@ -32,18 +32,12 @@ fun PlaylistItem(
     isSelected: Boolean = false,
     countVisible: Boolean
 ) {
-//    val background = if (isSelected)
-//        Color.LightGray
-//    else
-//        MaterialTheme.colors.surface
 
     Card(
-        shape = RoundedCornerShape(4.dp),
         modifier = Modifier
-//            .padding(8.dp)
             .fillMaxWidth()
             .then(modifier),
-//        backgroundColor = background
+        elevation = 0.dp
     ) {
         ListItem(
             text = { Text(text = playlist?.name.toString(), maxLines = 1) },
@@ -67,7 +61,6 @@ fun PlaylistItem(
                 .background(color = MaterialTheme.colors.background)
                 .clickable {
                     playlist?.let {
-                        Log.d(TAG, "PlaylistItem: ${it.coverImage}")
                         onPlaylistClick(it)
                     }
                 }
