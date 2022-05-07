@@ -55,6 +55,18 @@ class MediaPlayerViewModel @Inject constructor(
                     emit(ClearMediaPlayerStateChange())
                 }
             }
+        val executeSetCurrentSecond: suspend (Float) -> Flow<PartialStateChange<MediaPlayerState>> =
+            { currentSecond ->
+                flow {
+                    emit(SetCurrentSecondChange.Data(currentSecond))
+                }
+            }
+        val executeSetDuration: suspend (Float) -> Flow<PartialStateChange<MediaPlayerState>> =
+            { duration ->
+                flow {
+                    emit(SetDurationChange.Data(duration))
+                }
+            }
         val executeSetCurrentTrack: suspend (Track) -> Flow<PartialStateChange<MediaPlayerState>> =
             { track ->
                 flow {
@@ -98,6 +110,10 @@ class MediaPlayerViewModel @Inject constructor(
                     }.onStart { ToggleLikeStreamTrackChange.Loading }
             }
         return merge(
+            filterIsInstance<HomeAction.SetCurrentSecond>()
+                .flatMapConcat { executeSetCurrentSecond(it.currentSecond) },
+            filterIsInstance<HomeAction.SetDuration>()
+                .flatMapConcat { executeSetDuration(it.duration) },
             filterIsInstance<HomeAction.ToggleCurrentTrackLike>()
                 .flatMapConcat { executeToggleCurrentTrackLike(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.SetCurrentTrack>()

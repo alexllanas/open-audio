@@ -61,30 +61,9 @@ fun MediaPlayerControls(
 //    val textScroll = rememberScrollState(0)
     val mediaPlayerState by mediaPlayerViewModel.mediaPlayerState.collectAsState()
     var isPlaying by rememberSaveable { mutableStateOf(false) }
-    var videoId by rememberSaveable { mutableStateOf("") }
     mediaPlayerState.isPlaying.let {
         isPlaying = it
     }
-
-//    val youTubePlayerView = YouTubePlayerView(LocalContext.current)
-//    youTubePlayerView.enableBackgroundPlayback(true)
-//
-//    mediaPlayerState.videoId.let {
-//        if (videoId != it) {
-//            youTubePlayerView.getYouTubePlayerWhenReady(object :
-//                YouTubePlayerCallback {
-//                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-//                    if (it.startsWith("/yt/")) {
-//                        mediaPlayerViewModel.dispatch(HomeAction.SetYoutubePlayer(youTubePlayer))
-//                        youTubePlayer.loadVideo(it.removePrefix("/yt/"), 0f)
-//                        isPlaying = true
-//                        mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(isPlaying))
-//                    }
-//                }
-//            })
-//            videoId = it
-//        }
-//    }
 
     mediaPlayerState.currentPlayingTrack?.let {
         Card(
@@ -105,12 +84,6 @@ fun MediaPlayerControls(
                     placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
                     error = ImageBitmap.imageResource(R.drawable.blank_user)
                 )
-//                AndroidView(
-//                    factory = {
-//                        youTubePlayerView
-//                    },
-//                    modifier = Modifier.size(0.dp)
-//                )
                 Text(
                     text = mediaPlayerState.currentPlayingTrack?.title ?: "Track Title",
                     maxLines = 1,

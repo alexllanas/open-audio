@@ -6,35 +6,39 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.alexllanas.core.util.Constants.Companion.CHANNEL_ID
+import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.NotificationBroadcastReceiver
-import com.alexllanas.openaudio.presentation.auth.ui.AuthFragment
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.bumptech.glide.Glide
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import kotlin.math.floor
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -48,20 +52,38 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val ytView = findViewById<YouTubePlayerView>(R.id.youtube_view)
+        ytView.enableBackgroundPlayback(true)
+        var currentSecond = 0F
+
+        var secondFlow: Flow<Double>? = null
+
+        val youTubePlayerListener = object : AbstractYouTubePlayerListener() {
+            override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
+                if (currentSecond != second) {
+                    mediaPlayerViewModel.dispatch(HomeAction.SetCurrentSecond(second))
+                    currentSecond = second
+                }
+            }
+
+            override fun onVideoDuration(youTubePlayer: YouTubePlayer, duration: Float) {
+                Log.d(TAG, "onVideoDuration: $duration")
+                mediaPlayerViewModel.dispatch(HomeAction.SetDuration(duration = duration))
+            }
+        }
+
 
         val notificationManager = NotificationManagerCompat.from(this)
 
-        ytView.enableBackgroundPlayback(true)
-
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-
+//        val navHostFragment =
+//            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+//        val navController = navHostFragment.navController
         val intentFilter = IntentFilter("com.alexllanas.openaudio.TOGGLE_PLAYBACK")
         this.registerReceiver(
             NotificationBroadcastReceiver(mediaPlayerViewModel, mainViewModel),
             intentFilter
         )
+        val tracker = YouTubePlayerTracker()
+        mediaPlayerViewModel.dispatch(HomeAction.SetMediaTracker(tracker))
         lifecycleScope.launch(Dispatchers.IO) {
             mediaPlayerViewModel.mediaPlayerState.collect { state ->
                 state.currentPlayingTrack?.let { _ ->
@@ -71,6 +93,8 @@ class MainActivity : AppCompatActivity() {
                             ytView.getYouTubePlayerWhenReady(object :
                                 YouTubePlayerCallback {
                                 override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                                    youTubePlayer.addListener(tracker)
+                                    youTubePlayer.addListener(youTubePlayerListener)
                                     if (it.startsWith("/yt/")) {
                                         mediaPlayerViewModel.dispatch(
                                             HomeAction.SetYoutubePlayer(

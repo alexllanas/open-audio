@@ -6,6 +6,8 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTube
 
 data class MediaPlayerState(
     val currentPlayingTrack: Track? = null,
+    val duration: Float = 0F,
+    val currentSecond: Float = 0F,
     val videoId: String = "",
     val isPlaying: Boolean = false,
     val tracker: YouTubePlayerTracker? = null,

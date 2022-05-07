@@ -15,14 +15,24 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTube
 
 sealed class HomeAction : Action() {
 
-    object ClearHomeState : HomeAction()
-    object ClearMediaPlayerState : Action()
 
+    /**
+     * MediaPlayer Actions
+     * Move to separate file
+     */
+    object ClearMediaPlayerState : Action()
     data class SetCurrentTrack(val track: Track) : Action()
+    data class SetDuration(val duration: Float) : Action()
+    data class SetCurrentSecond(val currentSecond: Float) : Action()
     data class SetYoutubePlayer(val youTubePlayer: YouTubePlayer) : Action()
     data class SetMediaTracker(val tracker: YouTubePlayerTracker) : Action()
     data class SetVideoId(val videoId: String) : Action()
     data class SetIsPlaying(val isPlaying: Boolean) : Action()
+
+    /**
+     * Home Actions
+     */
+    object ClearHomeState : HomeAction()
     data class LoadStream(val userId: String, val sessionToken: String) : HomeAction()
     data class GetUserTracks(val userId: String) : HomeAction()
     data class SearchAction(val query: String) : HomeAction()
@@ -93,7 +103,26 @@ sealed class HomeAction : Action() {
         val sessionToken: String
     ) :
         HomeAction()
+}
 
+sealed class SetCurrentSecondChange : PartialStateChange<MediaPlayerState> {
+    override fun reduce(state: MediaPlayerState): MediaPlayerState {
+        return when (this) {
+            is Data -> state.copy(currentSecond = currentSecond)
+        }
+    }
+
+    data class Data(val currentSecond: Float) : SetCurrentSecondChange()
+}
+
+sealed class SetDurationChange : PartialStateChange<MediaPlayerState> {
+    override fun reduce(state: MediaPlayerState): MediaPlayerState {
+        return when (this) {
+            is Data -> state.copy(duration = duration)
+        }
+    }
+
+    data class Data(val duration: Float) : SetDurationChange()
 }
 
 sealed class SetTrackerChange : PartialStateChange<MediaPlayerState> {
@@ -154,7 +183,7 @@ class ClearHomeStateChange : PartialStateChange<HomeState> {
 
 class ClearMediaPlayerStateChange : PartialStateChange<MediaPlayerState> {
     override fun reduce(state: MediaPlayerState): MediaPlayerState {
-        return MediaPlayerState(null, ", false, null, null")
+        return MediaPlayerState(null, 0F, 0F, "", false, null)
     }
 }
 

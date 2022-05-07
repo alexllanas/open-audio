@@ -14,15 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.alexllanas.openaudio.R
-import com.alexllanas.openaudio.presentation.compose.PlayBackButton
 import com.alexllanas.openaudio.presentation.compose.components.MediaControlPanel
 import com.alexllanas.openaudio.presentation.compose.components.SeekBar
 import com.alexllanas.openaudio.presentation.compose.theme.GreenTint
@@ -148,7 +145,7 @@ fun TrackDetailScreen(
                             }
                         }
                     }
-                    SeekBar(modifier = Modifier.padding(top = 64.dp))
+                    SeekBar(modifier = Modifier.padding(top = 64.dp), mediaPlayerViewModel)
                     MediaControlPanel(
                         modifier = Modifier
                             .fillMaxWidth(),
