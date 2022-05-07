@@ -38,4 +38,5 @@ class MainApplication : MultiDexApplication() {
             manager.createNotificationChannel(channel)
         }
     }
+
 }

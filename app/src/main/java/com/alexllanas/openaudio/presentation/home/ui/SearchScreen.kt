@@ -161,8 +161,7 @@ fun SearchBar(
                         exit = fadeOut()
                     ) {
                         IconButton(onClick = {
-                            keyboardController?.hide()
-                            focusManager.clearFocus()
+                            query = ""
                         }) {
                             Icon(
                                 imageVector = Icons.Filled.Close,
@@ -181,9 +180,6 @@ fun SearchBar(
             )
         }
     )
-//    LaunchedEffect(Unit) {
-//        focusRequester.requestFocus()
-//    }
 }
 
 

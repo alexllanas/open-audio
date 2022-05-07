@@ -15,12 +15,14 @@ import androidx.compose.ui.unit.dp
 import arrow.core.const
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
 
 
 @Composable
 fun PlaylistList(
     playlists: List<Playlist>,
     isCountVisible: Boolean,
+    mediaPlayerState: MediaPlayerState,
     onPlaylistClick: (Playlist) -> Unit,
 ) {
     if (playlists.isEmpty()) {
@@ -40,8 +42,11 @@ fun PlaylistList(
                     countVisible = isCountVisible
                 )
                 if (index == playlists.size - 1) {
-                    Spacer(Modifier.height(144.dp))
-                }
+                    if (mediaPlayerState.currentPlayingTrack != null) {
+                        Spacer(Modifier.height(144.dp))
+                    } else {
+                        Spacer(Modifier.height(72.dp))
+                    }                }
             }
         }
     }

@@ -99,7 +99,7 @@ fun MediaPlayerControls(
                         .align(Alignment.CenterVertically)
                         .size(40.dp)
                         .clickable {
-                            if (isPlaying) {
+                            if (mediaPlayerViewModel.isPlaying() || mediaPlayerViewModel.isBuffering()) {
                                 mediaPlayerState.youTubePlayer?.pause()
                                 isPlaying = false
                                 mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(false))
@@ -110,7 +110,7 @@ fun MediaPlayerControls(
                             }
 
                         },
-                    imageVector = if (isPlaying)
+                    imageVector = if (mediaPlayerViewModel.isPlaying())
                         Icons.Default.Pause
                     else
                         Icons.Default.PlayArrow,

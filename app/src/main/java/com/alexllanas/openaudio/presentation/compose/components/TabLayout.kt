@@ -1,19 +1,23 @@
 package com.alexllanas.openaudio.presentation.compose.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.presentation.compose.components.lists.PlaylistList
@@ -33,8 +37,9 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SearchResultTabLayout(
     navHostController: NavHostController,
@@ -45,14 +50,18 @@ fun SearchResultTabLayout(
     likeCallback: () -> Unit
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
+    val mediaPlayerState by playerViewModel.mediaPlayerState.collectAsState()
     val context = LocalContext.current
-    var tabIndex = homeState.searchScreenState?.currentTab ?: 0
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     val pagerState = rememberPagerState()
+    val tabIndex by remember { mutableStateOf(0) }
     val titles = listOf(
         "TRACKS",
         "PLAYLISTS",
         "USERS",
     )
+    val coroutineScope = rememberCoroutineScope()
     TabRow(
         selectedTabIndex = tabIndex,
         backgroundColor = MaterialTheme.colors.surface,
@@ -64,7 +73,12 @@ fun SearchResultTabLayout(
                 selected = pagerState.currentPage == index,
                 onClick = {
 //                    homeViewModel.dispatch(HomeAction.SelectTab(index))
-//                    tabIndex = homeState.searchScreenState?.currentTab ?: 0
+                    coroutineScope.launch {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        pagerState.animateScrollToPage(index)
+                    }
+
                 },
                 text = {
                     Text(text = title)
@@ -76,6 +90,9 @@ fun SearchResultTabLayout(
         count = titles.size,
         state = pagerState,
     ) { index ->
+//        keyboardController?.hide()
+//        focusManager.clearFocus()
+//        homeViewModel.dispatch(HomeAction.SelectTab(index))
         when (index) {
             0 -> {
                 if (homeState.searchTrackResults.isEmpty()) {
@@ -113,7 +130,8 @@ fun SearchResultTabLayout(
                 } else {
                     PlaylistList(
                         playlists = homeState.searchPlaylistResults,
-                        isCountVisible = true
+                        isCountVisible = true,
+                        mediaPlayerState = mediaPlayerState
                     ) { selectedPlaylist ->
                         homeViewModel.dispatch(HomeAction.SelectPlaylist(selectedPlaylist))
                         navigateToPlaylistDetail(navHostController)
@@ -127,13 +145,20 @@ fun SearchResultTabLayout(
                     UserList(homeState.searchUserResults, { selectedUser ->
                         selectedUser.id?.let { userId ->
                             mainState.sessionToken?.let { sessionToken ->
-                                homeViewModel.dispatch(HomeAction.GetUser(userId, sessionToken))
+                                homeViewModel.dispatch(
+                                    HomeAction.GetUser(
+                                        userId,
+                                        sessionToken
+                                    )
+                                )
                             }
                         }
                         navigateToUserDetail(navHostController)
                     }, onFollowClick = { isSubscribing, user ->
                         homeViewModel.onFollowClick(isSubscribing, user, mainState, context)
-                    })
+                    },
+                        mediaPlayerState = mediaPlayerState
+                    )
                 }
             }
         }

@@ -6,6 +6,8 @@ import com.alexllanas.openaudio.presentation.auth.ui.RegisterScreen
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -41,6 +43,9 @@ fun TrackNavigationGraph(
     mediaPlayerViewModel: MediaPlayerViewModel,
     fragmentNavController: NavController
 ) {
+
+    val mediaPlayerState by mediaPlayerViewModel.mediaPlayerState.collectAsState()
+
     NavHost(
         navController = navHostController,
         startDestination = TrackNavItem.TrackDetail.screenRoute
@@ -66,7 +71,13 @@ fun TrackNavigationGraph(
             CreatePlaylistScreen(navHostController, mainViewModel)
         }
         composable(TrackNavItem.AddToPlaylist.screenRoute) {
-            AddToPlaylistScreen(mainViewModel, homeViewModel, navHostController, TrackNavItem.CreatePlaylist.screenRoute)
+            AddToPlaylistScreen(
+                mainViewModel,
+                homeViewModel,
+                mediaPlayerState,
+                navHostController,
+                TrackNavItem.CreatePlaylist.screenRoute
+            )
         }
     }
 }

@@ -68,6 +68,7 @@ sealed class NavItem(var title: String, var icon: ImageVector? = null, var scree
     object Search : NavItem("Search", Icons.Outlined.Search, "search")
     object Upload : NavItem("Upload", Icons.Filled.Upload, "upload")
     object Profile : NavItem("Profile", Icons.Filled.Person, "profile")
+    object ProfilePlaylist : NavItem("ProfilePlaylist", null, "profile_playlist")
     object Settings : NavItem("Settings", null, "settings")
     object PlaylistDetail :
         NavItem("PlaylistDetail", null, "playlist_detail")
@@ -90,6 +91,7 @@ fun NavigationGraph(
     fragmentNavController: NavController
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
+    val mediaPlayerState by playerViewModel.mediaPlayerState.collectAsState()
     NavHost(
         navController = navHostController,
         startDestination = NavItem.Stream.screenRoute
@@ -108,8 +110,9 @@ fun NavigationGraph(
             FollowScreen(
                 navHostController,
                 homeViewModel,
+                mediaPlayerState,
                 mainState = mainState,
-                title ?: "No Title"
+                title ?: "No Title",
             )
 //            }
         }
@@ -136,6 +139,7 @@ fun NavigationGraph(
             AddToPlaylistScreen(
                 mainViewModel,
                 homeViewModel,
+                mediaPlayerState,
                 navHostController,
                 NavItem.CreatePlaylist.screenRoute
             )
@@ -197,6 +201,7 @@ fun NavigationGraph(
                 homeViewModel,
                 mainViewModel,
                 mainState,
+                mediaPlayerState,
                 navHostController,
                 true
             ) {
@@ -211,6 +216,7 @@ fun NavigationGraph(
                 homeViewModel,
                 mainViewModel,
                 mainState,
+                mediaPlayerState,
                 navHostController,
                 false
             ) {
@@ -237,8 +243,6 @@ fun NavigationGraph(
                 navController = navHostController,
                 mainViewModel = mainViewModel
             )
-//            }
-//                }
         }
     }
 }
@@ -280,7 +284,7 @@ fun BottomNav(navController: NavController) {
                     },
                     label = { Text(text = item.title, fontSize = 9.sp) },
                     selectedContentColor = MaterialTheme.colors.onSurface,
-                    unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.5f),
+                    unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.6f),
                     alwaysShowLabel = true,
                     selected = currentRoute == item.screenRoute,
                     onClick = {

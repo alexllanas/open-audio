@@ -32,9 +32,6 @@ import kotlin.math.floor
 
 @Composable
 fun SeekBar(modifier: Modifier = Modifier, mediaPlayerViewModel: MediaPlayerViewModel) {
-    var sliderPosition by remember { mutableStateOf(0f) }
-    val maxPosition = 100f
-
     val mediaPlayerState by mediaPlayerViewModel.mediaPlayerState.collectAsState()
 
     Column(modifier = modifier) {
@@ -57,7 +54,6 @@ fun SeekBar(modifier: Modifier = Modifier, mediaPlayerViewModel: MediaPlayerView
                 DefaultTrack(
                     modifier = modifier,
                     progress = mediaPlayerState.currentSecond / mediaPlayerState.duration,
-//                    progress = fraction,
                     interactionSource = interactionSource,
                     tickFractions = tickFractions,
                     enabled = enabled,

@@ -10,6 +10,7 @@ import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 
@@ -21,6 +22,7 @@ sealed class HomeAction : Action() {
      * Move to separate file
      */
     object ClearMediaPlayerState : Action()
+    data class SetPlaybackState(val playbackState: PlayerConstants.PlayerState) : Action()
     data class SetCurrentTrack(val track: Track) : Action()
     data class SetDuration(val duration: Float) : Action()
     data class SetCurrentSecond(val currentSecond: Float) : Action()
@@ -105,6 +107,16 @@ sealed class HomeAction : Action() {
         HomeAction()
 }
 
+sealed class SetPlaybackState : PartialStateChange<MediaPlayerState> {
+    override fun reduce(state: MediaPlayerState): MediaPlayerState {
+        return when (this) {
+            is Data -> state.copy(playbackState = playbackState)
+        }
+    }
+
+    data class Data(val playbackState: PlayerConstants.PlayerState) : SetPlaybackState()
+}
+
 sealed class SetCurrentSecondChange : PartialStateChange<MediaPlayerState> {
     override fun reduce(state: MediaPlayerState): MediaPlayerState {
         return when (this) {
@@ -183,7 +195,13 @@ class ClearHomeStateChange : PartialStateChange<HomeState> {
 
 class ClearMediaPlayerStateChange : PartialStateChange<MediaPlayerState> {
     override fun reduce(state: MediaPlayerState): MediaPlayerState {
-        return MediaPlayerState(null, 0F, 0F, "", false, null)
+        return MediaPlayerState(
+            currentPlayingTrack = null,
+            duration = 0F,
+            currentSecond = 0F,
+            videoId = "",
+            isPlaying = false
+        )
     }
 }
 

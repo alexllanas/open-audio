@@ -24,6 +24,8 @@ import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.bumptech.glide.Glide
+import com.google.android.exoplayer2.offline.DownloadService.startForeground
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
@@ -31,19 +33,14 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTube
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import kotlin.math.floor
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     val mainViewModel: MainViewModel by viewModels()
     val mediaPlayerViewModel: MediaPlayerViewModel by viewModels()
+    lateinit var notificationManager: NotificationManagerCompat
     var isPlaying = false
     private var videoId = ""
 
@@ -55,7 +52,10 @@ class MainActivity : AppCompatActivity() {
         ytView.enableBackgroundPlayback(true)
         var currentSecond = 0F
 
-        var secondFlow: Flow<Double>? = null
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        navController.navigate(R.id.authFragment)
 
         val youTubePlayerListener = object : AbstractYouTubePlayerListener() {
             override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
@@ -69,25 +69,28 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "onVideoDuration: $duration")
                 mediaPlayerViewModel.dispatch(HomeAction.SetDuration(duration = duration))
             }
+
+            override fun onStateChange(
+                youTubePlayer: YouTubePlayer,
+                state: PlayerConstants.PlayerState
+            ) {
+                mediaPlayerViewModel.dispatch(HomeAction.SetPlaybackState(state))
+            }
         }
 
+        notificationManager = NotificationManagerCompat.from(this)
 
-        val notificationManager = NotificationManagerCompat.from(this)
-
-//        val navHostFragment =
-//            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-//        val navController = navHostFragment.navController
         val intentFilter = IntentFilter("com.alexllanas.openaudio.TOGGLE_PLAYBACK")
         this.registerReceiver(
-            NotificationBroadcastReceiver(mediaPlayerViewModel, mainViewModel),
+            NotificationBroadcastReceiver(mediaPlayerViewModel),
             intentFilter
         )
         val tracker = YouTubePlayerTracker()
         mediaPlayerViewModel.dispatch(HomeAction.SetMediaTracker(tracker))
         lifecycleScope.launch(Dispatchers.IO) {
             mediaPlayerViewModel.mediaPlayerState.collect { state ->
+                showNotification(state, notificationManager)
                 state.currentPlayingTrack?.let { _ ->
-                    showNotification(state, notificationManager)
                     state.videoId.let {
                         if (videoId != it) {
                             ytView.getYouTubePlayerWhenReady(object :
@@ -119,9 +122,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        moveTaskToBack(false)
-    }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun showNotification(
@@ -193,7 +193,9 @@ class MainActivity : AppCompatActivity() {
             TODO("VERSION.SDK_INT < S")
         }
 
-        if (mediaPlayerState.isPlaying) {
+        if (mediaPlayerState.playbackState == PlayerConstants.PlayerState.PLAYING
+//            || mediaPlayerState.playbackState == PlayerConstants.PlayerState.BUFFERING
+        ) {
             notification.actions[0] = Notification.Action(
                 com.google.android.exoplayer2.ui.R.drawable.exo_controls_pause,
                 "pause",
@@ -208,4 +210,9 @@ class MainActivity : AppCompatActivity() {
         }
         notificationManager.notify(1, notification)
     }
+
+//    override fun onBackPressed() {
+//        moveTaskToBack(false)
+//    }
+
 }

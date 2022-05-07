@@ -9,6 +9,7 @@ import com.alexllanas.core.interactors.home.HomeInteractors
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.home.state.*
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,6 +62,12 @@ class MediaPlayerViewModel @Inject constructor(
                     emit(SetCurrentSecondChange.Data(currentSecond))
                 }
             }
+        val executeSetPlaybackState: suspend (PlayerConstants.PlayerState) -> Flow<PartialStateChange<MediaPlayerState>> =
+            { playbackState ->
+                flow {
+                    emit(SetPlaybackState.Data(playbackState))
+                }
+            }
         val executeSetDuration: suspend (Float) -> Flow<PartialStateChange<MediaPlayerState>> =
             { duration ->
                 flow {
@@ -110,6 +117,8 @@ class MediaPlayerViewModel @Inject constructor(
                     }.onStart { ToggleLikeStreamTrackChange.Loading }
             }
         return merge(
+            filterIsInstance<HomeAction.SetPlaybackState>()
+                .flatMapConcat { executeSetPlaybackState(it.playbackState) },
             filterIsInstance<HomeAction.SetCurrentSecond>()
                 .flatMapConcat { executeSetCurrentSecond(it.currentSecond) },
             filterIsInstance<HomeAction.SetDuration>()
@@ -130,4 +139,9 @@ class MediaPlayerViewModel @Inject constructor(
                 .flatMapConcat { executeSetVideoId(it.videoId) },
         )
     }
+
+    fun isPlaying() = mediaPlayerState.value.playbackState == PlayerConstants.PlayerState.PLAYING
+    fun isBuffering() = mediaPlayerState.value.playbackState == PlayerConstants.PlayerState.BUFFERING
+    fun isEnded() = mediaPlayerState.value.playbackState == PlayerConstants.PlayerState.ENDED
+
 }

@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -31,7 +33,7 @@ fun TrackList(
     onHeartClick: (TrackUIModel) -> Unit = { },
     onMoreClick: (TrackUIModel) -> Unit = {},
 ) {
-
+    val mediaPlayerState by playerViewModel.mediaPlayerState.collectAsState()
     if (tracks.tracks.isEmpty()) {
         Row(
             modifier = Modifier.fillMaxWidth().height(100.dp),
@@ -54,8 +56,15 @@ fun TrackList(
                         playerViewModel = playerViewModel,
                         homeViewModel = homeViewModel
                     )
-                    if (index == tracks.tracks.size - 1) {
-                        Spacer(Modifier.height(144.dp))
+                    if (index == tracks.tracks.size - 1
+//                        &&
+//                        mediaPlayerState.currentPlayingTrack != null
+                    ) {
+                        if (mediaPlayerState.currentPlayingTrack != null) {
+                            Spacer(Modifier.height(144.dp))
+                        } else {
+                            Spacer(Modifier.height(72.dp))
+                        }
                     }
                 }
             }

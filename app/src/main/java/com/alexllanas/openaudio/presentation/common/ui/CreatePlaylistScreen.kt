@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
@@ -26,11 +27,14 @@ fun CreatePlaylistScreen(navHostController: NavHostController, mainViewModel: Ma
     var playlistName by remember { mutableStateOf("") }
     val mainState by mainViewModel.mainState.collectAsState()
 
-    ConstraintLayout(Modifier.background(MaterialTheme.colors.background).fillMaxSize().padding(16.dp)) {
+    ConstraintLayout(
+        Modifier.background(MaterialTheme.colors.background).fillMaxSize().padding(16.dp)
+    ) {
         val (promptText, playlistNameInputField, cancelOption, skipOption) = createRefs()
         Text(
             text = stringResource(R.string.give_playlist_name),
             style = MaterialTheme.typography.body2,
+            color = MaterialTheme.colors.onBackground,
             modifier = Modifier
                 .padding(top = 96.dp)
                 .constrainAs(promptText) {
@@ -43,7 +47,13 @@ fun CreatePlaylistScreen(navHostController: NavHostController, mainViewModel: Ma
             value = playlistName,
             singleLine = true,
             onValueChange = { playlistName = it },
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.background),
+            colors = TextFieldDefaults.textFieldColors(
+                cursorColor = MaterialTheme.colors.onBackground,
+//                focusedIndicatorColor = MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.UnfocusedIndicatorLineOpacity),
+//                backgroundColor = MaterialTheme.colors.background,
+                textColor = MaterialTheme.colors.onBackground,
+
+                ),
             modifier = Modifier
                 .padding(top = 24.dp)
                 .constrainAs(playlistNameInputField) {
@@ -52,7 +62,7 @@ fun CreatePlaylistScreen(navHostController: NavHostController, mainViewModel: Ma
                     end.linkTo(parent.end)
                 },
             textStyle = LocalTextStyle.current
-                .copy(textAlign = TextAlign.Center),
+                .copy(textAlign = TextAlign.Center, textDecoration = TextDecoration.Underline),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
             ),
@@ -76,6 +86,7 @@ fun CreatePlaylistScreen(navHostController: NavHostController, mainViewModel: Ma
         Text(
             text = stringResource(R.string.cancel),
             style = MaterialTheme.typography.body1,
+            color = MaterialTheme.colors.onBackground,
             modifier = Modifier
                 .clickable {
                     navHostController.popBackStack()
@@ -90,6 +101,7 @@ fun CreatePlaylistScreen(navHostController: NavHostController, mainViewModel: Ma
         Text(
             text = stringResource(R.string.skip),
             style = MaterialTheme.typography.body1,
+            color = MaterialTheme.colors.onBackground,
             modifier = Modifier
                 .clickable {
                     mainState.loggedInUser?.let { user ->

@@ -17,20 +17,14 @@ import kotlinx.coroutines.*
 
 class NotificationBroadcastReceiver(
     private val mediaPlayerViewModel: MediaPlayerViewModel,
-    private val mainViewModel: MainViewModel
 ) :
     BroadcastReceiver() {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onReceive(p0: Context?, p1: Intent?) {
-        Log.d(TAG, "onReceive: received broadcast")
-        mediaPlayerViewModel.mediaPlayerState.value.currentPlayingTrack?.let {
-            if (mediaPlayerViewModel.mediaPlayerState.value.isPlaying) {
-                mediaPlayerViewModel.mediaPlayerState.value.youTubePlayer?.pause()
-                mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(false))
-            } else {
-                mediaPlayerViewModel.mediaPlayerState.value.youTubePlayer?.play()
-                mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(true))
-            }
+        if (mediaPlayerViewModel.isPlaying() || mediaPlayerViewModel.isBuffering()) {
+            mediaPlayerViewModel.mediaPlayerState.value.youTubePlayer?.pause()
+        } else {
+            mediaPlayerViewModel.mediaPlayerState.value.youTubePlayer?.play()
         }
     }
 }

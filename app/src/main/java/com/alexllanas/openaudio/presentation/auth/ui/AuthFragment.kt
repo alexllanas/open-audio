@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -41,6 +42,15 @@ class AuthFragment : Fragment() {
         }
         val fragmentNavController = activity?.findNavController(R.id.nav_host_fragment)
 
+
+
+        lifecycleScope.launchWhenStarted {
+            mainViewModel.mainState.collect { mainState ->
+                mainState.loggedInUser?.let {
+                    fragmentNavController?.navigate(R.id.mainFragment)
+                }
+            }
+        }
         return ComposeView(requireContext()).apply {
             setContent {
                 val navController = rememberNavController()

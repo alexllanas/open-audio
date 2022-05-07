@@ -33,6 +33,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import com.alexllanas.openaudio.presentation.main.ui.navigateToPlaylistDetail
 import com.alexllanas.openaudio.presentation.mappers.toUI
@@ -47,6 +48,7 @@ fun UserDetailScreen(
     homeViewModel: HomeViewModel,
     mainViewModel: MainViewModel,
     mainState: MainState,
+    mediaPlayerState: MediaPlayerState,
     navHostController: NavHostController,
     isCurrentUser: Boolean,
     onEditClick: () -> Unit,
@@ -141,7 +143,8 @@ fun UserDetailScreen(
                 )
                 PlaylistList(
                     user.playlists.sortedBy { it.name },
-                    true
+                    true,
+                    mediaPlayerState
                 ) { selectedPlaylist ->
                     val newPlaylist = selectedPlaylist.copy()
                     newPlaylist.author = user

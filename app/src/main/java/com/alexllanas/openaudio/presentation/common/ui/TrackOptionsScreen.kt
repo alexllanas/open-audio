@@ -55,8 +55,9 @@ fun TrackOptionsScreen(
 
         Icon(
             imageVector = Icons.Default.Close,
+            tint = MaterialTheme.colors.onBackground,
             contentDescription = stringResource(R.string.close),
-            Modifier
+            modifier = Modifier
                 .clickable { navHostController.popBackStack() }
                 .constrainAs(closeIcon) {
                     top.linkTo(parent.top)
@@ -78,6 +79,7 @@ fun TrackOptionsScreen(
         Text(
             homeState.selectedTrack?.title ?: "Track Title",
             style = MaterialTheme.typography.h5,
+            color = MaterialTheme.colors.onBackground,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(top = 16.dp)
@@ -140,6 +142,7 @@ fun OptionsMenu(
             }
             Text(
                 "Like",
+                color = MaterialTheme.colors.onBackground,
                 modifier = Modifier.padding(start = 8.dp),
                 style = MaterialTheme.typography.body1
             )
@@ -152,10 +155,12 @@ fun OptionsMenu(
             .padding(bottom = 24.dp)) {
             Icon(
                 imageVector = Icons.Outlined.Queue,
+                tint = MaterialTheme.colors.onBackground,
                 contentDescription = stringResource(R.string.add_to_playlist)
             )
             Text(
                 "Add To Playlist",
+                color = MaterialTheme.colors.onBackground,
                 modifier = Modifier.padding(start = 8.dp),
                 style = MaterialTheme.typography.body1
             )
@@ -168,10 +173,12 @@ fun OptionsMenu(
             }) {
             Icon(
                 imageVector = Icons.Outlined.Share,
+                tint = MaterialTheme.colors.onBackground,
                 contentDescription = stringResource(R.string.share)
             )
             Text(
                 "Share",
+                color = MaterialTheme.colors.onBackground,
                 modifier = Modifier.padding(start = 8.dp),
                 style = MaterialTheme.typography.body1
             )

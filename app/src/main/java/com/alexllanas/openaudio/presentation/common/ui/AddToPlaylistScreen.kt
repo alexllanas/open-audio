@@ -19,11 +19,13 @@ import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
+import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
 
 @Composable
 fun AddToPlaylistScreen(
     mainViewModel: MainViewModel,
     homeViewModel: HomeViewModel,
+    mediaPlayerState: MediaPlayerState,
     navHostController: NavHostController,
     createPlaylistRoute: String
 ) {
@@ -47,7 +49,8 @@ fun AddToPlaylistScreen(
             }
             PlaylistList(
                 playlists = mainState.loggedInUser?.playlists ?: emptyList(),
-                false
+                false,
+                mediaPlayerState = mediaPlayerState
             ) { playlist ->
                 playlist.id?.let { id ->
                     playlist.name?.let { name ->

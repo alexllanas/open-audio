@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import com.alexllanas.openaudio.R
 
 @Composable
-fun PlayBackButton(modifier: Modifier = Modifier, isPlaying: Boolean, onClick: () -> Unit ) {
+fun PlayBackButton(modifier: Modifier = Modifier, isPlayingOrBuffering: Boolean, onClick: () -> Unit ) {
     val interactionSource = remember { MutableInteractionSource() }
 
     Icon(
@@ -24,7 +24,7 @@ fun PlayBackButton(modifier: Modifier = Modifier, isPlaying: Boolean, onClick: (
             ) {
                 onClick()
             },
-        imageVector = if (isPlaying)
+        imageVector = if (isPlayingOrBuffering)
             Icons.Filled.PauseCircle
         else
             Icons.Filled.PlayCircle,

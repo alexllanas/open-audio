@@ -46,14 +46,14 @@ fun MediaControlPanel(modifier: Modifier = Modifier, mediaPlayerViewModel: Media
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .size(84.dp),
-            isPlaying = mediaPlayerState.isPlaying
+            isPlayingOrBuffering = mediaPlayerViewModel.isPlaying() || mediaPlayerViewModel.isBuffering()
         ) {
-            if (mediaPlayerState.isPlaying) {
+            if (mediaPlayerViewModel.isPlaying()) {
                 mediaPlayerState.youTubePlayer?.pause()
-                mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(false))
+//                mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(false))
             } else {
                 mediaPlayerState.youTubePlayer?.play()
-                mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(true))
+//                mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(true))
             }
         }
         Icon(
