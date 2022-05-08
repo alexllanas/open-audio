@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.SESSION_TOKEN
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
+import com.alexllanas.openaudio.presentation.compose.components.BottomNav
 import com.alexllanas.openaudio.presentation.compose.components.LoadingIndicator
 import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
 import com.alexllanas.openaudio.presentation.dataStore
@@ -24,7 +25,6 @@ import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
-import com.alexllanas.openaudio.presentation.main.ui.BottomNav
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.mappers.toUI

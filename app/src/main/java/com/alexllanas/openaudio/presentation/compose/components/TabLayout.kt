@@ -29,8 +29,7 @@ import com.alexllanas.openaudio.presentation.home.state.SearchState
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
-import com.alexllanas.openaudio.presentation.main.ui.navigateToPlaylistDetail
-import com.alexllanas.openaudio.presentation.main.ui.navigateToUserDetail
+import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.mappers.toUI
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -134,7 +133,7 @@ fun SearchResultTabLayout(
                         mediaPlayerState = mediaPlayerState
                     ) { selectedPlaylist ->
                         homeViewModel.dispatch(HomeAction.SelectPlaylist(selectedPlaylist))
-                        navigateToPlaylistDetail(navHostController)
+                        navHostController.navigate(NavItem.PlaylistDetail.screenRoute)
                     }
                 }
             }
@@ -153,7 +152,7 @@ fun SearchResultTabLayout(
                                 )
                             }
                         }
-                        navigateToUserDetail(navHostController)
+                        navHostController.navigate(NavItem.UserDetail.screenRoute)
                     }, onFollowClick = { isSubscribing, user ->
                         homeViewModel.onFollowClick(isSubscribing, user, mainState, context)
                     },

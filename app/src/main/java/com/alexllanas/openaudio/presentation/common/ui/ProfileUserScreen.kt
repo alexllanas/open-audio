@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -48,18 +47,16 @@ import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun UserDetailScreen(
+fun ProfileUserScreen(
     modifier: Modifier,
     homeViewModel: HomeViewModel,
     mainViewModel: MainViewModel,
     mainState: MainState,
     mediaPlayerState: MediaPlayerState,
     navHostController: NavHostController,
-    onEditClick: () -> Unit,
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
     val context = LocalContext.current
-    homeViewModel.clearSelectedPlaylist()
     Scaffold(
         topBar = {
             TopAppBar(backgroundColor = Color.Transparent) {
@@ -79,18 +76,17 @@ fun UserDetailScreen(
         },
         bottomBar = { BottomNav(navController = navHostController) }
     ) {
-        Log.d(TAG, "UserDetailScreen: ")
+        Log.d(TAG, "ProfileUserScreen: ")
 
-        homeState.selectedUser?.let { user ->
+        homeState.selectedProfileScreenUser?.let { user ->
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                UserHeader(
+                ProfileUserHeader(
                     user.toUI(),
                     homeViewModel = homeViewModel,
                     mainViewModel = mainViewModel,
                     mainState = mainState,
-                    onEditClick = onEditClick,
                     navHostController = navHostController,
                 ) { isSubscribing ->
                     if (!isSubscribing) {
@@ -120,7 +116,12 @@ fun UserDetailScreen(
                         ).show()
                     }
                     user.id?.let { id ->
-                        homeViewModel.refreshSelectedUser(id, mainState.sessionToken)
+                        homeViewModel.dispatch(
+                            HomeAction.GetProfileScreenUser(
+                                id,
+                                mainState.sessionToken
+                            )
+                        )
                     }
                 }
                 Text(
@@ -135,8 +136,8 @@ fun UserDetailScreen(
                 ) { selectedPlaylist ->
                     val newPlaylist = selectedPlaylist.copy()
                     newPlaylist.author = user
-                    homeViewModel.dispatch(HomeAction.SelectPlaylist(newPlaylist))
-                    navHostController.navigate(NavItem.PlaylistDetail.screenRoute)
+                    mainViewModel.dispatch(HomeAction.SelectProfileUserPlaylist(newPlaylist))
+                    navHostController.navigate(NavItem.ProfileUserPlaylist.screenRoute)
                 }
             }
         }
@@ -145,12 +146,11 @@ fun UserDetailScreen(
 
 
 @Composable
-fun UserHeader(
+fun ProfileUserHeader(
     userUIModel: UserUIModel,
     homeViewModel: HomeViewModel,
     mainViewModel: MainViewModel,
     mainState: MainState,
-    onEditClick: () -> Unit,
     navHostController: NavHostController,
     onFollowButtonClick: (Boolean) -> Unit,
 ) {
@@ -190,14 +190,14 @@ fun UserHeader(
                     userUIModel.id?.let {
                         mainState.sessionToken?.let {
                             homeViewModel.dispatch(
-                                HomeAction.GetFollowing(
+                                HomeAction.GetProfileFollowing(
                                     userUIModel.id,
                                     mainState.sessionToken
                                 )
                             )
                         }
                     }
-                    navHostController.navigate("follow/${Constants.FOLLOWING}")
+                    navHostController.navigate("profile_follow/${Constants.FOLLOWING}")
                 }
             )
             Spacer(modifier = Modifier.width(24.dp))
@@ -206,23 +206,23 @@ fun UserHeader(
                     userUIModel.id?.let {
                         mainState.sessionToken?.let {
                             homeViewModel.dispatch(
-                                HomeAction.GetFollowers(
+                                HomeAction.GetProfileFollowers(
                                     userUIModel.id,
                                     mainState.sessionToken
                                 )
                             )
                         }
                     }
-                    navHostController.navigate("follow/${Constants.FOLLOWERS}")
+                    navHostController.navigate("profile_follow/${Constants.FOLLOWERS}")
                 }
             )
         }
-        FollowButton(userUIModel, onFollowButtonClick)
+        ProfileUserFollowButton(userUIModel, onFollowButtonClick)
     }
 }
 
 @Composable
-fun FollowButton(userUIModel: UserUIModel, onFollowButtonClick: (Boolean) -> Unit) {
+fun ProfileUserFollowButton(userUIModel: UserUIModel, onFollowButtonClick: (Boolean) -> Unit) {
     Button(
         {
             onFollowButtonClick(userUIModel.isSubscribing)

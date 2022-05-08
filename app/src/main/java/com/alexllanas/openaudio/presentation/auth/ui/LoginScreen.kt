@@ -25,6 +25,7 @@ import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.compose.components.BasicEmailField
 import com.alexllanas.openaudio.presentation.compose.components.BasicPasswordField
 import com.alexllanas.openaudio.presentation.compose.components.DefaultButton
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.util.isValidEmail
@@ -42,9 +43,17 @@ fun LoginScreen(
     var password = "doghaus1!"
     val mainState by mainViewModel.mainState.collectAsState()
 
-    mainState.sessionToken?.let {
-        mainState.loggedInUser?.let {
+    mainState.sessionToken?.let { sessionToken ->
+        mainState.loggedInUser?.let { currentUser ->
             navigateToMainFragment()
+            currentUser.id?.let { userId ->
+                mainViewModel.dispatch(
+                    HomeAction.GetCurrentUser(
+                        userId,
+                        sessionToken
+                    )
+                )
+            }
         }
     }
 

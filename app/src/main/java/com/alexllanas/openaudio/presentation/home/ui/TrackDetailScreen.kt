@@ -1,5 +1,6 @@
 package com.alexllanas.openaudio.presentation.home.ui
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.components.MediaControlPanel
 import com.alexllanas.openaudio.presentation.compose.components.SeekBar
@@ -39,6 +41,7 @@ fun TrackDetailScreen(
     navHostController: NavHostController
 ) {
     val mainState by mainViewModel.mainState.collectAsState()
+    val homeState by homeViewModel.homeState.collectAsState()
     val mediaPlayerState by mediaPlayerViewModel.mediaPlayerState.collectAsState()
     Scaffold(topBar = {
         Row(
@@ -103,6 +106,7 @@ fun TrackDetailScreen(
                             fontWeight = Bold
                         )
                         mainState.loggedInUser?.let { user ->
+
                             if (track.userLikeIds.contains(user.id)) {
                                 track.liked = true
                             }
@@ -113,6 +117,7 @@ fun TrackDetailScreen(
                                     contentDescription = stringResource(R.string.favorite),
                                     modifier = Modifier.clickable {
                                         track.id?.let { trackId ->
+                                            Log.d(TAG, "TrackDetailScreen: ${track.liked}")
                                             mainState.sessionToken?.let { token ->
                                                 mediaPlayerViewModel.dispatch(
                                                     HomeAction.ToggleCurrentTrackLike(

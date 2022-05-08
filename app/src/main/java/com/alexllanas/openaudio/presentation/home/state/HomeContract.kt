@@ -86,7 +86,17 @@ sealed class HomeAction : Action() {
         val sessionToken: String
     ) : HomeAction()
 
+    data class GetProfileFollowers(
+        val userId: String,
+        val sessionToken: String
+    ) : HomeAction()
+
     data class GetFollowing(
+        val userId: String,
+        val sessionToken: String
+    ) : HomeAction()
+
+    data class GetProfileFollowing(
         val userId: String,
         val sessionToken: String
     ) : HomeAction()
@@ -97,6 +107,8 @@ sealed class HomeAction : Action() {
     data class GetPlaylistTracks(val playlistUrl: String) : HomeAction()
     data class QueryTextChanged(val query: String) : HomeAction()
     data class GetUser(val id: String, val sessionToken: String) : HomeAction()
+    data class GetProfileScreenUser(val id: String, val sessionToken: String) : HomeAction()
+    data class GetCurrentUser(val id: String, val sessionToken: String) : HomeAction()
     data class ToggleTrackOptionsLike(val trackId: String, val sessionToken: String) : HomeAction()
     data class TogglePlaylistTrackLike(val trackId: String, val sessionToken: String) : HomeAction()
     data class CreatePlaylist(
@@ -104,6 +116,13 @@ sealed class HomeAction : Action() {
         val user: User,
         val sessionToken: String
     ) :
+        HomeAction()
+
+    data class SelectProfileUserPlaylist(val playlist: Playlist) : HomeAction()
+    data class GetProfileUserPlaylistTracks(val playlistUrl: String) : HomeAction()
+    data class SelectCurrentUserPlaylist(val playlist: Playlist) : HomeAction()
+    data class GetCurrentUserPlaylistTracks(val playlistUrl: String) : HomeAction()
+    data class ToggleCurrentUserPlaylistTrackLike(val trackId: String, val sessionToken: String) :
         HomeAction()
 }
 
@@ -262,12 +281,45 @@ sealed class TogglePlaylistTrackLikeChange : PartialStateChange<HomeState> {
     object Loading : TogglePlaylistTrackLikeChange()
 }
 
+sealed class ToggleCurrentUserPlaylistTrackLikeChange : PartialStateChange<MainState> {
+    override fun reduce(state: MainState): MainState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    currentUserPlaylistTracks = updateTrackList(
+                        post,
+                        state.currentUserPlaylistTracks,
+                        trackId
+                    ),
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            is Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val post: Post, val trackId: String) :
+        ToggleCurrentUserPlaylistTrackLikeChange()
+
+    data class Error(val throwable: Throwable) : ToggleCurrentUserPlaylistTrackLikeChange()
+    object Loading : ToggleCurrentUserPlaylistTrackLikeChange()
+}
+
 sealed class ToggleCurrentTrackLikeChange : PartialStateChange<MediaPlayerState> {
     override fun reduce(state: MediaPlayerState): MediaPlayerState {
         return when (this) {
             is Data -> {
                 state.copy(
-                    currentPlayingTrack = state.currentPlayingTrack?.copy(liked = post.loved),
+//                    currentPlayingTrack = state.currentPlayingTrack?.copy(liked = post.loved),
+                    currentPlayingTrack = post.track?.copy(liked = post.loved) ?: state.currentPlayingTrack?.copy(liked = post.loved),
                     isLoading = false,
                     error = null,
                 )
@@ -404,6 +456,58 @@ sealed class GetUserChange : PartialStateChange<HomeState> {
     object Loading : GetUserChange()
 }
 
+sealed class GetProfileScreenUserChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    selectedProfileScreenUser = user,
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            is Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val user: User) : GetProfileScreenUserChange()
+    data class Error(val throwable: Throwable) : GetProfileScreenUserChange()
+    object Loading : GetProfileScreenUserChange()
+}
+
+sealed class GetCurrentUserChange : PartialStateChange<MainState> {
+    override fun reduce(state: MainState): MainState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    loggedInUser = user,
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            is Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val user: User) : GetCurrentUserChange()
+    data class Error(val throwable: Throwable) : GetCurrentUserChange()
+    object Loading : GetCurrentUserChange()
+}
+
 sealed class SelectTabChange : PartialStateChange<HomeState> {
     override fun reduce(state: HomeState): HomeState {
         return when (this) {
@@ -482,6 +586,110 @@ sealed class GetPlaylistTracksChange : PartialStateChange<HomeState> {
     object Loading : GetPlaylistTracksChange()
 }
 
+sealed class SelectProfileUserPlaylistChange : PartialStateChange<MainState> {
+    override fun reduce(state: MainState): MainState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    profileUserPlaylist = playlist,
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            is Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val playlist: Playlist) : SelectProfileUserPlaylistChange()
+    data class Error(val throwable: Throwable) : SelectProfileUserPlaylistChange()
+    object Loading : SelectProfileUserPlaylistChange()
+}
+
+sealed class SelectCurrentUserPlaylistChange : PartialStateChange<MainState> {
+    override fun reduce(state: MainState): MainState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    currentUserPlaylist = playlist,
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            is Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val playlist: Playlist) : SelectCurrentUserPlaylistChange()
+    data class Error(val throwable: Throwable) : SelectCurrentUserPlaylistChange()
+    object Loading : SelectCurrentUserPlaylistChange()
+}
+
+sealed class GetCurrentUserPlaylistTracksChange : PartialStateChange<MainState> {
+    override fun reduce(state: MainState): MainState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    currentUserPlaylistTracks = tracks,
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            is Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val tracks: List<Track>) : GetCurrentUserPlaylistTracksChange()
+    data class Error(val throwable: Throwable) : GetCurrentUserPlaylistTracksChange()
+    object Loading : GetCurrentUserPlaylistTracksChange()
+}
+
+sealed class GetProfileUserPlaylistTracksChange : PartialStateChange<MainState> {
+    override fun reduce(state: MainState): MainState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    profileUserPlaylistTracks = tracks,
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            is Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val tracks: List<Track>) : GetProfileUserPlaylistTracksChange()
+    data class Error(val throwable: Throwable) : GetProfileUserPlaylistTracksChange()
+    object Loading : GetProfileUserPlaylistTracksChange()
+}
+
 sealed class GetFollowersChange : PartialStateChange<HomeState> {
     override fun reduce(state: HomeState): HomeState {
         return when (this) {
@@ -506,6 +714,32 @@ sealed class GetFollowersChange : PartialStateChange<HomeState> {
     data class Data(val followers: List<User>) : GetFollowersChange()
     data class Error(val throwable: Throwable) : GetFollowersChange()
     object Loading : GetFollowersChange()
+}
+
+sealed class GetProfileScreenFollowersChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    selectedProfileFollowers = followers,
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            is Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val followers: List<User>) : GetProfileScreenFollowersChange()
+    data class Error(val throwable: Throwable) : GetProfileScreenFollowersChange()
+    object Loading : GetProfileScreenFollowersChange()
 }
 
 sealed class TextChange : PartialStateChange<HomeState> {
@@ -544,6 +778,32 @@ sealed class GetFollowingChange : PartialStateChange<HomeState> {
     data class Data(val following: List<User>) : GetFollowingChange()
     data class Error(val throwable: Throwable) : GetFollowingChange()
     object Loading : GetFollowingChange()
+}
+
+sealed class GetProfileFollowingChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    selectedProfileFollowing = following,
+                    isLoading = false,
+                    error = null,
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            is Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val following: List<User>) : GetProfileFollowingChange()
+    data class Error(val throwable: Throwable) : GetProfileFollowingChange()
+    object Loading : GetProfileFollowingChange()
 }
 
 sealed class AddTrackToPlaylistChange : PartialStateChange<MainState> {

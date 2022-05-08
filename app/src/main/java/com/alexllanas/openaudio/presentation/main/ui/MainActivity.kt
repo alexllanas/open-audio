@@ -66,7 +66,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onVideoDuration(youTubePlayer: YouTubePlayer, duration: Float) {
-                Log.d(TAG, "onVideoDuration: $duration")
                 mediaPlayerViewModel.dispatch(HomeAction.SetDuration(duration = duration))
             }
 

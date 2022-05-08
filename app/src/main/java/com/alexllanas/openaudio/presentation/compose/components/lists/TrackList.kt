@@ -57,8 +57,6 @@ fun TrackList(
                         homeViewModel = homeViewModel
                     )
                     if (index == tracks.tracks.size - 1
-//                        &&
-//                        mediaPlayerState.currentPlayingTrack != null
                     ) {
                         if (mediaPlayerState.currentPlayingTrack != null) {
                             Spacer(Modifier.height(144.dp))

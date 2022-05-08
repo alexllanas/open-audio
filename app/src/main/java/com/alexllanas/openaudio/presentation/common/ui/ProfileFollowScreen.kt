@@ -1,6 +1,7 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -9,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.compose.components.BottomNav
@@ -21,20 +23,19 @@ import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
 
 @Composable
-fun FollowScreen(
+fun ProfileFollowScreen(
     navHostController: NavHostController,
     homeViewModel: HomeViewModel,
     mediaPlayerState: MediaPlayerState,
     mainState: MainState,
     title: String
 ) {
-    Log.d(TAG, "FollowScreen: ")
-    
+    Log.d(TAG, "ProfileFollowScreen: ")
     val homeState by homeViewModel.homeState.collectAsState()
     val context = LocalContext.current
     val followState = when (title) {
-        Constants.FOLLOWERS -> FollowState.FOLLOWERS
-        else -> FollowState.FOLLOWING
+        Constants.FOLLOWERS -> ProfileFollowState.FOLLOWERS
+        else -> ProfileFollowState.FOLLOWING
     }
 
     Scaffold(
@@ -52,33 +53,34 @@ fun FollowScreen(
     ) {
         UserList(
             when (followState) {
-                FollowState.FOLLOWERS -> homeState.selectedUserFollowers
-                FollowState.FOLLOWING -> homeState.selectedUserFollowing
+                ProfileFollowState.FOLLOWERS -> homeState.selectedProfileFollowers
+                ProfileFollowState.FOLLOWING -> homeState.selectedProfileFollowing
             }, onUserClick = { user ->
                 user.id?.let { id ->
                     mainState.sessionToken?.let { token ->
-                        homeViewModel.dispatch(HomeAction.GetUser(id, token))
-                        navHostController.navigate(NavItem.UserDetail.screenRoute)
+                        homeViewModel.dispatch(HomeAction.GetProfileScreenUser(id, token))
+                        navHostController.navigate(NavItem.ProfileUser.screenRoute)
                     }
                 }
             },
             onFollowClick = { isSubscribing, user ->
                 homeViewModel.onFollowClick(isSubscribing, user, mainState, context)
 
-                homeState.selectedUser?.id?.let { id ->
+                homeState.selectedProfileScreenUser?.id?.let { id ->
                     mainState.sessionToken?.let { token ->
+                        // refresh user list with updated value
                         when (followState) {
-                            FollowState.FOLLOWERS -> {
+                            ProfileFollowState.FOLLOWERS -> {
                                 homeViewModel.dispatch(
-                                    HomeAction.GetFollowers(
+                                    HomeAction.GetProfileFollowers(
                                         id,
                                         token
                                     )
                                 )
                             }
-                            FollowState.FOLLOWING -> {
+                            ProfileFollowState.FOLLOWING -> {
                                 homeViewModel.dispatch(
-                                    HomeAction.GetFollowing(
+                                    HomeAction.GetProfileFollowing(
                                         id,
                                         token
                                     )
@@ -94,6 +96,6 @@ fun FollowScreen(
     }
 }
 
-enum class FollowState {
+enum class ProfileFollowState {
     FOLLOWERS, FOLLOWING
 }

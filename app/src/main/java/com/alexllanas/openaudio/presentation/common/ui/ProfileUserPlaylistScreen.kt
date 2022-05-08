@@ -1,6 +1,5 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
-import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
@@ -23,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexllanas.core.domain.models.Playlist
-import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.components.BottomNav
 import com.alexllanas.openaudio.presentation.compose.components.LoadingIndicator
@@ -41,7 +39,7 @@ import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun PlaylistDetailScreen(
+fun ProfileUserPlaylistScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel,
     playerViewModel: MediaPlayerViewModel,
@@ -49,12 +47,8 @@ fun PlaylistDetailScreen(
     mainViewModel: MainViewModel,
     navController: NavHostController,
 ) {
-    Log.d(TAG, "PlaylistDetailScreen: ")
-    
-    val homeState by homeViewModel.homeState.collectAsState()
-
-    homeState.selectedPlaylist?.url?.let { url ->
-        homeViewModel.getPlaylistTracks(url)
+    mainState.profileUserPlaylist?.url?.let { url ->
+        mainViewModel.dispatch(HomeAction.GetProfileUserPlaylistTracks(url))
     }
 
     Scaffold(topBar = {
@@ -72,20 +66,30 @@ fun PlaylistDetailScreen(
                 )
             }
         }
-
     },
         bottomBar = { BottomNav(navController = navController) }
     ) {
-        homeState.selectedPlaylist?.let {
+        mainState.profileUserPlaylist?.let {
             Column(modifier = Modifier) {
-                Header(modifier, it.toUI())
+                ProfilePlaylistHeader(modifier, it.toUI())
                 TrackList(
-                    tracks = homeState.selectedPlaylistTracks.toUI(),
+                    tracks = mainState.profileUserPlaylistTracks.toUI(),
                     onHeartClick = { track ->
                         track.id?.let { id ->
                             mainState.sessionToken?.let { token ->
-                                homeState.selectedPlaylist?.url?.let { url ->
-                                    homeViewModel.refreshPlaylistTracks(id, token, url)
+                                mainState.profileUserPlaylist.url?.let { url ->
+                                    mainViewModel.dispatch(
+                                        HomeAction.ToggleCurrentUserPlaylistTrackLike(
+                                            id,
+                                            token
+                                        )
+                                    )
+                                    mainViewModel.dispatch(
+                                        HomeAction.GetCurrentUserPlaylistTracks(
+                                            url
+                                        )
+                                    )
+
                                 }
                             }
                         }
@@ -105,7 +109,7 @@ fun PlaylistDetailScreen(
 }
 
 @Composable
-fun Header(modifier: Modifier = Modifier, playlist: PlaylistUIModel) {
+fun ProfileUserPlaylistHeader(modifier: Modifier = Modifier, playlist: PlaylistUIModel) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         GlideImage(
             modifier = Modifier.size(160.dp)

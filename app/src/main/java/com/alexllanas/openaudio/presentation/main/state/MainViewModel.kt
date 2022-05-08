@@ -3,6 +3,7 @@ package com.alexllanas.openaudio.presentation.main.state
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.interactors.auth.AuthInteractors
@@ -67,6 +68,58 @@ class MainViewModel @Inject constructor(
 //                    emit(SetCurrentTrackChange.Data(track))
 //                }
 //            }
+        val executeCurrentGetUser: suspend (String, String) -> Flow<PartialStateChange<MainState>> =
+            { userId, sessionToken ->
+                homeInteractors.getUser(userId, sessionToken)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { GetCurrentUserChange.Error(it) },
+                            ifRight = { GetCurrentUserChange.Data(it) }
+                        )
+                    }.onStart { GetUserChange.Loading }
+            }
+        val executeSelectCurrentUserPlaylist: suspend (playlist: Playlist) -> Flow<PartialStateChange<MainState>> =
+            { playlist ->
+                flowOf(SelectCurrentUserPlaylistChange.Data(playlist))
+            }
+        val executeSelectProfileUserPlaylist: suspend (playlist: Playlist) -> Flow<PartialStateChange<MainState>> =
+            { playlist ->
+                flowOf(SelectProfileUserPlaylistChange.Data(playlist))
+            }
+        val executeGetCurrentUserPlaylistTracks: suspend (String) -> Flow<PartialStateChange<MainState>> =
+            { playlistUrl ->
+                homeInteractors.getPlaylistTracks(playlistUrl)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { GetCurrentUserPlaylistTracksChange.Error(it) },
+                            ifRight = { GetCurrentUserPlaylistTracksChange.Data(it) }
+                        )
+
+                    }.onStart { GetCurrentUserPlaylistTracksChange.Loading }
+            }
+        val executeGetProfileUserPlaylistTracks: suspend (String) -> Flow<PartialStateChange<MainState>> =
+            { playlistUrl ->
+                homeInteractors.getPlaylistTracks(playlistUrl)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { GetProfileUserPlaylistTracksChange.Error(it) },
+                            ifRight = { GetProfileUserPlaylistTracksChange.Data(it) }
+                        )
+
+                    }.onStart { GetProfileUserPlaylistTracksChange.Loading }
+            }
+        val executeToggleCurrentUserPlaylistTrackLike: suspend (String, String) -> Flow<PartialStateChange<MainState>> =
+            { trackId, sessionToken ->
+                homeInteractors.toggleLike(trackId, sessionToken)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { ToggleCurrentUserPlaylistTrackLikeChange.Error(it) },
+                            ifRight = {
+                                ToggleCurrentUserPlaylistTrackLikeChange.Data(it, trackId)
+                            }
+                        )
+                    }.onStart { TogglePlaylistTrackLikeChange.Loading }
+            }
         val executeLogin: suspend (String, String) -> Flow<PartialStateChange<MainState>> =
             { email, password ->
                 authInteractors.login(email, password)
@@ -189,8 +242,23 @@ class MainViewModel @Inject constructor(
                     }.onStart { ChangeInfo.Loading }
             }
         return merge(
-//            filterIsInstance<HomeAction.SetCurrentTrack>()
-//                .flatMapConcat { executeSetCurrentTrack(it.track) },
+            filterIsInstance<HomeAction.ToggleCurrentUserPlaylistTrackLike>()
+                .flatMapConcat {
+                    executeToggleCurrentUserPlaylistTrackLike(
+                        it.trackId,
+                        it.sessionToken
+                    )
+                },
+            filterIsInstance<HomeAction.GetCurrentUser>()
+                .flatMapConcat { executeCurrentGetUser(it.id, it.sessionToken) },
+            filterIsInstance<HomeAction.SelectCurrentUserPlaylist>()
+                .flatMapConcat { executeSelectCurrentUserPlaylist(it.playlist) },
+            filterIsInstance<HomeAction.SelectProfileUserPlaylist>()
+                .flatMapConcat { executeSelectProfileUserPlaylist(it.playlist) },
+            filterIsInstance<HomeAction.GetCurrentUserPlaylistTracks>()
+                .flatMapConcat { executeGetCurrentUserPlaylistTracks(it.playlistUrl) },
+            filterIsInstance<HomeAction.GetProfileUserPlaylistTracks>()
+                .flatMapConcat { executeGetProfileUserPlaylistTracks(it.playlistUrl) },
             filterIsInstance<AuthAction.ClearMainState>()
                 .flatMapConcat { executeClearMainState() },
             filterIsInstance<AuthAction.SetSessionTokenAction>()

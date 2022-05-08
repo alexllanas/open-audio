@@ -12,6 +12,7 @@ import com.alexllanas.core.interactors.home.HomeInteractors
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.auth.state.ClearMainStateChange
+import com.alexllanas.openaudio.presentation.home.state.HomeAction.SetCurrentSecond
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -133,6 +134,17 @@ class HomeViewModel @Inject constructor(
                         )
                     }.onStart { GetUserChange.Loading }
             }
+        val executeGetProfileScreenUser: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
+            { userId, sessionToken ->
+                homeInteractors.getUser(userId, sessionToken)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { GetProfileScreenUserChange.Error(it) },
+                            ifRight = { GetProfileScreenUserChange.Data(it) }
+                        )
+                    }.onStart { GetUserChange.Loading }
+            }
+
         val executeGetUserTracks: suspend (String) -> Flow<PartialStateChange<HomeState>> =
             { userId ->
 //                delay(300)
@@ -206,6 +218,16 @@ class HomeViewModel @Inject constructor(
                         )
                     }.onStart { GetFollowersChange.Loading }
             }
+        val executeGetProfileScreenFollowers: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
+            { userId, sessionToken ->
+                homeInteractors.getFollowers(userId, sessionToken)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { GetProfileScreenFollowersChange.Error(it) },
+                            ifRight = { GetProfileScreenFollowersChange.Data(it) }
+                        )
+                    }.onStart { GetProfileScreenFollowersChange.Loading }
+            }
         val executeGetPlaylistTracks: suspend (String) -> Flow<PartialStateChange<HomeState>> =
             { playlistUrl ->
                 homeInteractors.getPlaylistTracks(playlistUrl)
@@ -226,6 +248,16 @@ class HomeViewModel @Inject constructor(
                             ifRight = { GetFollowingChange.Data(it) }
                         )
                     }.onStart { GetFollowingChange.Loading }
+            }
+        val executeGetProfileFollowing: suspend (String, String) -> Flow<PartialStateChange<HomeState>> =
+            { userId, sessionToken ->
+                homeInteractors.getFollowing(userId, sessionToken)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { GetProfileFollowingChange.Error(it) },
+                            ifRight = { GetProfileFollowingChange.Data(it) }
+                        )
+                    }.onStart { GetProfileFollowingChange.Loading }
             }
         val executeSearch: suspend (String) -> Flow<PartialStateChange<HomeState>> =
             { query ->
@@ -261,8 +293,11 @@ class HomeViewModel @Inject constructor(
                 .flatMapConcat { executeToggleLike(it.trackId, it.sessionToken) },
             filterIsInstance<HomeAction.SelectTrack>()
                 .flatMapConcat { flowOf(SelectTrackChange.Data(selectedTrack = it.selectedTrack)) },
+            filterIsInstance<HomeAction.GetProfileScreenUser>()
+                .flatMapConcat { executeGetProfileScreenUser(it.id, it.sessionToken) },
             filterIsInstance<HomeAction.GetUser>()
                 .flatMapConcat { executeGetUser(it.id, it.sessionToken) },
+
             filterIsInstance<HomeAction.SelectTab>()
                 .flatMapConcat { flowOf(SelectTabChange.Data(it.tabIndex)) },
             filterIsInstance<HomeAction.QueryTextChanged>()
@@ -277,8 +312,12 @@ class HomeViewModel @Inject constructor(
                 .flatMapConcat { executeGetPlaylistTracks(it.playlistUrl) },
             filterIsInstance<HomeAction.GetFollowing>()
                 .flatMapConcat { executeGetFollowing(it.userId, it.sessionToken) },
+            filterIsInstance<HomeAction.GetProfileFollowing>()
+                .flatMapConcat { executeGetProfileFollowing(it.userId, it.sessionToken) },
             filterIsInstance<HomeAction.GetFollowers>()
                 .flatMapConcat { executeGetFollowers(it.userId, it.sessionToken) },
+            filterIsInstance<HomeAction.GetProfileFollowers>()
+                .flatMapConcat { executeGetProfileScreenFollowers(it.userId, it.sessionToken) },
             filterIsInstance<HomeAction.UnfollowUser>()
                 .flatMapConcat { executeUnfollowUser(it.user, it.sessionToken) },
             filterIsInstance<HomeAction.FollowUser>()

@@ -2,7 +2,6 @@ package com.alexllanas.openaudio.presentation.main.ui
 
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.*
@@ -15,12 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -33,14 +30,12 @@ import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.auth.ForgotPasswordScreen
 import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.auth.ui.LandingScreen
-import com.alexllanas.openaudio.presentation.auth.ui.LoginScreen
 import com.alexllanas.openaudio.presentation.auth.ui.RegisterScreen
 import com.alexllanas.openaudio.presentation.common.ui.*
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.home.ui.SearchScreen
 import com.alexllanas.openaudio.presentation.home.ui.StreamScreen
 import com.alexllanas.openaudio.presentation.common.ui.TrackOptionsScreen
-import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.models.PlaylistUIModel
@@ -59,6 +54,7 @@ sealed class NavItem(var title: String, var icon: ImageVector? = null, var scree
     object Login : NavItem("Login", null, "login")
     object Register : NavItem("Register", null, "register")
     object Follow : NavItem("Follow", null, "follow/{title}")
+    object ProfileFollow : NavItem("ProfileFollow", null, "profile_follow/{title}")
     object NewTrack : NavItem("NewTrack", null, "new_track")
     object AddToPlaylist : NavItem("AddToPlaylist", null, "add_to_playlist")
     object TrackOptions : NavItem("TrackOptions", null, "track_options")
@@ -68,14 +64,18 @@ sealed class NavItem(var title: String, var icon: ImageVector? = null, var scree
     object Search : NavItem("Search", Icons.Outlined.Search, "search")
     object Upload : NavItem("Upload", Icons.Filled.Upload, "upload")
     object Profile : NavItem("Profile", Icons.Filled.Person, "profile")
-    object ProfilePlaylist : NavItem("ProfilePlaylist", null, "profile_playlist")
     object Settings : NavItem("Settings", null, "settings")
     object PlaylistDetail :
         NavItem("PlaylistDetail", null, "playlist_detail")
-//        NavItem("PlaylistDetail", null, "playlist_detail/{playlistUIModel}")
+
+    object ProfilePlaylist : NavItem("ProfilePlaylist", null, "profile_playlist")
+    object ProfileUserPlaylist : NavItem("ProfileUserPlaylist", null, "profile_user_playlist")
 
     object UserDetail :
         NavItem("UserDetail", null, "user_detail")
+
+    object ProfileUser :
+        NavItem("ProfileUser", null, "profile_user")
 }
 
 @Composable
@@ -108,6 +108,21 @@ fun NavigationGraph(
             val title = backStackEntry.arguments?.getString("title")
 //            MediaScreen(mainViewModel) {
             FollowScreen(
+                navHostController,
+                homeViewModel,
+                mediaPlayerState,
+                mainState = mainState,
+                title ?: "No Title",
+            )
+//            }
+        }
+        composable(
+            NavItem.ProfileFollow.screenRoute,
+            arguments = listOf(navArgument("title") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val title = backStackEntry.arguments?.getString("title")
+//            MediaScreen(mainViewModel) {
+            ProfileFollowScreen(
                 navHostController,
                 homeViewModel,
                 mediaPlayerState,
@@ -196,14 +211,13 @@ fun NavigationGraph(
         }
         composable(NavItem.Profile.screenRoute) {
 //            MediaScreen(mainViewModel) {
-            UserDetailScreen(
+            ProfileDetailScreen(
                 Modifier,
                 homeViewModel,
                 mainViewModel,
                 mainState,
                 mediaPlayerState,
                 navHostController,
-                true
             ) {
                 navHostController.navigate(NavItem.Edit.screenRoute)
             }
@@ -217,23 +231,27 @@ fun NavigationGraph(
                 mainViewModel,
                 mainState,
                 mediaPlayerState,
-                navHostController,
-                false
+                navHostController
             ) {
                 navHostController.navigate(NavItem.Edit.screenRoute)
             }
 //            }
         }
+        composable(NavItem.ProfileUser.screenRoute) {
+//            MediaScreen(mainViewModel) {
+            ProfileUserScreen(
+                Modifier,
+                homeViewModel,
+                mainViewModel,
+                mainState,
+                mediaPlayerState,
+                navHostController
+            )
+//            }
+        }
         composable(
             NavItem.PlaylistDetail.screenRoute,
-//            arguments = listOf(
-//                navArgument("playlistUIModel") {
-//                    type = PlaylistUIModelType()
-//                }
-//            )
-        ) { backStackEntry ->
-//            backStackEntry.arguments?.getParcelable<PlaylistUIModel>("playlistUIModel")
-//                ?.let { playlist ->
+        ) {
 //            MediaScreen(mainViewModel) {
             PlaylistDetailScreen(
                 modifier = Modifier,
@@ -241,110 +259,29 @@ fun NavigationGraph(
                 homeViewModel = homeViewModel,
                 playerViewModel = playerViewModel,
                 navController = navHostController,
-                mainViewModel = mainViewModel
+                mainViewModel = mainViewModel,
             )
         }
-    }
-}
-
-@Composable
-fun BottomNav(navController: NavController) {
-    val items = listOf(
-        NavItem.Stream,
-        NavItem.Search,
-        NavItem.Upload,
-        NavItem.Profile
-    )
-    Box(
-        modifier = Modifier
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Transparent,
-                        Color.Black
-                    )
-                )
+        composable(NavItem.ProfilePlaylist.screenRoute) {
+            ProfilePlaylistDetailScreen(
+                modifier = Modifier,
+                mainState = mainState,
+                homeViewModel = homeViewModel,
+                playerViewModel = playerViewModel,
+                navController = navHostController,
+                mainViewModel = mainViewModel,
             )
-    ) {
-        BottomNavigation(
-            modifier = Modifier,
-            backgroundColor = Color.Transparent,
-        ) {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
-            items.forEach { item ->
-                BottomNavigationItem(
-                    icon = {
-                        item.icon?.let {
-                            Icon(
-                                imageVector = it,
-                                contentDescription = item.title
-                            )
-                        }
-                    },
-                    label = { Text(text = item.title, fontSize = 9.sp) },
-                    selectedContentColor = MaterialTheme.colors.onSurface,
-                    unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.6f),
-                    alwaysShowLabel = true,
-                    selected = currentRoute == item.screenRoute,
-                    onClick = {
-                        Log.d(TAG, "BottomNav: ${navController.currentDestination}")
-                        navController.navigate(item.screenRoute) {
-                            navController.graph.startDestinationRoute?.let { screenRoute ->
-                                popUpTo(screenRoute) {
-                                    saveState = true
-                                }
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                )
-            }
         }
+        composable(NavItem.ProfileUserPlaylist.screenRoute) {
+            ProfileUserPlaylistScreen(
+                modifier = Modifier,
+                mainState = mainState,
+                homeViewModel = homeViewModel,
+                playerViewModel = playerViewModel,
+                navController = navHostController,
+                mainViewModel = mainViewModel,
+            )
+        }
+
     }
-
-}
-
-class PlaylistUIModelType : NavType<PlaylistUIModel>(isNullableAllowed = false) {
-    override fun get(bundle: Bundle, key: String): PlaylistUIModel? {
-        return bundle.getParcelable(key)
-    }
-
-    override fun parseValue(value: String): PlaylistUIModel {
-        val g = Gson().fromJson(value, PlaylistUIModel::class.java)
-        Log.d(TAG, "parseValue: $g")
-        return g
-    }
-
-    override fun put(bundle: Bundle, key: String, value: PlaylistUIModel) {
-        bundle.putParcelable(key, value)
-    }
-}
-
-class UserUIModelType : NavType<UserUIModel>(isNullableAllowed = true) {
-    override fun get(bundle: Bundle, key: String): UserUIModel? {
-        return bundle.getParcelable(key)
-    }
-
-    override fun parseValue(value: String): UserUIModel {
-        return Gson().fromJson(value, UserUIModel::class.java)
-    }
-
-    override fun put(bundle: Bundle, key: String, value: UserUIModel) {
-        bundle.putParcelable(key, value)
-    }
-
-}
-
-fun navigateToPlaylistDetail(
-    navHostController: NavHostController
-) {
-    navHostController.navigate("playlist_detail")
-}
-
-fun navigateToUserDetail(
-    navHostController: NavHostController
-) {
-    navHostController.navigate("user_detail")
 }

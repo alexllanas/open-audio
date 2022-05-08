@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
-import com.alexllanas.openaudio.presentation.main.ui.BottomNav
+import com.alexllanas.openaudio.presentation.compose.components.BottomNav
 import com.alexllanas.openaudio.presentation.upload.state.UploadAction
 import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
 
