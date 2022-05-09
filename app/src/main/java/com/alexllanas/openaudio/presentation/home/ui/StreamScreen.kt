@@ -85,6 +85,7 @@ fun StreamScreen(
                 TrackList(
                     homeState.stream.toUI(),
                     onHeartClick = { track ->
+                        homeViewModel.dispatch(HomeAction.SelectTrack(track.toDomain()))
                         track.id?.let { id ->
                             mainState.sessionToken?.let { token ->
                                 mainState.loggedInUser?.id?.let { userId ->

@@ -82,6 +82,8 @@ fun PlaylistDetailScreen(
                 TrackList(
                     tracks = homeState.selectedPlaylistTracks.toUI(),
                     onHeartClick = { track ->
+                        homeViewModel.dispatch(HomeAction.SelectTrack(track.toDomain()))
+
                         track.id?.let { id ->
                             mainState.sessionToken?.let { token ->
                                 homeState.selectedPlaylist?.url?.let { url ->

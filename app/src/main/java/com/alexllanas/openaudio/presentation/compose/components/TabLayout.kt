@@ -71,7 +71,6 @@ fun SearchResultTabLayout(
             Tab(
                 selected = pagerState.currentPage == index,
                 onClick = {
-//                    homeViewModel.dispatch(HomeAction.SelectTab(index))
                     coroutineScope.launch {
                         keyboardController?.hide()
                         focusManager.clearFocus()
@@ -105,15 +104,23 @@ fun SearchResultTabLayout(
                         },
                         mainState = mainState,
                         onHeartClick = { track ->
+                            homeViewModel.dispatch(HomeAction.SelectTrack(track.toDomain()))
                             track.id?.let { id ->
                                 mainState.sessionToken?.let { token ->
-                                    homeViewModel.dispatch(
-                                        HomeAction.ToggleLikeSearchTracks(
-                                            trackId = id,
-                                            token
+                                    mainState.loggedInUser?.id?.let { userId ->
+//                                    homeViewModel.dispatch(
+//                                        HomeAction.ToggleLikeSearchTracks(
+//                                            trackId = id,
+//                                            token
+//                                        )
+//                                    )
+                                        homeViewModel.toggleTrackOptionsLike(
+                                            id,
+                                            token,
+                                            userId
                                         )
-                                    )
-                                    likeCallback()
+                                        likeCallback()
+                                    }
                                 }
                             }
                         },

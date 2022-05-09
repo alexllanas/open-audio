@@ -256,6 +256,8 @@ sealed class TogglePlaylistTrackLikeChange : PartialStateChange<HomeState> {
         return when (this) {
             is Data -> {
                 state.copy(
+                    selectedTrack = post.track?.copy(liked = post.loved)
+                        ?: state.selectedTrack?.copy(liked = post.loved),
                     selectedPlaylistTracks = updateTrackList(
                         post,
                         state.selectedPlaylistTracks,
@@ -319,7 +321,8 @@ sealed class ToggleCurrentTrackLikeChange : PartialStateChange<MediaPlayerState>
             is Data -> {
                 state.copy(
 //                    currentPlayingTrack = state.currentPlayingTrack?.copy(liked = post.loved),
-                    currentPlayingTrack = post.track?.copy(liked = post.loved) ?: state.currentPlayingTrack?.copy(liked = post.loved),
+                    currentPlayingTrack = post.track?.copy(liked = post.loved)
+                        ?: state.currentPlayingTrack?.copy(liked = post.loved),
                     isLoading = false,
                     error = null,
                 )
@@ -345,7 +348,9 @@ sealed class ToggleTrackOptionsLikeChange : PartialStateChange<HomeState> {
         return when (this) {
             is Data -> {
                 state.copy(
-                    selectedTrack = state.selectedTrack?.copy(liked = post.loved),
+//                    selectedTrack = state.selectedTrack?.copy(liked = post.loved),
+                    selectedTrack = post.track?.copy(liked = post.loved)
+                        ?: state.selectedTrack?.copy(liked = post.loved),
                     isLoading = false,
                     error = null,
                 )
@@ -383,6 +388,8 @@ sealed class ToggleLikeStreamTrackChange : PartialStateChange<HomeState> {
         return when (this) {
             is Data -> {
                 state.copy(
+                    selectedTrack = post.track?.copy(liked = post.loved)
+                        ?: state.selectedTrack?.copy(liked = post.loved),
                     stream = updateTrackList(post, state.stream, trackId),
                     isLoading = false,
                     error = null,
@@ -409,6 +416,8 @@ sealed class ToggleLikeSearchTrackChange : PartialStateChange<HomeState> {
         return when (this) {
             is Data -> {
                 state.copy(
+                    selectedTrack = post.track?.copy(liked = post.loved)
+                        ?: state.selectedTrack?.copy(liked = post.loved),
                     searchTrackResults = updateTrackList(post, state.searchTrackResults, trackId),
                     isLoading = false,
                     error = null,

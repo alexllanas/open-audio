@@ -29,6 +29,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.mappers.toDomain
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
@@ -75,7 +76,8 @@ fun TrackDetailScreen(
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            mediaPlayerState.currentPlayingTrack?.let { track ->
+//            mediaPlayerState.currentPlayingTrack?.let { track ->
+            homeState.selectedTrack?.let { track ->
                 AsyncImage(
                     modifier = Modifier
                         .padding(top = 64.dp)
@@ -106,10 +108,6 @@ fun TrackDetailScreen(
                             fontWeight = Bold
                         )
                         mainState.loggedInUser?.let { user ->
-
-                            if (track.userLikeIds.contains(user.id)) {
-                                track.liked = true
-                            }
                             if (track.liked) {
                                 Icon(
                                     imageVector = Icons.Filled.Favorite,
@@ -118,13 +116,22 @@ fun TrackDetailScreen(
                                     modifier = Modifier.clickable {
                                         track.id?.let { trackId ->
                                             Log.d(TAG, "TrackDetailScreen: ${track.liked}")
+//                                            mainState.sessionToken?.let { token ->
+//                                                mediaPlayerViewModel.dispatch(
+//                                                    HomeAction.ToggleCurrentTrackLike(
+//                                                        trackId = trackId,
+//                                                        sessionToken = token
+//                                                    )
+//                                                )
+//                                            }
                                             mainState.sessionToken?.let { token ->
-                                                mediaPlayerViewModel.dispatch(
-                                                    HomeAction.ToggleCurrentTrackLike(
-                                                        trackId = trackId,
-                                                        sessionToken = token
+                                                user.id?.let { userId ->
+                                                    homeViewModel.toggleTrackOptionsLike(
+                                                        trackId,
+                                                        token,
+                                                        userId
                                                     )
-                                                )
+                                                }
                                             }
                                         }
                                     }
@@ -135,14 +142,22 @@ fun TrackDetailScreen(
                                     tint = MaterialTheme.colors.onBackground,
                                     contentDescription = stringResource(R.string.unfavorite),
                                     modifier = Modifier.clickable {
+                                        Log.d(TAG, "TrackDetailScreen: ${track.liked}")
                                         track.id?.let { trackId ->
                                             mainState.sessionToken?.let { token ->
-                                                mediaPlayerViewModel.dispatch(
-                                                    HomeAction.ToggleCurrentTrackLike(
-                                                        trackId = trackId,
-                                                        sessionToken = token
+                                                user.id?.let { userId ->
+                                                    homeViewModel.toggleTrackOptionsLike(
+                                                        trackId,
+                                                        token,
+                                                        userId
                                                     )
-                                                )
+//                                                    mediaPlayerViewModel.dispatch(
+//                                                        HomeAction.ToggleCurrentTrackLike(
+//                                                            trackId = trackId,
+//                                                            sessionToken = token
+//                                                        )
+//                                                    )
+                                                }
                                             }
                                         }
                                     }
