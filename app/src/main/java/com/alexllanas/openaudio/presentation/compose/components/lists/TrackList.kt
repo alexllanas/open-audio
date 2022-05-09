@@ -1,12 +1,9 @@
 package com.alexllanas.openaudio.presentation.compose.components.lists
 
 import TrackItem
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,11 +11,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.alexllanas.core.domain.models.Track
+import com.alexllanas.openaudio.presentation.audio.MediaPlayerAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.models.TrackUIList
 import com.alexllanas.openaudio.presentation.models.TrackUIModel
 
@@ -43,7 +41,7 @@ fun TrackList(
             Text("No tracks")
         }
     } else {
-        LazyColumn {
+        LazyColumn() {
             itemsIndexed(tracks.tracks) { index, track ->
                 track?.let {
                     TrackItem(
@@ -54,7 +52,10 @@ fun TrackList(
                         mainState = mainState,
                         mainViewModel = mainViewModel,
                         playerViewModel = playerViewModel,
-                        homeViewModel = homeViewModel
+                        homeViewModel = homeViewModel,
+                        setPlayQueueCallback = {
+                            playerViewModel.dispatch(MediaPlayerAction.SetPlayQueue(tracks.toDomain()))
+                        }
                     )
                     if (index == tracks.tracks.size - 1
                     ) {

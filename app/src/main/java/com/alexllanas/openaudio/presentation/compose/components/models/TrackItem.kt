@@ -24,7 +24,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.models.TrackUIModel
 
@@ -40,6 +40,7 @@ fun TrackItem(
     onTrackClick: (TrackUIModel) -> Unit = {},
     onHeartClick: (TrackUIModel) -> Unit = { },
     onMoreClick: (TrackUIModel) -> Unit = {},
+    setPlayQueueCallback: () -> Unit = {},
     isSelected: Boolean = false
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -119,6 +120,7 @@ fun TrackItem(
                         it.mediaUrl?.let { videoId ->
                             playerViewModel.dispatch(HomeAction.SetVideoId(videoId))
                         }
+                        setPlayQueueCallback()
                         keyboardController?.hide()
                         focusManager.clearFocus(true)
                     }

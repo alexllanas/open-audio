@@ -1,8 +1,5 @@
 package com.alexllanas.openaudio.presentation.compose.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -12,9 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -25,10 +19,9 @@ import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
 import com.alexllanas.openaudio.presentation.compose.components.lists.UserList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
-import com.alexllanas.openaudio.presentation.home.state.SearchState
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.mappers.toUI

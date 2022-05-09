@@ -17,7 +17,7 @@ import com.alexllanas.openaudio.presentation.compose.components.lists.UserList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
 
 @Composable

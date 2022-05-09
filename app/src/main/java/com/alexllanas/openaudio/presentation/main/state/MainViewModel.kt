@@ -19,7 +19,6 @@ import com.alexllanas.openaudio.presentation.home.state.*
 import com.alexllanas.openaudio.presentation.profile.state.ChangeInfo
 import com.alexllanas.openaudio.presentation.profile.state.LogoutChange
 import com.alexllanas.openaudio.presentation.profile.state.ProfileAction
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -68,13 +67,13 @@ class MainViewModel @Inject constructor(
 //                    emit(SetCurrentTrackChange.Data(track))
 //                }
 //            }
-        val executeCurrentGetUser: suspend (String, String) -> Flow<PartialStateChange<MainState>> =
+        val executeGetCurrentUserPlaylists: suspend (String, String) -> Flow<PartialStateChange<MainState>> =
             { userId, sessionToken ->
                 homeInteractors.getUser(userId, sessionToken)
                     .map { result ->
                         result.fold(
-                            ifLeft = { GetCurrentUserChange.Error(it) },
-                            ifRight = { GetCurrentUserChange.Data(it) }
+                            ifLeft = { GetCurrentUserPlaylistsChange.Error(it) },
+                            ifRight = { GetCurrentUserPlaylistsChange.Data(it) }
                         )
                     }.onStart { GetUserChange.Loading }
             }
@@ -249,8 +248,8 @@ class MainViewModel @Inject constructor(
                         it.sessionToken
                     )
                 },
-            filterIsInstance<HomeAction.GetCurrentUser>()
-                .flatMapConcat { executeCurrentGetUser(it.id, it.sessionToken) },
+            filterIsInstance<HomeAction.GetCurrentUserPlaylists>()
+                .flatMapConcat { executeGetCurrentUserPlaylists(it.id, it.sessionToken) },
             filterIsInstance<HomeAction.SelectCurrentUserPlaylist>()
                 .flatMapConcat { executeSelectCurrentUserPlaylist(it.playlist) },
             filterIsInstance<HomeAction.SelectProfileUserPlaylist>()

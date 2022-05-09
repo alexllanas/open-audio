@@ -6,11 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 
 @Composable
 fun MediaScreen(

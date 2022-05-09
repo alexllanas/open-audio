@@ -3,7 +3,6 @@ package com.alexllanas.openaudio.presentation.common.ui
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -27,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
@@ -37,7 +35,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.mappers.toUI
 import com.alexllanas.openaudio.presentation.models.UserUIModel
@@ -126,7 +124,7 @@ fun ProfileDetailScreen(
                     }
                     user.id?.let { id ->
                         mainViewModel.dispatch(
-                            HomeAction.GetCurrentUser(
+                            HomeAction.GetCurrentUserPlaylists(
                                 id,
                                 mainState.sessionToken
                             )

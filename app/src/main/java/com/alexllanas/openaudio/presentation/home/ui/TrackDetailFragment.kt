@@ -15,7 +15,7 @@ import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.theme.OpenAudioTheme
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 import java.lang.IllegalArgumentException
 
 class TrackDetailFragment : Fragment() {

@@ -17,9 +17,8 @@ import com.alexllanas.openaudio.presentation.compose.components.appbars.TitleBac
 import com.alexllanas.openaudio.presentation.compose.components.lists.PlaylistList
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
-import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerState
 
 @Composable
 fun AddToPlaylistScreen(

@@ -1,10 +1,5 @@
 package com.alexllanas.openaudio.presentation.main.ui
 
-import android.os.Bundle
-import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -14,19 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.auth.ForgotPasswordScreen
 import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
 import com.alexllanas.openaudio.presentation.auth.ui.LandingScreen
@@ -37,16 +27,13 @@ import com.alexllanas.openaudio.presentation.home.ui.SearchScreen
 import com.alexllanas.openaudio.presentation.home.ui.StreamScreen
 import com.alexllanas.openaudio.presentation.common.ui.TrackOptionsScreen
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
-import com.alexllanas.openaudio.presentation.models.PlaylistUIModel
-import com.alexllanas.openaudio.presentation.models.UserUIModel
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 import com.alexllanas.openaudio.presentation.profile.ui.EditScreen
 import com.alexllanas.openaudio.presentation.profile.ui.SettingsScreen
 import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
 import com.alexllanas.openaudio.presentation.upload.ui.NewTrackScreen
 import com.alexllanas.openaudio.presentation.upload.ui.UploadScreen
-import com.google.gson.Gson
 
 sealed class NavItem(var title: String, var icon: ImageVector? = null, var screenRoute: String) {
     object Landing : NavItem("Landing", null, "landing")

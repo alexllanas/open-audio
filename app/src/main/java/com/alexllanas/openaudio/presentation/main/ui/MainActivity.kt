@@ -7,7 +7,6 @@ import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -16,15 +15,14 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.alexllanas.core.util.Constants.Companion.CHANNEL_ID
-import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.NotificationBroadcastReceiver
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerState
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.bumptech.glide.Glide
-import com.google.android.exoplayer2.offline.DownloadService.startForeground
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -40,6 +38,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     val mainViewModel: MainViewModel by viewModels()
     val mediaPlayerViewModel: MediaPlayerViewModel by viewModels()
+    val homeViewModel: HomeViewModel by viewModels()
     lateinit var notificationManager: NotificationManagerCompat
     var isPlaying = false
     private var videoId = ""
@@ -52,7 +51,8 @@ class MainActivity : AppCompatActivity() {
         ytView.enableBackgroundPlayback(true)
         var currentSecond = 0F
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
         navController.navigate(R.id.authFragment)
@@ -73,6 +73,9 @@ class MainActivity : AppCompatActivity() {
                 youTubePlayer: YouTubePlayer,
                 state: PlayerConstants.PlayerState
             ) {
+                if (state == PlayerConstants.PlayerState.ENDED) {
+                    mediaPlayerViewModel.playNextTrack()
+                }
                 mediaPlayerViewModel.dispatch(HomeAction.SetPlaybackState(state))
             }
         }
@@ -89,9 +92,10 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             mediaPlayerViewModel.mediaPlayerState.collect { state ->
                 showNotification(state, notificationManager)
-                state.currentPlayingTrack?.let { _ ->
+                state.currentPlayingTrack?.let { currentTrack ->
                     state.videoId.let {
                         if (videoId != it) {
+                            homeViewModel.dispatch(HomeAction.SelectTrack(currentTrack))
                             ytView.getYouTubePlayerWhenReady(object :
                                 YouTubePlayerCallback {
                                 override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {

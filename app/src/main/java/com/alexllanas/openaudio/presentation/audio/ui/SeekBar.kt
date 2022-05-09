@@ -1,33 +1,24 @@
 package com.alexllanas.openaudio.presentation.compose.components
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Slider
-import androidx.compose.material.SliderDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.alexllanas.core.util.Constants
 import com.alexllanas.core.util.Constants.Companion.TAG
-import com.alexllanas.openaudio.presentation.home.state.HomeAction
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 import com.github.krottv.compose.sliders.DefaultThumb
 import com.github.krottv.compose.sliders.DefaultTrack
 import com.github.krottv.compose.sliders.SliderValueHorizontal
-import kotlinx.coroutines.delay
 import kotlin.math.floor
 
 @Composable

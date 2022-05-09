@@ -9,7 +9,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
@@ -24,7 +23,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexllanas.core.util.Constants.Companion.TAG
@@ -32,10 +30,8 @@ import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.components.BottomNav
 import com.alexllanas.openaudio.presentation.compose.components.SearchResultTabLayout
 import com.alexllanas.openaudio.presentation.home.state.*
-import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
-import kotlinx.coroutines.delay
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 
 
 @OptIn(ExperimentalComposeUiApi::class)

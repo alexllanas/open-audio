@@ -4,14 +4,12 @@ import UserItem
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerState
 
 
 @Composable

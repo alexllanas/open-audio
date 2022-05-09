@@ -16,8 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.PlayBackButton
-import com.alexllanas.openaudio.presentation.home.state.HomeAction
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 
 @Composable
 fun MediaControlPanel(modifier: Modifier = Modifier, mediaPlayerViewModel: MediaPlayerViewModel) {

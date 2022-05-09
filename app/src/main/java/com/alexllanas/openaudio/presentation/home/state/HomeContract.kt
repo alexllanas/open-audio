@@ -8,7 +8,7 @@ import com.alexllanas.core.domain.models.User
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.main.state.MainState
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -108,7 +108,7 @@ sealed class HomeAction : Action() {
     data class QueryTextChanged(val query: String) : HomeAction()
     data class GetUser(val id: String, val sessionToken: String) : HomeAction()
     data class GetProfileScreenUser(val id: String, val sessionToken: String) : HomeAction()
-    data class GetCurrentUser(val id: String, val sessionToken: String) : HomeAction()
+    data class GetCurrentUserPlaylists(val id: String, val sessionToken: String) : HomeAction()
     data class ToggleTrackOptionsLike(val trackId: String, val sessionToken: String) : HomeAction()
     data class TogglePlaylistTrackLike(val trackId: String, val sessionToken: String) : HomeAction()
     data class CreatePlaylist(
@@ -491,12 +491,12 @@ sealed class GetProfileScreenUserChange : PartialStateChange<HomeState> {
     object Loading : GetProfileScreenUserChange()
 }
 
-sealed class GetCurrentUserChange : PartialStateChange<MainState> {
+sealed class GetCurrentUserPlaylistsChange : PartialStateChange<MainState> {
     override fun reduce(state: MainState): MainState {
         return when (this) {
             is Data -> {
                 state.copy(
-                    loggedInUser = user,
+                    loggedInUser = state.loggedInUser?.copy(playlists = user.playlists),
                     isLoading = false,
                     error = null,
                 )
@@ -512,9 +512,9 @@ sealed class GetCurrentUserChange : PartialStateChange<MainState> {
         }
     }
 
-    data class Data(val user: User) : GetCurrentUserChange()
-    data class Error(val throwable: Throwable) : GetCurrentUserChange()
-    object Loading : GetCurrentUserChange()
+    data class Data(val user: User) : GetCurrentUserPlaylistsChange()
+    data class Error(val throwable: Throwable) : GetCurrentUserPlaylistsChange()
+    object Loading : GetCurrentUserPlaylistsChange()
 }
 
 sealed class SelectTabChange : PartialStateChange<HomeState> {

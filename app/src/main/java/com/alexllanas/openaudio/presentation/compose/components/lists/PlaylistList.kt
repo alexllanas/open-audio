@@ -1,21 +1,16 @@
 package com.alexllanas.openaudio.presentation.compose.components.lists
 
 import PlaylistItem
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import arrow.core.const
 import com.alexllanas.core.domain.models.Playlist
-import com.alexllanas.core.util.Constants.Companion.TAG
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerState
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerState
 
 
 @Composable

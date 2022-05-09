@@ -1,6 +1,5 @@
 package com.alexllanas.openaudio.presentation.profile.ui
 
-import android.app.Activity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,7 +8,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,9 +25,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
-import com.alexllanas.openaudio.presentation.main.ui.MainFragment
-import com.alexllanas.openaudio.presentation.main.ui.NavItem
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.profile.state.ProfileAction
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 

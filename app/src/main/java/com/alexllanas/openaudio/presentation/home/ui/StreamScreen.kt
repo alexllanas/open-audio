@@ -3,33 +3,23 @@ package com.alexllanas.openaudio.presentation.home.ui
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexllanas.core.util.Constants.Companion.TAG
-import com.alexllanas.openaudio.presentation.SESSION_TOKEN
-import com.alexllanas.openaudio.presentation.auth.state.AuthAction
 import com.alexllanas.openaudio.presentation.compose.components.BottomNav
 import com.alexllanas.openaudio.presentation.compose.components.LoadingIndicator
 import com.alexllanas.openaudio.presentation.compose.components.lists.TrackList
-import com.alexllanas.openaudio.presentation.dataStore
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
-import com.alexllanas.openaudio.presentation.main.ui.NavItem
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.alexllanas.openaudio.presentation.mappers.toUI
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 
 @Composable
 fun StreamScreen(

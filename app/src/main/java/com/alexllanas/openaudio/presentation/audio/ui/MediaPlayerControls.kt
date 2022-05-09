@@ -1,13 +1,10 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
-import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -17,33 +14,21 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
 import androidx.navigation.NavController
-import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.theme.DarkPurple
 import com.alexllanas.openaudio.presentation.home.state.HomeAction
-import com.alexllanas.openaudio.presentation.home.ui.TrackDetailFragment
-import com.alexllanas.openaudio.presentation.home.ui.TrackDetailScreen
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
-import com.alexllanas.openaudio.presentation.main.state.MediaPlayerViewModel
-import com.alexllanas.openaudio.presentation.main.ui.MainFragment
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.main.ui.MainFragmentDirections
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import com.skydoves.landscapist.glide.GlideImage
 
 private val youTubePlayerTracker = YouTubePlayerTracker()

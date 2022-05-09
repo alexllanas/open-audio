@@ -1,14 +1,16 @@
-package com.alexllanas.openaudio.presentation.main.state
+package com.alexllanas.openaudio.presentation.audio.state
 
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.interactors.home.HomeInteractors
-import com.alexllanas.core.util.Constants.Companion.TAG
+import com.alexllanas.openaudio.presentation.audio.MediaPlayerAction
+import com.alexllanas.openaudio.presentation.audio.SetPlayQueueChange
 import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.home.state.*
+import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
+import com.alexllanas.openaudio.presentation.mappers.toDomain
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
@@ -17,10 +19,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class MediaPlayerViewModel @Inject constructor(
-    private val homeInteractors: HomeInteractors
+    private val homeInteractors: HomeInteractors,
 ) : ViewModel() {
     private val initialMainState: MediaPlayerState by lazy { MediaPlayerState() }
     var mediaPlayerState: StateFlow<MediaPlayerState>
@@ -42,7 +45,7 @@ class MediaPlayerViewModel @Inject constructor(
     }
 
     fun dispatch(action: Action) {
-        Log.d(TAG, "dispatch: $action")
+//        Log.d(TAG, "dispatch: $action")
         viewModelScope.launch {
             _actions.emit(action)
         }
@@ -50,6 +53,12 @@ class MediaPlayerViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class, kotlinx.coroutines.FlowPreview::class)
     private fun SharedFlow<Action>.toChangeFlow(): Flow<PartialStateChange<MediaPlayerState>> {
+        val executeSetPlayQueue: suspend (List<Track>) -> Flow<PartialStateChange<MediaPlayerState>> =
+            { change ->
+                flow {
+                    emit(SetPlayQueueChange.Data(change))
+                }
+            }
         val executeClearMediaPlayerState: suspend () -> Flow<PartialStateChange<MediaPlayerState>> =
             {
                 flow {
@@ -117,6 +126,8 @@ class MediaPlayerViewModel @Inject constructor(
                     }.onStart { ToggleLikeStreamTrackChange.Loading }
             }
         return merge(
+            filterIsInstance<MediaPlayerAction.SetPlayQueue>()
+                .flatMapConcat { executeSetPlayQueue(it.queue) },
             filterIsInstance<HomeAction.SetPlaybackState>()
                 .flatMapConcat { executeSetPlaybackState(it.playbackState) },
             filterIsInstance<HomeAction.SetCurrentSecond>()
@@ -141,7 +152,25 @@ class MediaPlayerViewModel @Inject constructor(
     }
 
     fun isPlaying() = mediaPlayerState.value.playbackState == PlayerConstants.PlayerState.PLAYING
-    fun isBuffering() = mediaPlayerState.value.playbackState == PlayerConstants.PlayerState.BUFFERING
+    fun isBuffering() =
+        mediaPlayerState.value.playbackState == PlayerConstants.PlayerState.BUFFERING
+
     fun isEnded() = mediaPlayerState.value.playbackState == PlayerConstants.PlayerState.ENDED
+
+    fun playNextTrack() {
+        val track = mediaPlayerState.value.playQueue[Random.nextInt(
+            0,
+            10
+        )]
+        dispatch(
+            HomeAction.SetCurrentTrack(
+                track
+            )
+        )
+//        homeViewModel.dispatch(HomeAction.SelectTrack(track))
+        track.mediaUrl?.let { videoId ->
+            dispatch(HomeAction.SetVideoId(videoId))
+        }
+    }
 
 }

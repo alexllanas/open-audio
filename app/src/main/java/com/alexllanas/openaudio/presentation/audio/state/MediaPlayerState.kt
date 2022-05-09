@@ -1,4 +1,4 @@
-package com.alexllanas.openaudio.presentation.main.state
+package com.alexllanas.openaudio.presentation.audio.state
 
 import android.media.session.PlaybackState
 import com.alexllanas.core.domain.models.Track
@@ -8,6 +8,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTube
 
 data class MediaPlayerState(
     val currentPlayingTrack: Track? = null,
+    val playQueue: List<Track> = emptyList(),
     val duration: Float = 0F,
     val playbackState: PlayerConstants.PlayerState = PlayerConstants.PlayerState.UNKNOWN,
     val currentSecond: Float = 0F,
