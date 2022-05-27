@@ -21,4 +21,4 @@ https://youtu.be/kgFbDZ2JohQ
 - Retrofit 
 
 ## Credits
-- Adrien Joly & Contributors @ [openWhyd.org ](https://github.com/openwhyd)
+- Adrien Joly & everyone @ [openWhyd.org ](https://github.com/openwhyd)
