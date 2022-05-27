@@ -7,9 +7,12 @@ import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.Button
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.lifecycleScope
@@ -17,11 +20,11 @@ import androidx.navigation.fragment.NavHostFragment
 import com.alexllanas.core.util.Constants.Companion.CHANNEL_ID
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.NotificationBroadcastReceiver
-import com.alexllanas.openaudio.presentation.home.state.HomeAction
-import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerState
 import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
+import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.bumptech.glide.Glide
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -46,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         val ytView = findViewById<YouTubePlayerView>(R.id.youtube_view)
         ytView.enableBackgroundPlayback(true)
@@ -74,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 state: PlayerConstants.PlayerState
             ) {
                 if (state == PlayerConstants.PlayerState.ENDED) {
-                    mediaPlayerViewModel.playNextTrack()
+                    mediaPlayerViewModel.playRandomTrack()
                 }
                 mediaPlayerViewModel.dispatch(HomeAction.SetPlaybackState(state))
             }
@@ -156,7 +160,8 @@ class MainActivity : AppCompatActivity() {
         val launchPendingIntent =
             PendingIntent.getActivity(this, 0, launchIntent, PendingIntent.FLAG_IMMUTABLE)
 
-        val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val notification =
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -192,9 +197,9 @@ class MainActivity : AppCompatActivity() {
 //                )
 //                .setLargeIcon(bitmap)
                 .build()
-        } else {
-            TODO("VERSION.SDK_INT < S")
-        }
+//        } else {
+//            TODO("VERSION.SDK_INT < S")
+//        }
 
         if (mediaPlayerState.playbackState == PlayerConstants.PlayerState.PLAYING
 //            || mediaPlayerState.playbackState == PlayerConstants.PlayerState.BUFFERING

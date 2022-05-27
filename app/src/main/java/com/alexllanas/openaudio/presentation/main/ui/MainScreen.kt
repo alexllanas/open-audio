@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.alexllanas.openaudio.presentation.auth.state.AuthViewModel
-import com.alexllanas.openaudio.presentation.common.ui.MediaScreen
+import com.alexllanas.openaudio.presentation.audio.ui.MediaScreen
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel

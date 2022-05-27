@@ -4,12 +4,16 @@ buildscript {
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.41'
         classpath "com.android.tools.build:gradle:7.0.4"
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.4.2")
+        classpath 'com.google.gms:google-services:4.3.10'  // Google Services plugin
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
+        classpath 'com.google.firebase:perf-plugin:1.4.1'  // Performance Monitoring plugin
+        classpath 'com.android.tools.build:gradle:3.4.3'
     }
     repositories {
         google()
+        mavenCentral()  // Maven Central repository
     }
 }
-
 
 plugins {
     id 'com.android.application' version '7.1.1' apply false

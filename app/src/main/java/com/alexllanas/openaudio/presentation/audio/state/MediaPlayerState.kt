@@ -9,6 +9,8 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTube
 data class MediaPlayerState(
     val currentPlayingTrack: Track? = null,
     val playQueue: List<Track> = emptyList(),
+    val isRepeatOn: Boolean = false,
+    val isShuffleOn: Boolean = false,
     val duration: Float = 0F,
     val playbackState: PlayerConstants.PlayerState = PlayerConstants.PlayerState.UNKNOWN,
     val currentSecond: Float = 0F,

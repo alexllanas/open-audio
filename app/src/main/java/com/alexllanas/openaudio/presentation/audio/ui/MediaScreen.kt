@@ -1,4 +1,4 @@
-package com.alexllanas.openaudio.presentation.common.ui
+package com.alexllanas.openaudio.presentation.audio.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.common.ui.MediaPlayerControls
 
 @Composable
 fun MediaScreen(

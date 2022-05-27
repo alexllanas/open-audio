@@ -157,20 +157,24 @@ class MediaPlayerViewModel @Inject constructor(
 
     fun isEnded() = mediaPlayerState.value.playbackState == PlayerConstants.PlayerState.ENDED
 
-    fun playNextTrack() {
-        val track = mediaPlayerState.value.playQueue[Random.nextInt(
+    fun playRandomTrack() {
+        var track = mediaPlayerState.value.playQueue[Random.nextInt(
             0,
-            10
+            mediaPlayerState.value.playQueue.size - 1
         )]
+        while (track.mediaUrl?.startsWith("/yt/") == false) {
+            track = mediaPlayerState.value.playQueue[Random.nextInt(
+                0,
+                20
+            )]
+        }
         dispatch(
             HomeAction.SetCurrentTrack(
                 track
             )
         )
-//        homeViewModel.dispatch(HomeAction.SelectTrack(track))
         track.mediaUrl?.let { videoId ->
             dispatch(HomeAction.SetVideoId(videoId))
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package com.alexllanas.openaudio.presentation.compose.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
@@ -15,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.alexllanas.openaudio.R
-import com.alexllanas.openaudio.presentation.compose.PlayBackButton
+import com.alexllanas.openaudio.presentation.audio.ui.PlayBackButton
 import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 
 @Composable
@@ -36,7 +37,10 @@ fun MediaControlPanel(modifier: Modifier = Modifier, mediaPlayerViewModel: Media
         )
         Icon(
             modifier = Modifier
-                .size(48.dp),
+                .size(48.dp)
+                .clickable {
+                    mediaPlayerViewModel.playRandomTrack()
+                },
             imageVector = Icons.Filled.SkipPrevious,
             contentDescription = stringResource(R.string.previous)
         )
@@ -45,19 +49,20 @@ fun MediaControlPanel(modifier: Modifier = Modifier, mediaPlayerViewModel: Media
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .size(84.dp),
-            isPlayingOrBuffering = mediaPlayerViewModel.isPlaying() || mediaPlayerViewModel.isBuffering()
+            mediaPlayerState = mediaPlayerState
         ) {
             if (mediaPlayerViewModel.isPlaying()) {
                 mediaPlayerState.youTubePlayer?.pause()
-//                mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(false))
             } else {
                 mediaPlayerState.youTubePlayer?.play()
-//                mediaPlayerViewModel.dispatch(HomeAction.SetIsPlaying(true))
             }
         }
         Icon(
             modifier = Modifier
-                .size(48.dp),
+                .size(48.dp)
+                .clickable {
+                    mediaPlayerViewModel.playRandomTrack()
+                },
             imageVector = Icons.Filled.SkipNext,
             contentDescription = stringResource(R.string.next)
         )

@@ -1,6 +1,7 @@
 package com.alexllanas.openaudio.presentation.compose.components.lists
 
 import TrackItem
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -10,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.alexllanas.openaudio.presentation.audio.MediaPlayerAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
@@ -41,7 +43,10 @@ fun TrackList(
             Text("No tracks")
         }
     } else {
-        LazyColumn() {
+        LazyColumn(
+            Modifier
+//            .background(Color.Yellow)
+        ) {
             itemsIndexed(tracks.tracks) { index, track ->
                 track?.let {
                     TrackItem(
@@ -60,9 +65,15 @@ fun TrackList(
                     if (index == tracks.tracks.size - 1
                     ) {
                         if (mediaPlayerState.currentPlayingTrack != null) {
-                            Spacer(Modifier.height(144.dp))
+                            Spacer(
+                                Modifier
+                                    .height(144.dp)
+                            )
                         } else {
-                            Spacer(Modifier.height(72.dp))
+                            Spacer(
+                                Modifier
+                                    .height(72.dp)
+                            )
                         }
                     }
                 }

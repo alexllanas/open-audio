@@ -8,6 +8,9 @@ plugins {
 apply plugin: 'androidx.navigation.safeargs'
 apply plugin: 'com.android.application'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'com.google.gms.google-services'  // Google Services plugin
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdk 32
@@ -101,6 +104,13 @@ dependencies {
 //    implementation 'com.github.TeamNewPipe:NewPipeExtractor:0.22.0'
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.26'
 
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:30.0.1')
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    // Declare the dependency for the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-perf-ktx'
 
     // For local unit tests
     testImplementation 'com.google.dagger:hilt-android-testing:2.41'

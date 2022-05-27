@@ -127,28 +127,6 @@ fun LoginScreen(
                     start.linkTo(parent.start)
                 }
         )
-//        Button(onClick = {
-//            isEmailError = !email.isValidEmail()
-//
-//            if (!isEmailError) {
-//                mainViewModel.dispatch(
-//                    AuthAction.Login.LoginAction(
-//                        email.trim(),
-//                        password.trim()
-//                    )
-//                )
-//            }
-//        },
-//            modifier = Modifier
-//                .fillMaxWidth(.75f)
-//                .padding(top = 32.dp)
-//                .constrainAs(loginButton) {
-//                    top.linkTo(forgotText.bottom)
-//                    start.linkTo(parent.start)
-//                    end.linkTo(parent.end)
-//                }) {
-//            Text(stringResource(R.string.login))
-//        }
         DefaultButton(
             stringResource = R.string.login,
             modifier = Modifier

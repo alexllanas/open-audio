@@ -1,5 +1,6 @@
 package com.alexllanas.openaudio.presentation.common.ui
 
+import android.icu.text.CaseMap
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -28,6 +29,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
 import com.alexllanas.openaudio.presentation.main.ui.MainFragmentDirections
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -70,7 +72,8 @@ fun MediaPlayerControls(
                     error = ImageBitmap.imageResource(R.drawable.blank_user)
                 )
                 Text(
-                    text = mediaPlayerState.currentPlayingTrack?.title ?: "Track Title",
+                    text = if (mediaPlayerState.playbackState == PlayerConstants.PlayerState.BUFFERING) "Buffering or Advertisement"
+                    else mediaPlayerState.currentPlayingTrack?.title ?: "Track CaseMap.Title",
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier

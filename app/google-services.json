@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "290037485811",
+    "project_id": "openaudio",
+    "storage_bucket": "openaudio.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290037485811:android:57782622308ef4f477e786",
+        "android_client_info": {
+          "package_name": "com.alexllanas.openaudio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "290037485811-37scf5lhe78vlbhbgauikfc7qt1higg4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLNEFdOV-hFWE_MLO_LtmKcHCPjump_9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "290037485811-37scf5lhe78vlbhbgauikfc7qt1higg4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,4 @@
-package com.alexllanas.openaudio.presentation.compose
+package com.alexllanas.openaudio.presentation.audio.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -11,11 +11,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.alexllanas.openaudio.R
+import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerState
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 
 @Composable
-fun PlayBackButton(modifier: Modifier = Modifier, isPlayingOrBuffering: Boolean, onClick: () -> Unit ) {
+fun PlayBackButton(
+    modifier: Modifier = Modifier,
+    mediaPlayerState: MediaPlayerState,
+    onClick: () -> Unit
+) {
     val interactionSource = remember { MutableInteractionSource() }
-
     Icon(
         modifier = modifier
             .clickable(
@@ -24,7 +29,9 @@ fun PlayBackButton(modifier: Modifier = Modifier, isPlayingOrBuffering: Boolean,
             ) {
                 onClick()
             },
-        imageVector = if (isPlayingOrBuffering)
+        imageVector = if (mediaPlayerState.playbackState == PlayerConstants.PlayerState.PLAYING
+            || mediaPlayerState.playbackState == PlayerConstants.PlayerState.BUFFERING
+        )
             Icons.Filled.PauseCircle
         else
             Icons.Filled.PlayCircle,
