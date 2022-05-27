@@ -19,3 +19,6 @@ https://youtu.be/kgFbDZ2JohQ
 - Kotlin Coroutines & Flows
 - Dagger-Hilt
 - Retrofit 
+
+## Credits
+- Adrien Joly & Contributors @ [openWhyd.org ](https://github.com/openwhyd)
