@@ -1,8 +1,8 @@
 # OpenAudio
-This app is built upon OpenWhyd's API for collecting and streaming music from different music platforms. The app only supports YouTube at this time.
+This app is built upon OpenWhyd's API for collecting and streaming music from different music platforms.
 
 ## Screenshots
-
+<img src="https://github.com/alexllanas/open-audio/blob/main/metadata/images/screenshots/home.jpg" alt="drawing" width="200"/>  <img src="https://github.com/alexllanas/open-audio/blob/main/metadata/images/screenshots/search.jpg" alt="drawing" width="200"/>  <img src="https://github.com/alexllanas/open-audio/blob/main/metadata/images/screenshots/upload.jpg" alt="drawing" width="200"/>  <img src="https://github.com/alexllanas/open-audio/blob/main/metadata/images/screenshots/profile.jpg" alt="drawing" width="200"/>
 
 ## Features
 - Search and play music in background
