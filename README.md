@@ -9,10 +9,10 @@ https://youtu.be/kgFbDZ2JohQ
 <img src="https://github.com/alexllanas/open-audio/blob/main/metadata/images/screenshots/controls.jpg" alt="drawing" width="200"/>
 
 ## Features
-- Search and play music in background
-- Account login/logout/register
-- Browsing other user's profiles and playlists
-- Uploading new music
+- Search and play music while app is in background
+- User Authentication
+- Browse other user's profiles and playlists
+- Upload new music
 
 ## Technologies
 - Jetpack Compose
