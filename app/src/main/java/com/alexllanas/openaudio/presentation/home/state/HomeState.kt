@@ -3,6 +3,7 @@ package com.alexllanas.openaudio.presentation.home.state
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
+import com.alexllanas.openaudio.presentation.common.ui.FollowState
 import com.alexllanas.openaudio.presentation.main.state.BaseState
 
 data class HomeState(
@@ -25,5 +26,6 @@ data class HomeState(
     val isLoading: Boolean = false,
     val error: Throwable? = null,
     val searchScreenState: SearchScreenState? = SearchScreenState(),
-    val searchDisplay: SearchDisplay = SearchDisplay.Initial
+    val searchDisplay: SearchDisplay = SearchDisplay.Initial,
+    val followScreenState: FollowState? = FollowState.NONE
 ) : BaseState

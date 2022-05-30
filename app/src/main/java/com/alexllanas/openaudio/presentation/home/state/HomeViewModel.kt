@@ -308,6 +308,10 @@ class HomeViewModel @Inject constructor(
                         executeSelectPlaylist(playlist)
                     } ?: flowOf()
                 },
+            filterIsInstance<HomeAction.SetFollowState>()
+                .flatMapConcat {
+                    flowOf(SetFollowStateChange.Data(it.followState))
+                },
             filterIsInstance<HomeAction.GetPlaylistTracks>()
                 .flatMapConcat { executeGetPlaylistTracks(it.playlistUrl) },
             filterIsInstance<HomeAction.GetFollowing>()

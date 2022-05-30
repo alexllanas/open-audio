@@ -9,10 +9,12 @@ import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.openaudio.presentation.common.state.Action
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerState
+import com.alexllanas.openaudio.presentation.common.ui.FollowState
 import com.alexllanas.openaudio.presentation.main.state.PartialStateChange
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
+import java.lang.IllegalArgumentException
 
 sealed class HomeAction : Action() {
 
@@ -103,6 +105,7 @@ sealed class HomeAction : Action() {
 
     data class SelectTab(val tabIndex: Int) : HomeAction()
     data class SelectTrack(val selectedTrack: Track) : HomeAction()
+    data class SetFollowState(val followState: FollowState) : HomeAction()
     data class SelectPlaylist(val selectedPlaylist: Playlist?) : HomeAction()
     data class GetPlaylistTracks(val playlistUrl: String) : HomeAction()
     data class QueryTextChanged(val query: String) : HomeAction()
@@ -124,6 +127,16 @@ sealed class HomeAction : Action() {
     data class GetCurrentUserPlaylistTracks(val playlistUrl: String) : HomeAction()
     data class ToggleCurrentUserPlaylistTrackLike(val trackId: String, val sessionToken: String) :
         HomeAction()
+}
+
+sealed class SetFollowStateChange : PartialStateChange<HomeState> {
+    override fun reduce(state: HomeState): HomeState {
+        return when (this) {
+            is Data -> state.copy(followScreenState = followState)
+        }
+    }
+
+    data class Data(val followState: FollowState) : SetFollowStateChange()
 }
 
 sealed class SetPlaybackState : PartialStateChange<MediaPlayerState> {
@@ -1055,28 +1068,69 @@ private fun User.updateFollowUser(
     shouldFollow: Boolean
 ): HomeState {
     val updateUsers = arrayListOf<User>()
-    if (state.searchUserResults.find { it.id == id } != null) {
-        state.searchUserResults.map {
-            if (it.id == id) {
-                updateUsers.add(it.copy(isSubscribing = shouldFollow))
+    when (state.followScreenState) {
+        FollowState.FOLLOWERS -> {
+            if (state.selectedUserFollowers.find { it.id == id } != null) {
+                state.selectedUserFollowers.map {
+                    if (it.id == id) {
+                        updateUsers.add(it.copy(isSubscribing = shouldFollow))
+                    } else {
+                        updateUsers.add(it.copy())
+                    }
+                }
             } else {
-                updateUsers.add(it.copy())
+                state.selectedUserFollowers.forEach {
+                    updateUsers.add(it.copy())
+                }
             }
+            return state.copy(
+                selectedUserFollowers = updateUsers,
+                isLoading = false,
+                error = null
+            )
         }
-    } else {
-        state.searchUserResults.forEach {
-            updateUsers.add(it.copy())
+        FollowState.FOLLOWING -> {
+            if (state.selectedUserFollowing.find { it.id == id } != null) {
+                state.selectedUserFollowing.map {
+                    if (it.id == id) {
+                        updateUsers.add(it.copy(isSubscribing = shouldFollow))
+                    } else {
+                        updateUsers.add(it.copy())
+                    }
+                }
+            } else {
+                state.selectedUserFollowing.forEach {
+                    updateUsers.add(it.copy())
+                }
+            }
+            return state.copy(
+                selectedUserFollowing = updateUsers,
+                isLoading = false,
+                error = null
+            )
+        }
+        else -> {
+            if (state.searchUserResults.find { it.id == id } != null) {
+                state.searchUserResults.map {
+                    if (it.id == id) {
+                        updateUsers.add(it.copy(isSubscribing = shouldFollow))
+                    } else {
+                        updateUsers.add(it.copy())
+                    }
+                }
+            } else {
+                state.searchUserResults.forEach {
+                    updateUsers.add(it.copy())
+                }
+            }
+            return state.copy(
+                searchUserResults = updateUsers,
+                isLoading = false,
+                error = null
+            )
         }
     }
-    return state.copy(
-        searchUserResults = updateUsers,
-        isLoading = false,
-        error = null
-    )
 }
-
-//private fun updateTrackLike(post: Post, track: Track): Track {
-//}
 
 private fun updateTrackList(post: Post, tracks: List<Track>, trackId: String): List<Track> {
     val updateTracks = arrayListOf<Track>()

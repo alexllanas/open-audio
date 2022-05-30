@@ -18,8 +18,13 @@ import com.alexllanas.openaudio.presentation.home.state.HomeAction
 import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerState
+import com.alexllanas.openaudio.presentation.home.state.SetFollowStateChange
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
+import java.lang.IllegalArgumentException
 
+/**
+ * Follow screen displayed when viewing other users' followers/following
+ */
 @Composable
 fun FollowScreen(
     navHostController: NavHostController,
@@ -29,14 +34,21 @@ fun FollowScreen(
     title: String
 ) {
     Log.d(TAG, "FollowScreen: ")
-    
+
     val homeState by homeViewModel.homeState.collectAsState()
     val context = LocalContext.current
-    val followState = when (title) {
-        Constants.FOLLOWERS -> FollowState.FOLLOWERS
-        else -> FollowState.FOLLOWING
+//    val followState = when (title) {
+//        Constants.FOLLOWERS -> FollowState.FOLLOWERS
+//        else -> FollowState.FOLLOWING
+//    }
+    when (title) {
+        Constants.FOLLOWERS -> homeViewModel.dispatch(
+            HomeAction.SetFollowState(FollowState.FOLLOWERS)
+        )
+        Constants.FOLLOWING -> homeViewModel.dispatch(
+            HomeAction.SetFollowState(FollowState.FOLLOWING)
+        )
     }
-
     Scaffold(
         topBar = {
             OpenAudioAppBar(
@@ -51,9 +63,10 @@ fun FollowScreen(
 
     ) {
         UserList(
-            when (followState) {
+            when (homeState.followScreenState) {
                 FollowState.FOLLOWERS -> homeState.selectedUserFollowers
                 FollowState.FOLLOWING -> homeState.selectedUserFollowing
+                else -> homeState.searchUserResults
             }, onUserClick = { user ->
                 user.id?.let { id ->
                     mainState.sessionToken?.let { token ->
@@ -67,7 +80,7 @@ fun FollowScreen(
 
                 homeState.selectedUser?.id?.let { id ->
                     mainState.sessionToken?.let { token ->
-                        when (followState) {
+                        when (homeState.followScreenState) {
                             FollowState.FOLLOWERS -> {
                                 homeViewModel.dispatch(
                                     HomeAction.GetFollowers(
@@ -95,5 +108,5 @@ fun FollowScreen(
 }
 
 enum class FollowState {
-    FOLLOWERS, FOLLOWING
+    FOLLOWERS, FOLLOWING, NONE
 }
