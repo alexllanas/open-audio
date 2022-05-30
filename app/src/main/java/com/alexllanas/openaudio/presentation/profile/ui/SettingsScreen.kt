@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.auth.state.AuthAction
@@ -26,6 +27,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerViewModel
+import com.alexllanas.openaudio.presentation.compose.components.DefaultButton
 import com.alexllanas.openaudio.presentation.profile.state.ProfileAction
 import com.alexllanas.openaudio.presentation.profile.state.ProfileViewModel
 
@@ -37,7 +39,8 @@ fun SettingsScreen(
     profileViewModel: ProfileViewModel,
     mainState: MainState,
     navHostController: NavHostController,
-    fragmentManager: FragmentManager?
+    fragmentManager: FragmentManager?,
+    fragmentNavController: NavController
 ) {
     Scaffold(
         topBar = {
@@ -60,26 +63,45 @@ fun SettingsScreen(
                         end.linkTo(parent.end)
                     })
             // logout button
-            Button(onClick = {
-                mainState.sessionToken?.let { token ->
-                    fragmentManager?.commit {
-                        setReorderingAllowed(true)
-                        replace(R.id.nav_host_fragment, AuthFragment())
+            DefaultButton(
+                stringResource = R.string.logout,
+                modifier = Modifier
+                    .padding(top = 64.dp)
+                    .constrainAs(logoutButton) {
+                        top.linkTo(passwordFields.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
                     }
+            ) {
+                mainState.sessionToken?.let { token ->
+                    fragmentNavController.navigate(R.id.authFragment)
                     profileViewModel.dispatch(ProfileAction.Logout(token))
                     mainViewModel.dispatch(AuthAction.ClearMainState)
                     homeViewModel.dispatch(HomeAction.ClearHomeState)
                     mediaPlayerViewModel.dispatch(HomeAction.ClearMediaPlayerState)
                 }
-            }, modifier = Modifier
-                .padding(top = 64.dp)
-                .constrainAs(logoutButton) {
-                    top.linkTo(passwordFields.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }) {
-                Text(text = "Logout")
             }
+
+//            Button(onClick = {
+//                mainState.sessionToken?.let { token ->
+//                    fragmentManager?.commit {
+//                        setReorderingAllowed(true)
+//                        replace(R.id.nav_host_fragment, AuthFragment())
+//                    }
+//                    profileViewModel.dispatch(ProfileAction.Logout(token))
+//                    mainViewModel.dispatch(AuthAction.ClearMainState)
+//                    homeViewModel.dispatch(HomeAction.ClearHomeState)
+//                    mediaPlayerViewModel.dispatch(HomeAction.ClearMediaPlayerState)
+//                }
+//            }, modifier = Modifier
+//                .padding(top = 64.dp)
+//                .constrainAs(logoutButton) {
+//                    top.linkTo(passwordFields.bottom)
+//                    start.linkTo(parent.start)
+//                    end.linkTo(parent.end)
+//                }) {
+//                Text(text = "Logout")
+//            }
         }
     }
 }

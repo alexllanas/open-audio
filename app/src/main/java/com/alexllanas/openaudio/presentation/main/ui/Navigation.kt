@@ -155,7 +155,8 @@ fun NavigationGraph(
                 profileViewModel = profileViewModel,
                 mainState = mainState,
                 navHostController = navHostController,
-                fragmentManager = fragmentManager
+                fragmentManager = fragmentManager,
+                fragmentNavController =  fragmentNavController
             )
 //            }
         }
