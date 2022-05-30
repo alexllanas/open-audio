@@ -36,6 +36,7 @@ import com.alexllanas.openaudio.presentation.home.state.HomeViewModel
 import com.alexllanas.openaudio.presentation.main.state.MainState
 import com.alexllanas.openaudio.presentation.main.state.MainViewModel
 import com.alexllanas.openaudio.presentation.audio.state.MediaPlayerState
+import com.alexllanas.openaudio.presentation.compose.components.DefaultButton
 import com.alexllanas.openaudio.presentation.main.ui.NavItem
 import com.alexllanas.openaudio.presentation.mappers.toUI
 import com.alexllanas.openaudio.presentation.models.UserUIModel
@@ -220,10 +221,11 @@ fun ProfileHeader(
                 }
             )
         }
-        Button(
-            onClick = { onEditClick() },
-        ) {
-            Text("EDIT")
-        }
+        DefaultButton(R.string.edit) { onEditClick() }
+//        Button(
+//            onClick = { onEditClick() },
+//        ) {
+//            Text("EDIT")
+//        }
     }
 }

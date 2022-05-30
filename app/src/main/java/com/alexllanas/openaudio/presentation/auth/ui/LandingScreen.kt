@@ -1,5 +1,8 @@
 package com.alexllanas.openaudio.presentation.auth.ui
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,9 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.alexllanas.core.util.Constants
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.components.DefaultButton
 import com.alexllanas.openaudio.presentation.compose.theme.FacebookBlue
@@ -22,6 +27,8 @@ import com.alexllanas.openaudio.presentation.util.ColorUtil
 
 @Composable
 fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
+    val context = LocalContext.current
+
     val modifier = Modifier
         .fillMaxSize()
         .background(colors.background)
@@ -53,7 +60,7 @@ fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
                     end.linkTo(parent.end)
                 })
         DefaultButton(
-            stringResource = R.string.sign_up_with_email,
+            stringResource = R.string.sign_up,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
@@ -63,10 +70,11 @@ fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
                     end.linkTo(parent.end)
                 }
         ) {
-            onEmailClick()
+            launchWebIntent(context)
+//            onEmailClick()
         }
         DefaultButton(
-            stringResource = R.string.login_caps,
+            stringResource = R.string.login,
             modifier = Modifier
                 .padding(top = 16.dp, bottom = 64.dp)
                 .height(48.dp)
@@ -82,3 +90,8 @@ fun LandingScreen(onEmailClick: () -> Unit, onLoginClick: () -> Unit) {
     }
 }
 
+private fun launchWebIntent(context: Context) {
+    val i = Intent(Intent.ACTION_VIEW)
+    i.data = Uri.parse(Constants.REGISTER_URL)
+    context.startActivity(i)
+}

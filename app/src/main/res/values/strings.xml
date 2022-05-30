@@ -27,9 +27,9 @@
     <string name="unfavorite">unfavorite</string>
     <string name="search_hint">Search music</string>
     <string name="close">close</string>
-    <string name="login">Log in</string>
+    <string name="login">Log In</string>
     <string name="login_caps">LOG IN</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="sign_up">Sign Up With OpenWhyd</string>
     <string name="sign_up_with_email">SIGN UP WITH EMAIL</string>
     <string name="confirm_email_reset_pw">Confirm your email to reset your password.</string>
     <string name="forgot_pw">Forgot password?</string>
@@ -38,4 +38,6 @@
     <string name="track_image">track image</string>
     <string name="previous">previous</string>
     <string name="next">next</string>
+    <string name="edit">EDIT</string>
+    <string name="upload">UPLOAD</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.alexllanas.openaudio.presentation.upload.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -12,12 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.components.BottomNav
+import com.alexllanas.openaudio.presentation.compose.components.DefaultButton
 import com.alexllanas.openaudio.presentation.upload.state.UploadAction
 import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
 
@@ -73,20 +76,31 @@ fun UploadScreen(navController: NavHostController, uploadViewModel: UploadViewMo
                         centerVerticallyTo(parent)
                     }
             )
-            Button(onClick = {
 
-                navController.navigate("new_track")
-            },
-                modifier = Modifier
+            DefaultButton(R.string.upload,
+                Modifier
                     .padding(top = 24.dp)
                     .constrainAs(uploadButton) {
                         top.linkTo(urlTextField.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                    }
-            ) {
-                Text("Upload")
+                    }) {
+                navController.navigate("new_track")
             }
+//            Button(onClick = {
+//
+//                navController.navigate("new_track")
+//            },
+//                modifier = Modifier
+//                    .padding(top = 24.dp)
+//                    .constrainAs(uploadButton) {
+//                        top.linkTo(urlTextField.bottom)
+//                        start.linkTo(parent.start)
+//                        end.linkTo(parent.end)
+//                    }
+//            ) {
+//                Text("Upload")
+//            }
         }
     }
 }
@@ -94,17 +108,22 @@ fun UploadScreen(navController: NavHostController, uploadViewModel: UploadViewMo
 
 @Composable
 fun Heading(modifier: Modifier = Modifier) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Spacer(modifier = Modifier.height(200.dp))
         Text(
             text = "OpenAudio",
             style = MaterialTheme.typography.h2,
-            modifier = Modifier.alpha(0.3f)
+            modifier = Modifier.alpha(0.3f),
+            textAlign = TextAlign.Center,
         )
         Text(
             text = "MUSIC BY MUSIC LOVERS",
             style = MaterialTheme.typography.subtitle1,
-            modifier = Modifier.alpha(0.3f)
+            modifier = Modifier.alpha(0.3f),
+            textAlign = TextAlign.Center
         )
     }
 

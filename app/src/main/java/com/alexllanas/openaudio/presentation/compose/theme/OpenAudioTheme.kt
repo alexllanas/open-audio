@@ -17,8 +17,7 @@ val darkColors = darkColors(
 //    primaryVariant = Color.Gray,
 //    onBackground = Color.Gray,
 //    background = Color.Black
-//    primary = Color(0xFFBB86FC),
-    primary = Color(0xFF121212),
+    primary = Color.White.copy(alpha = 0.7f),
 //    primaryVariant = Color(0xFF3700B3),
     primaryVariant = Color(0xFF121212),
     secondary = Color(0xFF03DAC6),

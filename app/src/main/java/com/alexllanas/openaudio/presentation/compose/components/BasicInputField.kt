@@ -8,6 +8,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.VisualTransformation
@@ -48,7 +49,9 @@ fun BasicInputField(
         singleLine = true,
         colors = TextFieldDefaults.textFieldColors(
             textColor = MaterialTheme.colors.onSurface,
-            backgroundColor = MaterialTheme.colors.surface
+            backgroundColor = MaterialTheme.colors.surface,
+            focusedIndicatorColor = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+            cursorColor = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
         ),
     )
 }

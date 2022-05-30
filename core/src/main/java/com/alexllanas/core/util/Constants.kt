@@ -21,6 +21,7 @@ class Constants {
          * Network
          */
         const val BASE_URL = "https://openwhyd.org"
+        const val REGISTER_URL = "https://openwhyd.org/#signup"
         const val PAGE_LIMIT = 50
 
         /**
@@ -28,8 +29,5 @@ class Constants {
          */
         const val DATABASE_NAME = "open_audio_db"
 
-        /**
-         * DataStore
-         */
     }
 }

@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DefaultButton(@StringRes stringResource: Int, modifier: Modifier, onClick: () -> Unit) {
+fun DefaultButton(@StringRes stringResource: Int, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Button(
         onClick = { onClick() },
         colors = ButtonDefaults.buttonColors(
