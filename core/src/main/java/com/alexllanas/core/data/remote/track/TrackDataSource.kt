@@ -2,6 +2,7 @@ package com.alexllanas.core.data.remote.track
 
 import arrow.core.Either
 import com.alexllanas.core.domain.models.Track
+import com.alexllanas.core.domain.models.TrackMetadata
 import kotlinx.coroutines.flow.Flow
 
 interface TrackDataSource {
@@ -22,6 +23,10 @@ interface TrackDataSource {
         playListId: String,
         sessionToken: String
     ): Flow<Either<Throwable, Track>>
+
+    suspend fun getTrackMetadata(
+        mediaUrl: String
+    ) : Flow<Either<Throwable, TrackMetadata>>
 
     suspend fun deleteTrack(
         trackId: String,

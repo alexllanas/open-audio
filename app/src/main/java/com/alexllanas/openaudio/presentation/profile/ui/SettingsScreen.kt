@@ -81,27 +81,6 @@ fun SettingsScreen(
                     mediaPlayerViewModel.dispatch(HomeAction.ClearMediaPlayerState)
                 }
             }
-
-//            Button(onClick = {
-//                mainState.sessionToken?.let { token ->
-//                    fragmentManager?.commit {
-//                        setReorderingAllowed(true)
-//                        replace(R.id.nav_host_fragment, AuthFragment())
-//                    }
-//                    profileViewModel.dispatch(ProfileAction.Logout(token))
-//                    mainViewModel.dispatch(AuthAction.ClearMainState)
-//                    homeViewModel.dispatch(HomeAction.ClearHomeState)
-//                    mediaPlayerViewModel.dispatch(HomeAction.ClearMediaPlayerState)
-//                }
-//            }, modifier = Modifier
-//                .padding(top = 64.dp)
-//                .constrainAs(logoutButton) {
-//                    top.linkTo(passwordFields.bottom)
-//                    start.linkTo(parent.start)
-//                    end.linkTo(parent.end)
-//                }) {
-//                Text(text = "Logout")
-//            }
         }
     }
 }

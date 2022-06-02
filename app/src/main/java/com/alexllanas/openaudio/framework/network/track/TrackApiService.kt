@@ -1,6 +1,7 @@
 package com.alexllanas.openaudio.framework.network.track
 
 import com.alexllanas.core.data.remote.track.TrackRemoteServiceContract
+import com.alexllanas.core.domain.models.TrackMetadata
 import com.alexllanas.openaudio.framework.network.models.TrackResponse
 import retrofit2.http.*
 
@@ -24,6 +25,11 @@ interface TrackApiService : TrackRemoteServiceContract {
         @Query("pl[id]") playListId: String,
         @Header("Cookie") sessionToken: String
     ): TrackResponse
+
+    @GET("https://youtube.com/oembed?url=https://www.youtube.com/watch")
+    override suspend fun getTrackMetadata(
+        @Query("v") mediaUrl: String
+    ): TrackMetadata
 
     @GET("/api/post?action=delete")
     override suspend fun deleteTrack(

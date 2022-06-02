@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.alexllanas.core.data.remote.track.TrackDataSource
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
+import com.alexllanas.core.domain.models.TrackMetadata
 import com.alexllanas.core.util.getResult
 import com.alexllanas.openaudio.framework.mappers.toDomainTrack
 import com.alexllanas.openaudio.framework.mappers.toDomainUser
@@ -48,6 +49,12 @@ class TrackDataSourceImpl(
                     sessionToken
                 )
                 .toDomainTrack()
+        }.asFlow()
+            .getResult()
+
+    override suspend fun getTrackMetadata(mediaUrl: String): Flow<Either<Throwable, TrackMetadata>> =
+        suspend {
+            trackApiService.getTrackMetadata(mediaUrl)
         }.asFlow()
             .getResult()
 

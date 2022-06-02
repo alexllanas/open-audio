@@ -1,7 +1,5 @@
 package com.alexllanas.core.data.remote.track
 
-import javax.sound.midi.Track
-
 interface TrackRemoteServiceContract {
 
 
@@ -21,6 +19,10 @@ interface TrackRemoteServiceContract {
         playListId: String,
         sessionToken: String
     ): Any
+
+    suspend fun getTrackMetadata(
+        mediaUrl: String
+    ) : Any
 
     suspend fun deleteTrack(
         trackId: String,
