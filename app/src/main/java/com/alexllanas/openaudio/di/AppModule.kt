@@ -18,6 +18,7 @@ import com.alexllanas.core.interactors.home.*
 import com.alexllanas.core.interactors.profile.*
 import com.alexllanas.core.interactors.common.AddTrack
 import com.alexllanas.core.interactors.common.AddTrackToPlaylist
+import com.alexllanas.core.interactors.upload.GetTrackMetadata
 import com.alexllanas.core.interactors.upload.UploadInteractors
 import com.alexllanas.openaudio.framework.network.user.UserDataSourceImpl
 import com.alexllanas.core.util.Constants
@@ -242,6 +243,7 @@ class AppModule {
         return UploadInteractors(
             AddTrack(trackDataSource),
             AddTrackToPlaylist(trackDataSource),
+            GetTrackMetadata(trackDataSource),
             LikeTrack(trackDataSource),
             UnlikeTrack(trackDataSource)
         )

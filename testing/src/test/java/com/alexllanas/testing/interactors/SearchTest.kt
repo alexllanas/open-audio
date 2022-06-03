@@ -16,30 +16,30 @@ class SearchTest {
     private val dataSource = FakeHomeDataSourceImpl(remoteService)
 
     // system under test
-    val search = Search(commonDataSource = dataSource)
-
-    @Test
-    fun query_success() = runTest {
-        query_success_error("succeed")
-    }
-
-    @Test
-    fun query_error() = runTest {
-        query_success_error("fail")
-    }
-
-    private fun query_success_error(succeedOrError: String) = runTest {
-        val resultFlow = search(succeedOrError)
-        resultFlow
-            .collect { result ->
-                result.fold(
-                    ifRight = {
-                        assert(it == SEARCH_MAP_RESULTS)
-                    },
-                    ifLeft = {
-                        assert(it.throwable.message == NETWORK_ERROR_MESSAGE)
-                    }
-                )
-            }
-    }
+//    val search = Search(commonDataSource = dataSource)
+//
+//    @Test
+//    fun query_success() = runTest {
+//        query_success_error("succeed")
+//    }
+//
+//    @Test
+//    fun query_error() = runTest {
+//        query_success_error("fail")
+//    }
+//
+//    private fun query_success_error(succeedOrError: String) = runTest {
+//        val resultFlow = search(succeedOrError)
+//        resultFlow
+//            .collect { result ->
+//                result.fold(
+//                    ifRight = {
+//                        assert(it == SEARCH_MAP_RESULTS)
+//                    },
+//                    ifLeft = {
+//                        assert(it.throwable.message == NETWORK_ERROR_MESSAGE)
+//                    }
+//                )
+//            }
+//    }
 }

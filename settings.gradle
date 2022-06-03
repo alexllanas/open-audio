@@ -17,4 +17,3 @@ rootProject.name = "OpenAudio"
 include ':app'
 include ':core'
 include ':testing'
-include ':metadata'
