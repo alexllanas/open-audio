@@ -5,7 +5,6 @@ import com.alexllanas.core.util.Constants
 import com.alexllanas.testing.data.remote.track.FakeTrackDataSourceImpl
 import com.alexllanas.testing.data.remote.track.FakeTrackRemoteServiceImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import java.util.*
@@ -27,7 +26,7 @@ class GetTrackMetadataTest {
                 result.fold(
                     ifRight = {
                         assert(it.title == Constants.SAMPLE_TRACK_TITLE)
-                        assert(it.thumbNailUrl == Constants.SAMPLE_TRACK_THUMBNAIL_URL)
+                        assert(it.thumbnailUrl == Constants.SAMPLE_TRACK_THUMBNAIL_URL)
                     },
                     ifLeft = {
                         assert(it.message == Constants.GET_TRACK_METADATA_ERROR)
@@ -44,7 +43,7 @@ class GetTrackMetadataTest {
                 result.fold(
                     ifRight = {
                         assert(it.title == Constants.SAMPLE_TRACK_TITLE)
-                        assert(it.thumbNailUrl == Constants.SAMPLE_TRACK_THUMBNAIL_URL)
+                        assert(it.thumbnailUrl == Constants.SAMPLE_TRACK_THUMBNAIL_URL)
                     },
                     ifLeft = {
                         assert(it.message == Constants.GET_TRACK_METADATA_ERROR)

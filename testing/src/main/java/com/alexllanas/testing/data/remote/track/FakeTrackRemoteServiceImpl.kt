@@ -33,7 +33,8 @@ class FakeTrackRemoteServiceImpl : TrackRemoteServiceContract {
             return TrackMetadata(
                 id = UUID.randomUUID().toString(),
                 title = Constants.SAMPLE_TRACK_TITLE,
-                thumbNailUrl = Constants.SAMPLE_TRACK_THUMBNAIL_URL
+                mediaUrl = mediaUrl,
+                thumbnailUrl = Constants.SAMPLE_TRACK_THUMBNAIL_URL
             )
         } else {
             throw Exception(Constants.GET_TRACK_METADATA_ERROR)

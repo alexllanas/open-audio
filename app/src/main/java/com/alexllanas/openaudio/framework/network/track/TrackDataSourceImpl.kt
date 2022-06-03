@@ -54,7 +54,9 @@ class TrackDataSourceImpl(
 
     override suspend fun getTrackMetadata(mediaUrl: String): Flow<Either<Throwable, TrackMetadata>> =
         suspend {
-            trackApiService.getTrackMetadata(mediaUrl)
+            val metadata = trackApiService.getTrackMetadata(mediaUrl)
+            metadata.mediaUrl = mediaUrl
+            metadata
         }.asFlow()
             .getResult()
 
