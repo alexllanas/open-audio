@@ -22,7 +22,7 @@ interface TrackRemoteServiceContract {
 
     suspend fun getTrackMetadata(
         mediaUrl: String
-    ) : Any
+    ): Any
 
     suspend fun deleteTrack(
         trackId: String,

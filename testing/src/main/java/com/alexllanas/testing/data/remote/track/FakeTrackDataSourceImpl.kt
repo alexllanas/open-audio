@@ -7,6 +7,7 @@ import com.alexllanas.core.domain.models.TrackMetadata
 import com.alexllanas.core.util.getResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 class FakeTrackDataSourceImpl(private val fakeTrackRemoteServiceImpl: FakeTrackRemoteServiceImpl) :
     TrackDataSource {
@@ -31,11 +32,8 @@ class FakeTrackDataSourceImpl(private val fakeTrackRemoteServiceImpl: FakeTrackR
         TODO("Not yet implemented")
     }
 
-    override suspend fun getTrackMetadata(mediaUrl: String): Flow<Either<Throwable, TrackMetadata>> =
-        flow {
-            val metadata = fakeTrackRemoteServiceImpl.getTrackMetadata(mediaUrl)
-            emit(metadata)
-        }.getResult()
+    override suspend fun getTrackMetadata(mediaUrl: String): Flow<TrackMetadata> =
+        flowOf(fakeTrackRemoteServiceImpl.getTrackMetadata(mediaUrl))
 
 
     override suspend fun deleteTrack(

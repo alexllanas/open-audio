@@ -87,20 +87,6 @@ fun UploadScreen(navController: NavHostController, uploadViewModel: UploadViewMo
                     }) {
                 navController.navigate("new_track")
             }
-//            Button(onClick = {
-//
-//                navController.navigate("new_track")
-//            },
-//                modifier = Modifier
-//                    .padding(top = 24.dp)
-//                    .constrainAs(uploadButton) {
-//                        top.linkTo(urlTextField.bottom)
-//                        start.linkTo(parent.start)
-//                        end.linkTo(parent.end)
-//                    }
-//            ) {
-//                Text("Upload")
-//            }
         }
     }
 }
