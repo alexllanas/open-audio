@@ -28,7 +28,7 @@ interface TrackApiService : TrackRemoteServiceContract {
 
     @GET("https://youtube.com/oembed?url=https://www.youtube.com/watch")
     override suspend fun getTrackMetadata(
-        @Query("v") mediaUrl: String
+        @Query("v") videoId: String
     ): TrackMetadata
 
     @GET("/api/post?action=delete")

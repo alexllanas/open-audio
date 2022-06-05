@@ -24,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
+import com.alexllanas.core.domain.models.Track
+import com.alexllanas.core.util.Constants
 import com.alexllanas.openaudio.R
 import com.alexllanas.openaudio.presentation.compose.components.BottomNav
 import com.alexllanas.openaudio.presentation.compose.components.appbars.TitleBackBar
@@ -40,6 +42,8 @@ fun NewTrackScreen(
     homeViewModel: HomeViewModel
 ) {
     val uploadState by uploadViewModel.uploadState.collectAsState()
+//    val newTrack = uploadState.uploadedTrackResults[0]
+    val newTrack = Track(title = "asdfasd")
 
     Scaffold(
         topBar = { TitleBackBar("Upload") { navHostController.popBackStack() } },
@@ -48,7 +52,7 @@ fun NewTrackScreen(
         ConstraintLayout(modifier = Modifier.padding(16.dp).fillMaxSize()) {
             val (image, trackInfo) = createRefs()
 
-            GlideImage(imageModel = uploadState.uploadedTrack?.title,
+            GlideImage(imageModel = newTrack.title,
                 contentScale = ContentScale.Crop,
                 placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
                 error = ImageBitmap.imageResource(R.drawable.blank_user),
@@ -71,6 +75,7 @@ fun NewTrackScreen(
                 homeViewModel = homeViewModel,
                 uploadState = uploadState,
                 navHostController = navHostController,
+                newTrack = newTrack
             )
         }
 
@@ -82,12 +87,13 @@ fun TrackDetail(
     modifier: Modifier = Modifier,
     uploadState: UploadState,
     homeViewModel: HomeViewModel,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    newTrack: Track
 ) {
     Row(modifier = modifier) {
         Text(
             modifier = Modifier.weight(1f),
-            text = uploadState.trackTitle + "track title",
+            text = newTrack.title ?: "No Title",
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Start
         )
@@ -100,10 +106,8 @@ fun TrackDetail(
             imageVector = Icons.Outlined.MoreVert,
             contentDescription = stringResource(R.string.like_track),
             modifier = Modifier.clickable {
-                uploadState.uploadedTrack?.let { track ->
-                    homeViewModel.dispatch(HomeAction.SelectTrack(track))
-                    navHostController.navigate("track_options")
-                }
+                homeViewModel.dispatch(HomeAction.SelectTrack(newTrack))
+                navHostController.navigate("track_options")
             }
         )
     }

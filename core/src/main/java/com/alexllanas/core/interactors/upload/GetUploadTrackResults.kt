@@ -6,6 +6,7 @@ import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.util.Constants
 import com.alexllanas.core.util.getResult
 import kotlinx.coroutines.flow.map
+import java.lang.IllegalArgumentException
 
 class GetUploadTrackResults(
     private val trackDataSource: TrackDataSource,
@@ -14,7 +15,14 @@ class GetUploadTrackResults(
     suspend operator fun invoke(
         mediaUrl: String
     ) =
-        trackDataSource.getTrackMetadata(mediaUrl).map { metadata ->
+
+
+        trackDataSource.getTrackMetadata(
+            Regex(Constants.VIDEO_ID_REGEX).find(mediaUrl)?.groupValues?.get(0)
+                ?: throw IllegalArgumentException(
+                    "No video ID found in url."
+                )
+        ).map { metadata ->
             val uploadTrackResults = arrayListOf<Track>()
             val newTrack = Track(
                 id = Constants.NEW_TRACK_ID,

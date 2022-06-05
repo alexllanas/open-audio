@@ -25,7 +25,7 @@ interface TrackDataSource {
     ): Flow<Either<Throwable, Track>>
 
     suspend fun getTrackMetadata(
-        mediaUrl: String
+        videoId: String
     ): Flow<TrackMetadata>
 
     suspend fun deleteTrack(

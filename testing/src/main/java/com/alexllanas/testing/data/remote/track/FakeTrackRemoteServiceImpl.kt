@@ -28,12 +28,12 @@ class FakeTrackRemoteServiceImpl : TrackRemoteServiceContract {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getTrackMetadata(mediaUrl: String): TrackMetadata {
-        if (mediaUrl == Constants.SAMPLE_MEDIA_URL) {
+    override suspend fun getTrackMetadata(videoId: String): TrackMetadata {
+        if (videoId == Constants.SAMPLE_MEDIA_URL) {
             return TrackMetadata(
                 id = Constants.NEW_TRACK_ID,
                 title = Constants.SAMPLE_TRACK_TITLE,
-                mediaUrl = mediaUrl,
+                mediaUrl = videoId,
                 thumbnailUrl = Constants.SAMPLE_TRACK_THUMBNAIL_URL
             )
         } else {

@@ -21,7 +21,7 @@ interface TrackRemoteServiceContract {
     ): Any
 
     suspend fun getTrackMetadata(
-        mediaUrl: String
+        videoId: String
     ): Any
 
     suspend fun deleteTrack(

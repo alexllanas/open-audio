@@ -63,13 +63,6 @@ class UploadViewModel @Inject constructor(
                         )
                     }.onStart { GetUploadTrackResultsChange.Loading }
             }
-        val executeGetTrackMetadata: suspend (String) -> Flow<PartialStateChange<UploadState>> =
-            { mediaUrl ->
-                uploadInteractors.getTrackMetadata(mediaUrl)
-                    .map { result ->
-                        GetTrackMetadataChange.Data(result)
-                    }.onStart { GetTrackMetadataChange.Loading }
-            }
         return merge(
             filterIsInstance<UploadAction.UploadTrack>()
                 .flatMapConcat {
@@ -86,12 +79,6 @@ class UploadViewModel @Inject constructor(
                         it.mediaUrl,
                     )
                 },
-            filterIsInstance<UploadAction.GetTrackMetadata>()
-                .flatMapConcat {
-                    executeGetTrackMetadata(
-                        it.mediaUrl
-                    )
-                }
         )
     }
 

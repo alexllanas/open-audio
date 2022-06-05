@@ -32,8 +32,8 @@ class FakeTrackDataSourceImpl(private val fakeTrackRemoteServiceImpl: FakeTrackR
         TODO("Not yet implemented")
     }
 
-    override suspend fun getTrackMetadata(mediaUrl: String): Flow<TrackMetadata> =
-        flowOf(fakeTrackRemoteServiceImpl.getTrackMetadata(mediaUrl))
+    override suspend fun getTrackMetadata(videoId: String): Flow<TrackMetadata> =
+        flowOf(fakeTrackRemoteServiceImpl.getTrackMetadata(videoId))
 
 
     override suspend fun deleteTrack(

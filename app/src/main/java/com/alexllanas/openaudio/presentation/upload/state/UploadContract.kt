@@ -76,29 +76,3 @@ sealed class GetUploadTrackResultsChange : PartialStateChange<UploadState> {
     data class Error(val throwable: Throwable) : GetUploadTrackResultsChange()
     object Loading : GetUploadTrackResultsChange()
 }
-
-sealed class GetTrackMetadataChange : PartialStateChange<UploadState> {
-    override fun reduce(state: UploadState): UploadState {
-        return when (this) {
-            is Data -> {
-                state.copy(
-                    trackMetadata = trackMetadata,
-                    isLoading = false,
-                    error = null
-                )
-            }
-            is Error -> state.copy(
-                isLoading = false,
-                error = throwable
-            )
-            Loading -> state.copy(
-                isLoading = true,
-                error = null
-            )
-        }
-    }
-
-    data class Error(val throwable: Throwable) : GetTrackMetadataChange()
-    data class Data(val trackMetadata: TrackMetadata) : GetTrackMetadataChange()
-    object Loading : GetTrackMetadataChange()
-}

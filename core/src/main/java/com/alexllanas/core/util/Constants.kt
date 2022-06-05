@@ -26,6 +26,8 @@ class Constants {
         const val GET_TRACK_METADATA_ERROR = "Error fetching track metadata."
         const val SEARCHING_ERROR = "Searching Error"
 
+        const val VIDEO_ID_REGEX = """(?<=youtu.be/|watch\?v=|/videos/|embed\\/)[^#\&\?]*"""
+
         /**
          * Database
          */

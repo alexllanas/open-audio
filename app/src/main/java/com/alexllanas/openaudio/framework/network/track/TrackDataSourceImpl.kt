@@ -1,10 +1,12 @@
 package com.alexllanas.openaudio.framework.network.track
 
+import android.util.Log
 import arrow.core.Either
 import com.alexllanas.core.data.remote.track.TrackDataSource
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.TrackMetadata
+import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.core.util.getResult
 import com.alexllanas.openaudio.framework.mappers.toDomainTrack
 import com.alexllanas.openaudio.framework.mappers.toDomainUser
@@ -52,10 +54,11 @@ class TrackDataSourceImpl(
         }.asFlow()
             .getResult()
 
-    override suspend fun getTrackMetadata(mediaUrl: String): Flow<TrackMetadata> =
+    override suspend fun getTrackMetadata(videoId: String): Flow<TrackMetadata> =
         suspend {
-            val metadata = trackApiService.getTrackMetadata(mediaUrl)
-            metadata.mediaUrl = mediaUrl
+            Log.d(TAG, "getTrackMetadata: $videoId")
+            val metadata = trackApiService.getTrackMetadata(videoId)
+            metadata.mediaUrl = videoId
             metadata
         }.asFlow()
 
