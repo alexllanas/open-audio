@@ -20,6 +20,8 @@ class ResponseInterceptor(private val context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val req = chain.request()
         val res = chain.proceed(req)
+        Log.d(TAG, "intercept: ${req.url}")
+        Log.d(TAG, "intercept: ${res.peekBody(Long.MAX_VALUE).string()}")
 
         val sessionToken = res.getSessionToken()
         sessionToken?.let { token ->

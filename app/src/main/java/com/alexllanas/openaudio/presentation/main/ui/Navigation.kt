@@ -120,7 +120,7 @@ fun NavigationGraph(
         }
         composable(NavItem.NewTrack.screenRoute) {
 //            MediaScreen(mainViewModel) {
-            NewTrackScreen(uploadViewModel, navHostController, homeViewModel)
+            NewTrackScreen(uploadViewModel, mainViewModel, navHostController, homeViewModel)
 //            }
         }
         composable(NavItem.ForgotPassword.screenRoute) {
@@ -156,7 +156,7 @@ fun NavigationGraph(
                 mainState = mainState,
                 navHostController = navHostController,
                 fragmentManager = fragmentManager,
-                fragmentNavController =  fragmentNavController
+                fragmentNavController = fragmentNavController
             )
 //            }
         }

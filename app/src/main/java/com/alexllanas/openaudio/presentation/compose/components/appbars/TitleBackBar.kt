@@ -21,7 +21,7 @@ import com.alexllanas.openaudio.R
 @Composable
 fun TitleBackBar(barTitle: String? = null, onBackPressed: () -> Unit) {
     ConstraintLayout(
-        Modifier.fillMaxWidth().height(height = 56.dp).background(MaterialTheme.colors.primary)
+        Modifier.fillMaxWidth().height(height = 56.dp).background(MaterialTheme.colors.background)
     ) {
         val (backArrow, title) = createRefs()
 

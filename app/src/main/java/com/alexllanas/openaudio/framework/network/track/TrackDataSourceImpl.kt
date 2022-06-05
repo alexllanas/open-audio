@@ -3,16 +3,17 @@ package com.alexllanas.openaudio.framework.network.track
 import android.util.Log
 import arrow.core.Either
 import com.alexllanas.core.data.remote.track.TrackDataSource
-import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.TrackMetadata
+import com.alexllanas.core.util.Constants
 import com.alexllanas.core.util.Constants.Companion.TAG
 import com.alexllanas.core.util.getResult
 import com.alexllanas.openaudio.framework.mappers.toDomainTrack
-import com.alexllanas.openaudio.framework.mappers.toDomainUser
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flowOf
+import java.lang.IllegalArgumentException
 
 @OptIn(FlowPreview::class)
 class TrackDataSourceImpl(
@@ -54,13 +55,8 @@ class TrackDataSourceImpl(
         }.asFlow()
             .getResult()
 
-    override suspend fun getTrackMetadata(videoId: String): Flow<TrackMetadata> =
-        suspend {
-            Log.d(TAG, "getTrackMetadata: $videoId")
-            val metadata = trackApiService.getTrackMetadata(videoId)
-            metadata.mediaUrl = videoId
-            metadata
-        }.asFlow()
+    override suspend fun getTrackMetadata(url: String): Flow<TrackMetadata> =
+        flowOf(trackApiService.getTrackMetadata(url))
 
     override suspend fun deleteTrack(
         trackId: String,

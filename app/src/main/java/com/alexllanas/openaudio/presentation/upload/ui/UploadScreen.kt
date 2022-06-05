@@ -84,8 +84,11 @@ fun UploadScreen(navController: NavHostController, uploadViewModel: UploadViewMo
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }) {
-                uploadViewModel.dispatch(UploadAction.GetUploadedTrackResults(mediaUrl))
-                navController.navigate("new_track")
+                if (mediaUrl.isNotEmpty()) {
+                    uploadViewModel.dispatch(UploadAction.GetUploadedTrackResults(mediaUrl))
+                    navController.navigate("new_track")
+                    mediaUrl = ""
+                }
             }
         }
     }

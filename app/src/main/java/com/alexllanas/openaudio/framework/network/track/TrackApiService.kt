@@ -26,9 +26,9 @@ interface TrackApiService : TrackRemoteServiceContract {
         @Header("Cookie") sessionToken: String
     ): TrackResponse
 
-    @GET("https://youtube.com/oembed?url=https://www.youtube.com/watch")
+    @GET("https://youtube.com/oembed?")
     override suspend fun getTrackMetadata(
-        @Query("v") videoId: String
+        @Query("url") url: String
     ): TrackMetadata
 
     @GET("/api/post?action=delete")

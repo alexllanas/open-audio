@@ -14,39 +14,33 @@ class GetUploadTrackResults(
 ) {
     suspend operator fun invoke(
         mediaUrl: String
-    ) =
-
-
-        trackDataSource.getTrackMetadata(
-            Regex(Constants.VIDEO_ID_REGEX).find(mediaUrl)?.groupValues?.get(0)
+    ) = trackDataSource.getTrackMetadata(mediaUrl).map { metadata ->
+        val uploadTrackResults = arrayListOf<Track>()
+        val newTrack = Track(
+            id = Constants.NEW_TRACK_ID,
+            title = metadata.title,
+            image = metadata.thumbnailUrl,
+            mediaUrl = "/yt/" + Regex(Constants.VIDEO_ID_REGEX).find(mediaUrl)?.groupValues?.get(0)
                 ?: throw IllegalArgumentException(
-                    "No video ID found in url."
+                    "No video ID found in URL: $mediaUrl"
                 )
-        ).map { metadata ->
-            val uploadTrackResults = arrayListOf<Track>()
-            val newTrack = Track(
-                id = Constants.NEW_TRACK_ID,
-                title = metadata.title,
-                image = metadata.thumbnailUrl,
-                mediaUrl = metadata.mediaUrl
-            )
-            uploadTrackResults.add(newTrack)
+        )
+        uploadTrackResults.add(newTrack)
 
-            newTrack.title?.let { title ->
-                homeDataSource.search(title).map { result ->
-                    result.fold(
-                        ifLeft = {
-                            throw Exception(Constants.SEARCHING_ERROR)
-                        },
-                        ifRight = { resultMap ->
-                            uploadTrackResults.addAll(
-                                resultMap["tracks"]?.filterIsInstance<Track>() ?: emptyList()
-                            )
-                        }
-                    )
-                }
+        newTrack.title?.let { title ->
+            homeDataSource.search(title).map { result ->
+                result.fold(
+                    ifLeft = {
+                        throw Exception(Constants.SEARCHING_ERROR)
+                    },
+                    ifRight = { resultMap ->
+                        uploadTrackResults.addAll(
+                            resultMap["tracks"]?.filterIsInstance<Track>() ?: emptyList()
+                        )
+                    }
+                )
             }
-//            emit(uploadTrackResults)
-            return@map uploadTrackResults
-        }.getResult()
+        }
+        uploadTrackResults
+    }.getResult()
 }
