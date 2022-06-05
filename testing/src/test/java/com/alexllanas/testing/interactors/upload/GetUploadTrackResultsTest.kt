@@ -2,10 +2,13 @@ package com.alexllanas.testing.interactors.upload
 
 import com.alexllanas.core.interactors.upload.GetUploadTrackResults
 import com.alexllanas.core.util.Constants
+import com.alexllanas.testing.NEW_TRACK
+import com.alexllanas.testing.NO_EXISTING_TRACKS_UPLOAD_RESULTS
 import com.alexllanas.testing.data.remote.home.FakeHomeDataSourceImpl
 import com.alexllanas.testing.data.remote.home.FakeHomeRemoteServiceImpl
 import com.alexllanas.testing.data.remote.track.FakeTrackDataSourceImpl
 import com.alexllanas.testing.data.remote.track.FakeTrackRemoteServiceImpl
+import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -37,8 +40,8 @@ class GetUploadTrackResultsTest {
             .collect { result ->
                 result.fold(
                     ifLeft = {},
-                    ifRight = {
-
+                    ifRight = { resultList ->
+                        assertEquals(NO_EXISTING_TRACKS_UPLOAD_RESULTS, resultList)
                     }
                 )
             }
@@ -51,7 +54,7 @@ class GetUploadTrackResultsTest {
             .collect { result ->
                 result.fold(
                     ifLeft = { throwable ->
-                        assert(throwable.message == Constants.SEARCHING_ERROR)
+                        assertEquals(Constants.SEARCHING_ERROR, throwable.message)
                     },
                     ifRight = {}
                 )

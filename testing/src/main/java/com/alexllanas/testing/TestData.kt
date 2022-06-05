@@ -3,6 +3,7 @@ package com.alexllanas.testing
 import com.alexllanas.core.domain.models.Playlist
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.domain.models.User
+import com.alexllanas.core.util.Constants
 
 internal const val NETWORK_ERROR_MESSAGE = "Something went wrong with the network.."
 
@@ -21,7 +22,7 @@ internal val PLAYLISTS = listOf(
 internal val USERS = listOf(
     User(id = "11", name = "Alex", "fake@email.com"),
     User(id = "23", name = "Lily", "lily4@gmail.com"),
-    User(id = "54", name = "Bilbo", "fake.email@yahoo.com")
+    User(id = "54", name = "Walt", "fake.email@yahoo.com")
 )
 
 internal val POSTS = listOf(
@@ -36,3 +37,14 @@ internal val SEARCH_MAP_RESULTS = hashMapOf(
     "users" to USERS,
     "posts" to POSTS
 )
+
+internal val NEW_TRACK = Track(
+    id = Constants.NEW_TRACK_ID,
+    title = Constants.SAMPLE_TRACK_TITLE,
+    mediaUrl = Constants.SAMPLE_MEDIA_URL,
+    image = Constants.SAMPLE_TRACK_THUMBNAIL_URL
+)
+
+
+
+internal val NO_EXISTING_TRACKS_UPLOAD_RESULTS = arrayListOf(NEW_TRACK)

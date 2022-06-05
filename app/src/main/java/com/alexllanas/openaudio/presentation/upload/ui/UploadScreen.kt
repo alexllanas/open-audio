@@ -5,9 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -26,16 +25,16 @@ import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
 
 @Composable
 fun UploadScreen(navController: NavHostController, uploadViewModel: UploadViewModel) {
-    val uploadState by uploadViewModel.uploadState.collectAsState()
-    val modifier = Modifier
-        .padding(16.dp)
-        .fillMaxSize()
+    var mediaUrl by rememberSaveable { mutableStateOf("") }
 
     Scaffold(bottomBar = { BottomNav(navController = navController) }
     ) {
         ConstraintLayout(
-            modifier = modifier
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize()
         ) {
+
             val (heading, urlTextField, uploadButton) = createRefs()
             Heading(modifier = Modifier.constrainAs(heading) {
                 top.linkTo(parent.top)
@@ -43,7 +42,7 @@ fun UploadScreen(navController: NavHostController, uploadViewModel: UploadViewMo
                 end.linkTo(parent.end)
             })
             TextField(
-                value = uploadState.trackUrl,
+                value = mediaUrl,
                 singleLine = true,
                 placeholder = {
 
@@ -53,11 +52,11 @@ fun UploadScreen(navController: NavHostController, uploadViewModel: UploadViewMo
                     )
                 },
                 onValueChange = { url ->
-                    uploadViewModel.dispatch(UploadAction.SetUrlText(url))
+                    mediaUrl = url
                 },
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = MaterialTheme.colors.background,
-                    textColor = Color.Black,
+                    textColor = MaterialTheme.colors.onBackground,
                 ),
                 leadingIcon = {
                     Icon(
@@ -85,6 +84,7 @@ fun UploadScreen(navController: NavHostController, uploadViewModel: UploadViewMo
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }) {
+                uploadViewModel.dispatch(UploadAction.GetUploadedTrackResults(mediaUrl))
                 navController.navigate("new_track")
             }
         }

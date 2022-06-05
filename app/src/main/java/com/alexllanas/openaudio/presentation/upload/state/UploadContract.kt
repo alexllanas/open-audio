@@ -18,20 +18,12 @@ sealed class UploadAction : Action() {
         val mediaUrl: String
     ) : UploadAction()
 
-    data class SetUrlText(val url: String) : UploadAction()
+    data class GetUploadedTrackResults(
+        val mediaUrl: String
+    ) : UploadAction()
+
 }
 
-sealed class SetUrlTextChange : PartialStateChange<UploadState> {
-    override fun reduce(state: UploadState): UploadState {
-        return when (this) {
-            is Data -> {
-                state.copy(trackUrl = url)
-            }
-        }
-    }
-
-    data class Data(val url: String) : SetUrlTextChange()
-}
 
 sealed class UploadTrackChange : PartialStateChange<UploadState> {
     override fun reduce(state: UploadState): UploadState {
@@ -57,6 +49,32 @@ sealed class UploadTrackChange : PartialStateChange<UploadState> {
     data class Error(val throwable: Throwable) : UploadTrackChange()
     data class Data(val track: Track) : UploadTrackChange()
     object Loading : UploadTrackChange()
+}
+
+sealed class GetUploadTrackResultsChange : PartialStateChange<UploadState> {
+    override fun reduce(state: UploadState): UploadState {
+        return when (this) {
+            is Data -> {
+                state.copy(
+                    uploadedTrackResults = uploadedTrackResults,
+                    isLoading = false,
+                    error = null
+                )
+            }
+            is Error -> state.copy(
+                isLoading = false,
+                error = throwable
+            )
+            Loading -> state.copy(
+                isLoading = true,
+                error = null
+            )
+        }
+    }
+
+    data class Data(val uploadedTrackResults: List<Track>) : GetUploadTrackResultsChange()
+    data class Error(val throwable: Throwable) : GetUploadTrackResultsChange()
+    object Loading : GetUploadTrackResultsChange()
 }
 
 sealed class GetTrackMetadataChange : PartialStateChange<UploadState> {

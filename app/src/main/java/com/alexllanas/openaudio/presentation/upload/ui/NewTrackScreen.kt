@@ -48,7 +48,7 @@ fun NewTrackScreen(
         ConstraintLayout(modifier = Modifier.padding(16.dp).fillMaxSize()) {
             val (image, trackInfo) = createRefs()
 
-            GlideImage(imageModel = uploadState.trackUrl,
+            GlideImage(imageModel = uploadState.uploadedTrack?.title,
                 contentScale = ContentScale.Crop,
                 placeHolder = ImageBitmap.imageResource(R.drawable.blank_user),
                 error = ImageBitmap.imageResource(R.drawable.blank_user),

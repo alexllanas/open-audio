@@ -52,13 +52,12 @@ class TrackDataSourceImpl(
         }.asFlow()
             .getResult()
 
-    override suspend fun getTrackMetadata(mediaUrl: String): Flow<Either<Throwable, TrackMetadata>> =
+    override suspend fun getTrackMetadata(mediaUrl: String): Flow<TrackMetadata> =
         suspend {
             val metadata = trackApiService.getTrackMetadata(mediaUrl)
             metadata.mediaUrl = mediaUrl
             metadata
         }.asFlow()
-            .getResult()
 
     override suspend fun deleteTrack(
         trackId: String,

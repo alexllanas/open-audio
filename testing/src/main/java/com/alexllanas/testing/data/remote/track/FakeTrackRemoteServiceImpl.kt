@@ -31,7 +31,7 @@ class FakeTrackRemoteServiceImpl : TrackRemoteServiceContract {
     override suspend fun getTrackMetadata(mediaUrl: String): TrackMetadata {
         if (mediaUrl == Constants.SAMPLE_MEDIA_URL) {
             return TrackMetadata(
-                id = UUID.randomUUID().toString(),
+                id = Constants.NEW_TRACK_ID,
                 title = Constants.SAMPLE_TRACK_TITLE,
                 mediaUrl = mediaUrl,
                 thumbnailUrl = Constants.SAMPLE_TRACK_THUMBNAIL_URL

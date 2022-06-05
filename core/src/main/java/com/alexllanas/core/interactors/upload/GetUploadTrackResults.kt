@@ -5,8 +5,6 @@ import com.alexllanas.core.data.remote.track.TrackDataSource
 import com.alexllanas.core.domain.models.Track
 import com.alexllanas.core.util.Constants
 import com.alexllanas.core.util.getResult
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class GetUploadTrackResults(
@@ -15,7 +13,7 @@ class GetUploadTrackResults(
 ) {
     suspend operator fun invoke(
         mediaUrl: String
-    ) = flow {
+    ) =
         trackDataSource.getTrackMetadata(mediaUrl).map { metadata ->
             val uploadTrackResults = arrayListOf<Track>()
             val newTrack = Track(
@@ -33,12 +31,14 @@ class GetUploadTrackResults(
                             throw Exception(Constants.SEARCHING_ERROR)
                         },
                         ifRight = { resultMap ->
-                            uploadTrackResults.addAll(resultMap["tracks"] as List<Track>)
+                            uploadTrackResults.addAll(
+                                resultMap["tracks"]?.filterIsInstance<Track>() ?: emptyList()
+                            )
                         }
                     )
                 }
             }
-            emit(uploadTrackResults)
-        }
-    }.getResult()
+//            emit(uploadTrackResults)
+            return@map uploadTrackResults
+        }.getResult()
 }

@@ -41,7 +41,7 @@ class UploadViewModel @Inject constructor(
                 )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class, kotlinx.coroutines.FlowPreview::class)
+    @OptIn(kotlinx.coroutines.FlowPreview::class)
     private fun SharedFlow<UploadAction>.toChangeFlow(): Flow<PartialStateChange<UploadState>> {
         val executeUploadTrack: suspend (String, String, String, String) -> Flow<PartialStateChange<UploadState>> =
             { title, mediaUrl, image, sessionToken ->
@@ -53,19 +53,24 @@ class UploadViewModel @Inject constructor(
                         )
                     }.onStart { UploadTrackChange.Loading }
             }
+        val executeGetUploadTrackResults: suspend (String) -> Flow<PartialStateChange<UploadState>> =
+            { mediaUrl ->
+                uploadInteractors.getUploadTrackResults(mediaUrl)
+                    .map { result ->
+                        result.fold(
+                            ifLeft = { GetUploadTrackResultsChange.Error(it) },
+                            ifRight = { GetUploadTrackResultsChange.Data(it) }
+                        )
+                    }.onStart { GetUploadTrackResultsChange.Loading }
+            }
         val executeGetTrackMetadata: suspend (String) -> Flow<PartialStateChange<UploadState>> =
             { mediaUrl ->
                 uploadInteractors.getTrackMetadata(mediaUrl)
                     .map { result ->
-                        result.fold(
-                            ifLeft = { GetTrackMetadataChange.Error(it) },
-                            ifRight = { GetTrackMetadataChange.Data(it) }
-                        )
+                        GetTrackMetadataChange.Data(result)
                     }.onStart { GetTrackMetadataChange.Loading }
             }
         return merge(
-            filterIsInstance<UploadAction.SetUrlText>()
-                .flatMapConcat { flowOf(SetUrlTextChange.Data(it.url)) },
             filterIsInstance<UploadAction.UploadTrack>()
                 .flatMapConcat {
                     executeUploadTrack(
@@ -73,6 +78,12 @@ class UploadViewModel @Inject constructor(
                         it.trackUrl,
                         it.image,
                         it.sessionToken
+                    )
+                },
+            filterIsInstance<UploadAction.GetUploadedTrackResults>()
+                .flatMapConcat {
+                    executeGetUploadTrackResults(
+                        it.mediaUrl,
                     )
                 },
             filterIsInstance<UploadAction.GetTrackMetadata>()

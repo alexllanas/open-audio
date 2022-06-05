@@ -11,6 +11,7 @@ data class UploadInteractors(
     val addTrack: AddTrack,
     val addTrackToPlaylist: AddTrackToPlaylist,
     val getTrackMetadata: GetTrackMetadata,
+    val getUploadTrackResults: GetUploadTrackResults,
     val likeTrack: LikeTrack,
     val unlikeTrack: UnlikeTrack,
 )
