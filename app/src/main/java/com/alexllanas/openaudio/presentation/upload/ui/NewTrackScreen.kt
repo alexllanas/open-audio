@@ -53,7 +53,7 @@ fun NewTrackScreen(
     newTrack.mediaUrl?.let { url ->
         newTrack.title?.let { title ->
             mainState.sessionToken?.let { token ->
-                LaunchedEffect(token) {
+                LaunchedEffect(Unit) {
                     uploadViewModel.dispatch(
                         UploadAction.UploadTrack(
                             url,

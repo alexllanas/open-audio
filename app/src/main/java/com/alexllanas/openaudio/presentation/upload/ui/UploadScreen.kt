@@ -1,5 +1,6 @@
 package com.alexllanas.openaudio.presentation.upload.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,6 +27,7 @@ import com.alexllanas.openaudio.presentation.upload.state.UploadViewModel
 
 @Composable
 fun UploadScreen(navController: NavHostController, uploadViewModel: UploadViewModel) {
+    val context = LocalContext.current
     var mediaUrl by rememberSaveable { mutableStateOf("") }
 
     Scaffold(bottomBar = { BottomNav(navController = navController) }
@@ -87,6 +90,7 @@ fun UploadScreen(navController: NavHostController, uploadViewModel: UploadViewMo
                 if (mediaUrl.isNotEmpty()) {
                     uploadViewModel.dispatch(UploadAction.GetUploadedTrackResults(mediaUrl))
                     navController.navigate("new_track")
+                    Toast.makeText(context, "Uploaded", Toast.LENGTH_LONG)
                     mediaUrl = ""
                 }
             }

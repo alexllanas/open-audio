@@ -1,18 +1,14 @@
 package com.alexllanas.testing.interactors.upload
 
-import arrow.core.Const
-import com.alexllanas.core.domain.models.TrackMetadata
 import com.alexllanas.core.interactors.upload.GetTrackMetadata
 import com.alexllanas.core.util.Constants
 import com.alexllanas.testing.data.remote.track.FakeTrackDataSourceImpl
 import com.alexllanas.testing.data.remote.track.FakeTrackRemoteServiceImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import java.lang.Exception
 import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)

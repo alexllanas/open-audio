@@ -82,7 +82,7 @@ fun TrackDetailScreen(
                         .weight(1f, true),
                     model =
                     URLDecoder.decode(
-                        track.image,
+                        track.image?: "",
                         StandardCharsets.UTF_8.toString()
                     ),
                     contentDescription = stringResource(R.string.track_image),
