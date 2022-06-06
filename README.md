@@ -18,7 +18,8 @@ https://youtu.be/kgFbDZ2JohQ
 - Jetpack Compose
 - Kotlin Coroutines & Flows
 - Dagger-Hilt
-- Retrofit 
+- Retrofit
+- JUnit
 
 ## Credits
 - Adrien Joly & everyone @ [openWhyd.org ](https://github.com/openwhyd)
