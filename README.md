@@ -6,6 +6,7 @@ https://youtu.be/kgFbDZ2JohQ
 
 ## Screenshots
 <img src="https://github.com/alexllanas/open-audio/blob/main/metadata/images/screenshots/stream.jpg" alt="drawing" width="200"/>  <img src="https://github.com/alexllanas/open-audio/blob/main/metadata/images/screenshots/search.jpg" alt="drawing" width="200"/>  <img src="https://github.com/alexllanas/open-audio/blob/main/metadata/images/screenshots/upload.jpg" alt="drawing" width="200"/>
+<br>
 <img src="https://github.com/alexllanas/open-audio/blob/main/metadata/images/screenshots/profile.jpg" alt="drawing" width="200"/>
 <img src="https://github.com/alexllanas/open-audio/blob/main/metadata/images/screenshots/media_player.jpg" alt="drawing" width="200"/> <img src="https://github.com/alexllanas/open-audio/blob/main/metadata/images/screenshots/stream_with_player.jpg" alt="drawing" width="200"/>
 
