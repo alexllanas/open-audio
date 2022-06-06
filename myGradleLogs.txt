@@ -1,0 +1,275 @@
+
+> Configure project :app
+app: 'annotationProcessor' dependencies won't be recognized as kapt annotation processors. Please change the configuration name to 'kapt' for these artifacts: 'androidx.room:room-compiler:2.4.2', 'com.github.bumptech.glide:compiler:4.13.0'.
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :core:processResources NO-SOURCE
+> Task :app:compileDebugAidl NO-SOURCE
+> Task :app:compileDebugRenderscript NO-SOURCE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:generateSafeArgsDebug UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:injectCrashlyticsMappingFileIdDebug UP-TO-DATE
+> Task :app:processDebugGoogleServices UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:processDebugJavaRes NO-SOURCE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:desugarDebugFileDependencies
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:buildKotlinToolingMetadata UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:compileReleaseAidl NO-SOURCE
+> Task :app:compileReleaseRenderscript NO-SOURCE
+> Task :app:generateReleaseBuildConfig UP-TO-DATE
+> Task :app:generateSafeArgsRelease UP-TO-DATE
+> Task :app:checkReleaseAarMetadata UP-TO-DATE
+> Task :app:generateReleaseResValues UP-TO-DATE
+> Task :app:generateReleaseResources UP-TO-DATE
+> Task :app:injectCrashlyticsMappingFileIdRelease UP-TO-DATE
+> Task :app:mergeReleaseResources UP-TO-DATE
+
+> Task :app:processReleaseGoogleServices
+Execution optimizations have been disabled for task ':app:processReleaseGoogleServices' to ensure correctness due to the following reasons:
+  - Gradle detected a problem with the following location: 'C:\Users\Alex\StudioProjects\OpenAudio2\app\build\generated\res\google-services\release'. Reason: Task ':app:mergeReleaseResources' uses this output of task ':app:processReleaseGoogleServices' without declaring an explicit or implicit dependency. This can lead to incorrect results being produced, depending on what order the tasks are executed. Please refer to https://docs.gradle.org/7.2/userguide/validation_problems.html#implicit_dependency for more details about this problem.
+
+> Task :app:packageReleaseResources UP-TO-DATE
+> Task :app:parseReleaseLocalResources UP-TO-DATE
+> Task :app:createReleaseCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksRelease UP-TO-DATE
+> Task :app:processReleaseMainManifest UP-TO-DATE
+> Task :app:processReleaseManifest UP-TO-DATE
+> Task :app:processReleaseManifestForPackage UP-TO-DATE
+
+> Task :core:compileKotlin
+w: C:\Users\Alex\StudioProjects\OpenAudio2\core\src\main\java\com\alexllanas\core\interactors\profile\ChangeAvatar.kt: (14, 6): This annotation should be used with the compiler argument '-opt-in=kotlin.RequiresOptIn'
+
+> Task :app:processReleaseResources UP-TO-DATE
+> Task :core:compileJava NO-SOURCE
+> Task :core:classes UP-TO-DATE
+> Task :core:inspectClassesForKotlinIC UP-TO-DATE
+> Task :core:jar UP-TO-DATE
+> Task :app:javaPreCompileRelease UP-TO-DATE
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :app:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :app:mergeReleaseNativeLibs NO-SOURCE
+> Task :app:stripReleaseDebugSymbols NO-SOURCE
+> Task :app:extractReleaseNativeSymbolTables NO-SOURCE
+> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:checkReleaseDuplicateClasses UP-TO-DATE
+> Task :app:desugarReleaseFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexRelease UP-TO-DATE
+> Task :app:mergeLibDexDebug
+> Task :app:processDebugManifestForPackage
+> Task :app:mergeReleaseArtProfile UP-TO-DATE
+> Task :app:mergeReleaseShaders UP-TO-DATE
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets UP-TO-DATE
+> Task :app:compressReleaseAssets UP-TO-DATE
+> Task :app:processReleaseJavaRes NO-SOURCE
+> Task :app:optimizeReleaseResources UP-TO-DATE
+> Task :app:collectReleaseDependencies UP-TO-DATE
+> Task :app:sdkReleaseDependencyData UP-TO-DATE
+> Task :app:writeReleaseAppMetadata UP-TO-DATE
+> Task :app:writeReleaseSigningConfigVersions UP-TO-DATE
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:processDebugAndroidTestManifest UP-TO-DATE
+> Task :app:compileDebugAndroidTestRenderscript NO-SOURCE
+> Task :app:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes NO-SOURCE
+> Task :app:preReleaseUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileReleaseUnitTest UP-TO-DATE
+> Task :app:processReleaseUnitTestJavaRes NO-SOURCE
+> Task :core:assemble UP-TO-DATE
+> Task :core:compileTestKotlin NO-SOURCE
+> Task :core:compileTestJava NO-SOURCE
+> Task :core:processTestResources NO-SOURCE
+> Task :core:testClasses UP-TO-DATE
+> Task :core:test NO-SOURCE
+> Task :core:check UP-TO-DATE
+> Task :core:build UP-TO-DATE
+> Task :testing:preBuild UP-TO-DATE
+> Task :testing:preDebugBuild UP-TO-DATE
+> Task :testing:compileDebugAidl NO-SOURCE
+> Task :testing:mergeDebugJniLibFolders UP-TO-DATE
+> Task :testing:mergeDebugNativeLibs NO-SOURCE
+> Task :testing:stripDebugDebugSymbols NO-SOURCE
+> Task :testing:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :testing:compileDebugRenderscript NO-SOURCE
+> Task :testing:generateDebugBuildConfig UP-TO-DATE
+> Task :testing:generateDebugResValues UP-TO-DATE
+> Task :testing:generateDebugResources UP-TO-DATE
+> Task :testing:packageDebugResources UP-TO-DATE
+> Task :testing:parseDebugLocalResources UP-TO-DATE
+> Task :testing:processDebugManifest UP-TO-DATE
+> Task :testing:generateDebugRFile UP-TO-DATE
+> Task :testing:javaPreCompileDebug UP-TO-DATE
+> Task :testing:mergeDebugShaders UP-TO-DATE
+> Task :testing:compileDebugShaders NO-SOURCE
+> Task :testing:generateDebugAssets UP-TO-DATE
+> Task :testing:packageDebugAssets UP-TO-DATE
+> Task :testing:packageDebugRenderscript NO-SOURCE
+> Task :testing:prepareDebugArtProfile UP-TO-DATE
+> Task :testing:prepareLintJarForPublish UP-TO-DATE
+> Task :testing:processDebugJavaRes NO-SOURCE
+> Task :testing:writeDebugAarMetadata UP-TO-DATE
+> Task :testing:preReleaseBuild UP-TO-DATE
+> Task :testing:compileReleaseAidl NO-SOURCE
+> Task :testing:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :testing:mergeReleaseNativeLibs NO-SOURCE
+> Task :testing:stripReleaseDebugSymbols NO-SOURCE
+> Task :testing:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :testing:compileReleaseRenderscript NO-SOURCE
+> Task :testing:generateReleaseBuildConfig UP-TO-DATE
+> Task :testing:generateReleaseResValues UP-TO-DATE
+> Task :testing:generateReleaseResources UP-TO-DATE
+> Task :testing:packageReleaseResources UP-TO-DATE
+> Task :testing:parseReleaseLocalResources UP-TO-DATE
+> Task :testing:processReleaseManifest UP-TO-DATE
+> Task :testing:generateReleaseRFile UP-TO-DATE
+> Task :testing:javaPreCompileRelease UP-TO-DATE
+> Task :testing:mergeReleaseShaders UP-TO-DATE
+> Task :testing:compileReleaseShaders NO-SOURCE
+> Task :testing:generateReleaseAssets UP-TO-DATE
+> Task :testing:packageReleaseAssets UP-TO-DATE
+> Task :testing:packageReleaseRenderscript NO-SOURCE
+> Task :testing:prepareReleaseArtProfile UP-TO-DATE
+> Task :testing:processReleaseJavaRes NO-SOURCE
+> Task :testing:writeReleaseAarMetadata UP-TO-DATE
+> Task :testing:mergeReleaseResources UP-TO-DATE
+> Task :testing:verifyReleaseResources UP-TO-DATE
+> Task :testing:preDebugAndroidTestBuild UP-TO-DATE
+> Task :testing:extractDeepLinksDebug UP-TO-DATE
+> Task :testing:processDebugAndroidTestManifest UP-TO-DATE
+> Task :testing:compileDebugAndroidTestRenderscript NO-SOURCE
+> Task :testing:extractProguardFiles UP-TO-DATE
+> Task :testing:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :testing:writeDebugLintModelMetadata UP-TO-DATE
+> Task :testing:preDebugUnitTestBuild UP-TO-DATE
+> Task :testing:generateDebugUnitTestStubRFile UP-TO-DATE
+> Task :testing:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :testing:processDebugUnitTestJavaRes NO-SOURCE
+> Task :testing:preReleaseUnitTestBuild UP-TO-DATE
+> Task :testing:generateReleaseUnitTestStubRFile UP-TO-DATE
+> Task :testing:javaPreCompileReleaseUnitTest UP-TO-DATE
+> Task :testing:processReleaseUnitTestJavaRes NO-SOURCE
+
+> Task :testing:compileDebugKotlin
+w: C:\Users\Alex\StudioProjects\OpenAudio2\testing\src\main\java\com\alexllanas\testing\data\remote\user\FakeUserRemoteService.kt: (82, 30): Parameter 'file' is never used
+w: C:\Users\Alex\StudioProjects\OpenAudio2\testing\src\main\java\com\alexllanas\testing\data\remote\user\FakeUserRemoteService.kt: (82, 42): Parameter 'sessionToken' is never used
+
+> Task :testing:extractDebugAnnotations
+
+> Task :testing:compileReleaseKotlin
+w: C:\Users\Alex\StudioProjects\OpenAudio2\testing\src\main\java\com\alexllanas\testing\data\remote\user\FakeUserRemoteService.kt: (82, 30): Parameter 'file' is never used
+w: C:\Users\Alex\StudioProjects\OpenAudio2\testing\src\main\java\com\alexllanas\testing\data\remote\user\FakeUserRemoteService.kt: (82, 42): Parameter 'sessionToken' is never used
+
+> Task :testing:compileDebugJavaWithJavac
+> Task :testing:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :testing:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :testing:mergeDebugJavaResource UP-TO-DATE
+> Task :testing:syncDebugLibJars
+> Task :testing:bundleDebugAar
+> Task :testing:assembleDebug
+> Task :testing:extractReleaseAnnotations
+> Task :testing:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :testing:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :testing:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :testing:mergeReleaseJavaResource UP-TO-DATE
+> Task :testing:syncReleaseLibJars
+> Task :testing:bundleReleaseAar
+> Task :testing:assembleRelease
+> Task :testing:assemble
+> Task :testing:bundleDebugLocalLintAar
+> Task :testing:bundleLibResDebug UP-TO-DATE
+> Task :testing:bundleLibRuntimeToJarDebug
+> Task :testing:bundleLibCompileToJarDebug
+> Task :testing:bundleLibResRelease
+> Task :testing:createFullJarDebug
+> Task :testing:bundleLibRuntimeToJarRelease
+> Task :testing:bundleLibCompileToJarRelease
+> Task :app:processDebugResources
+
+> Task :testing:compileDebugUnitTestKotlin
+w: C:\Users\Alex\StudioProjects\OpenAudio2\testing\src\test\java\com\alexllanas\testing\interactors\SearchTest.kt: (12, 2): This annotation should be used with the compiler argument '-opt-in=kotlin.RequiresOptIn'
+w: C:\Users\Alex\StudioProjects\OpenAudio2\testing\src\test\java\com\alexllanas\testing\interactors\upload\GetTrackMetadataTest.kt: (14, 2): This annotation should be used with the compiler argument '-opt-in=kotlin.RequiresOptIn'
+w: C:\Users\Alex\StudioProjects\OpenAudio2\testing\src\test\java\com\alexllanas\testing\interactors\upload\GetUploadTrackResultsTest.kt: (11, 24): 'Assert' is deprecated. Deprecated in Java
+w: C:\Users\Alex\StudioProjects\OpenAudio2\testing\src\test\java\com\alexllanas\testing\interactors\upload\GetUploadTrackResultsTest.kt: (16, 2): This annotation should be used with the compiler argument '-opt-in=kotlin.RequiresOptIn'
+
+> Task :app:kaptGenerateStubsReleaseKotlin
+> Task :testing:lintAnalyzeDebug
+> Task :testing:compileDebugUnitTestJavaWithJavac NO-SOURCE
+
+> Task :testing:lintReportDebug
+Wrote HTML report to file:///C:/Users/Alex/StudioProjects/OpenAudio2/testing/build/reports/lint-results-debug.html
+
+> Task :app:mergeExtDexDebug
+> Task :testing:testDebugUnitTest
+> Task :testing:lintDebug
+> Task :testing:lint
+
+> Task :testing:compileReleaseUnitTestKotlin
+w: C:\Users\Alex\StudioProjects\OpenAudio2\testing\src\test\java\com\alexllanas\testing\interactors\SearchTest.kt: (12, 2): This annotation should be used with the compiler argument '-opt-in=kotlin.RequiresOptIn'
+w: C:\Users\Alex\StudioProjects\OpenAudio2\testing\src\test\java\com\alexllanas\testing\interactors\upload\GetTrackMetadataTest.kt: (14, 2): This annotation should be used with the compiler argument '-opt-in=kotlin.RequiresOptIn'
+w: C:\Users\Alex\StudioProjects\OpenAudio2\testing\src\test\java\com\alexllanas\testing\interactors\upload\GetUploadTrackResultsTest.kt: (11, 24): 'Assert' is deprecated. Deprecated in Java
+w: C:\Users\Alex\StudioProjects\OpenAudio2\testing\src\test\java\com\alexllanas\testing\interactors\upload\GetUploadTrackResultsTest.kt: (16, 2): This annotation should be used with the compiler argument '-opt-in=kotlin.RequiresOptIn'
+
+> Task :testing:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :testing:testReleaseUnitTest
+> Task :testing:test
+> Task :testing:check
+> Task :testing:build
+> Task :app:kaptGenerateStubsDebugKotlin
+> Task :app:kaptReleaseKotlin
+
+> Task :app:compileReleaseKotlin FAILED
+e: This version (1.1.1) of the Compose Compiler requires Kotlin version 1.6.10 but you appear to be using Kotlin version 1.6.21 which is not known to be compatible.  Please fix your configuration (or `suppressKotlinVersionCompatibilityCheck` but don't say I didn't warn you!).
+
+> Task :app:kaptDebugKotlin
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileReleaseKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 8.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+See https://docs.gradle.org/7.2/userguide/command_line_interface.html#sec:command_line_warnings
+
+Execution optimizations have been disabled for 1 invalid unit(s) of work during this build to ensure correctness.
+Please consult deprecation warnings for more details.
+
+BUILD FAILED in 19s
+139 actionable tasks: 38 executed, 101 up-to-date

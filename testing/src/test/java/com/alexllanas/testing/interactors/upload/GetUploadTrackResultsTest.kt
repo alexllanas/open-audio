@@ -49,14 +49,15 @@ class GetUploadTrackResultsTest {
 
     @Test
     fun get_upload_track_results_failure() = runTest {
-        val resultFlow = getUploadTrackResults(Constants.SAMPLE_MEDIA_URL)
+        val resultFlow = getUploadTrackResults(Constants.ERROR_FLAG)
         resultFlow
             .collect { result ->
                 result.fold(
-                    ifLeft = { throwable ->
-                        assertEquals(Constants.SEARCHING_ERROR, throwable.message)
+                    ifLeft = {
                     },
-                    ifRight = {}
+                    ifRight = { resultList ->
+                        assertEquals(Constants.ERROR, resultList[0].id)     // need to fix
+                    }
                 )
             }
     }
