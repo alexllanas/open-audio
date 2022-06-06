@@ -1,5 +1,5 @@
 # OpenAudio
-This app is built upon OpenWhyd's API for collecting and streaming music from different music platforms.
+This app is built with OpenWhyd's API for collecting and streaming music from different music platforms.
 
 ## Demo
 https://youtu.be/kgFbDZ2JohQ
@@ -25,3 +25,6 @@ https://youtu.be/kgFbDZ2JohQ
 
 ## Credits
 - Adrien Joly & everyone @ [openWhyd.org ](https://github.com/openwhyd)
+
+### Note
+Currently only YouTube videos are supported, but SoundCloud, BandCamp, and Deezer tracks are planned for future versions.
